@@ -4,6 +4,39 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Rijan Thapa Kaji — Nepal</title>
+
+<!-- ═══ SEO META TAGS ═══ -->
+<meta name="description" content="Rijan Thapa Kaji — A creative soul from the Himalayas. Music, mountains, and moments worth remembering. Based in Nepal 🇳🇵"/>
+<meta name="keywords" content="Rijan Thapa Kaji, Nepal, Music, Mountains, Himalayas, RTK, Blog, Photography"/>
+<meta name="author" content="Rijan Thapa Kaji"/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://rijan-website.onrender.com/"/>
+
+<!-- ═══ OPEN GRAPH (Facebook, WhatsApp, Discord preview) ═══ -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://rijan-website.onrender.com/"/>
+<meta property="og:title" content="Rijan Thapa Kaji — Nepal"/>
+<meta property="og:description" content="A creative soul from the Himalayas — chasing melodies, summits, and moments worth remembering."/>
+<meta property="og:image" content="https://rijan-website.onrender.com/preview.jpg"/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:site_name" content="Rijan Thapa Kaji"/>
+
+<!-- ═══ TWITTER CARD (X / Twitter preview) ═══ -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Rijan Thapa Kaji — Nepal"/>
+<meta name="twitter:description" content="A creative soul from the Himalayas — chasing melodies, summits, and moments worth remembering."/>
+<meta name="twitter:image" content="https://rijan-website.onrender.com/preview.jpg"/>
+
+<!-- ═══ GOOGLE ANALYTICS ═══ -->
+<!-- 👇 Replace G-XXXXXXXXXX with your actual Google Analytics ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"/>
 <!-- Supabase SDK for database -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -940,7 +973,7 @@ section+section::before{
 <div id="dashTab-music" style="display:none;padding:0 2rem 4rem;">
   <div style="max-width:1180px;margin:0 auto;">
     <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:0.5rem;">🎵 Music Manager</h3>
-    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:2rem;">Add your songs — they will appear in the music player popup on the website!</p>
+    <p style="color:var(--muted);font-size:0.82rem;margin-bottom:2rem;">Add songs from your uploaded files or paste a URL — they appear in the floating music player!</p>
 
     <!-- Add Song Form -->
     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-bottom:2rem;position:relative;overflow:hidden;">
@@ -950,13 +983,29 @@ section+section::before{
         <div class="form-group"><label>Song Title</label><input id="songTitle" type="text" placeholder="Mero Gaun ko Bato..."/></div>
         <div class="form-group"><label>Artist Name</label><input id="songArtist" type="text" placeholder="Rijan Thapa Kaji" value="Rijan Thapa Kaji"/></div>
       </div>
-      <div style="display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:end;">
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:end;margin-bottom:1rem;">
         <div class="form-group"><label>Emoji</label><input id="songEmoji" type="text" placeholder="🎵" maxlength="4" style="width:70px;text-align:center;font-size:1.3rem;"/></div>
-        <div class="form-group"><label>Song URL (Cloudinary/any MP3 link)</label><input id="songUrl" type="url" placeholder="https://res.cloudinary.com/dvd5bjlpa/video/upload/...mp3"/></div>
+        <div class="form-group">
+          <label>Song URL</label>
+          <input id="songUrl" type="url" placeholder="Paste MP3/audio URL here..." style="width:100%;"/>
+        </div>
       </div>
+
+      <!-- Pick from Uploaded Files -->
+      <div style="background:var(--surface);border:1px solid rgba(201,169,110,0.2);border-radius:10px;padding:1.2rem;margin-bottom:1.2rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;flex-wrap:wrap;gap:0.5rem;">
+          <span style="font-size:0.82rem;color:var(--gold);">🎧 Or pick from your uploaded audio files:</span>
+          <button onclick="loadAudioFiles()" style="padding:0.35rem 0.9rem;border-radius:100px;border:1px solid var(--border);background:var(--card);color:var(--text2);font-size:0.72rem;cursor:pointer;font-family:'Outfit',sans-serif;">🔄 Refresh</button>
+        </div>
+        <div id="audioFileList" style="display:flex;flex-direction:column;gap:0.4rem;max-height:220px;overflow-y:auto;">
+          <div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:0.8rem;">Click Refresh to load your audio files from Gallery</div>
+        </div>
+      </div>
+
       <div style="margin-top:0.5rem;display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
         <button class="form-submit" style="width:auto;padding:0.75rem 1.8rem;" onclick="addSong()">🎵 Add Song</button>
-        <span style="font-size:0.75rem;color:var(--muted);">Upload MP3 to Cloudinary first → copy URL → paste above</span>
+        <button onclick="document.getElementById('directAudioUpload').click()" style="padding:0.75rem 1.4rem;border-radius:100px;border:1px solid rgba(201,169,110,0.3);background:rgba(201,169,110,0.06);color:var(--gold);font-size:0.8rem;cursor:pointer;font-family:'Outfit',sans-serif;">⬆️ Upload MP3</button>
+        <input type="file" id="directAudioUpload" accept="audio/*,.mp3,.wav,.ogg,.flac,.m4a" style="display:none" onchange="uploadAndFillSongUrl(event)"/>
       </div>
     </div>
 
@@ -968,45 +1017,100 @@ section+section::before{
   </div>
 </div>
 
-<!-- BLOG WRITE TAB -->
+<!-- BLOG WRITE TAB — Facebook-style post composer -->
 <div id="dashTab-blog" style="display:none;padding:0 2rem 4rem;">
-  <div style="max-width:1180px;margin:0 auto;">
+  <div style="max-width:780px;margin:0 auto;">
 
-    <!-- Write/Edit Form -->
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-bottom:2rem;position:relative;overflow:hidden;">
+    <!-- FB-style Composer Card -->
+    <div id="blogComposerCard" style="background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;margin-bottom:2rem;position:relative;">
       <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);"></div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem;">
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;" id="blogFormTitle">✍️ Write New Blog Post</h3>
-        <button id="cancelEditBtn" style="display:none;padding:0.5rem 1rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:0.78rem;" onclick="cancelBlogEdit()">✕ Cancel Edit</button>
-      </div>
-      <input type="hidden" id="editBlogId" value=""/>
-      <div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:1rem;margin-bottom:1rem;align-items:end;">
-        <div class="form-group"><label>Emoji</label><input id="blogEmoji" type="text" placeholder="🏔️" maxlength="4" style="width:70px;text-align:center;font-size:1.5rem;"/></div>
-        <div class="form-group"><label>Title</label><input id="blogTitle" type="text" placeholder="Your blog post title..."/></div>
-        <div class="form-group"><label>Category</label>
-          <select id="blogCat">
-            <option>🏔️ Travel & Adventure</option>
-            <option>🎵 Music</option>
-            <option>📸 Photography</option>
-            <option>💭 Life & Thoughts</option>
-            <option>🇳🇵 Nepal</option>
-            <option>🎬 YouTube & Content</option>
-            <option>Other</option>
-          </select>
+
+      <!-- Composer Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem 0.8rem;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:0.8rem;">
+          <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:1rem;color:#07090d;font-weight:600;flex-shrink:0;">R</div>
+          <div>
+            <div style="font-size:0.9rem;color:var(--text);font-weight:500;">Rijan Thapa Kaji</div>
+            <select id="blogCat" style="background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:0.15rem 0.6rem;color:var(--muted);font-size:0.7rem;outline:none;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:0.15rem;">
+              <option>🏔️ Travel & Adventure</option>
+              <option>🎵 Music</option>
+              <option>📸 Photography</option>
+              <option>💭 Life & Thoughts</option>
+              <option>🇳🇵 Nepal</option>
+              <option>🎬 YouTube & Content</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <input id="blogEmoji" type="text" placeholder="🏔️" maxlength="4" style="width:52px;text-align:center;font-size:1.3rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.3rem;outline:none;"/>
+          <button id="cancelEditBtn" style="display:none;padding:0.4rem 0.9rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-size:0.75rem;" onclick="cancelBlogEdit()">✕ Cancel Edit</button>
         </div>
       </div>
-      <div class="form-group">
-        <label>Story / Content</label>
-        <textarea id="blogContent" rows="12" placeholder="Write your story here...
 
-Share your adventures, music journey, thoughts about Nepal, and experiences with your fans!
-
-Use line breaks to separate paragraphs."></textarea>
+      <!-- Title input -->
+      <div style="padding:0.8rem 1.5rem 0;">
+        <input id="blogTitle" type="text" placeholder="Post title (optional but great for blogs)..." style="width:100%;background:transparent;border:none;outline:none;color:var(--text);font-size:1rem;font-family:'Cormorant Garamond',serif;font-weight:300;letter-spacing:0.01em;"/>
       </div>
-      <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap;">
-        <button class="form-submit" style="width:auto;padding:0.8rem 2rem;" id="blogSubmitBtn" onclick="publishBlog()">🚀 Publish Post</button>
-        <button onclick="clearBlogForm()" style="padding:0.8rem 1.5rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:0.8rem;">🗑️ Clear</button>
-        <button onclick="previewBlog()" style="padding:0.8rem 1.5rem;border-radius:100px;border:1px solid rgba(201,169,110,0.3);background:rgba(201,169,110,0.05);color:var(--gold);cursor:pointer;font-size:0.8rem;">👁️ Preview</button>
+
+      <!-- Text area — big like FB composer -->
+      <div style="padding:0.4rem 1.5rem 0.6rem;">
+        <textarea id="blogContent" placeholder="What's on your mind, Rijan? Share your story, adventure, or thoughts..." style="width:100%;background:transparent;border:none;outline:none;resize:none;color:var(--text2);font-family:'Outfit',sans-serif;font-size:0.95rem;line-height:1.7;min-height:100px;max-height:320px;" rows="5" oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,320)+'px'"></textarea>
+        <input type="hidden" id="editBlogId" value=""/>
+      </div>
+
+      <!-- Media preview area -->
+      <div id="blogMediaPreview" style="display:none;padding:0 1.5rem;margin-bottom:0.6rem;">
+        <div style="position:relative;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);">
+          <button onclick="removeBlogMedia()" style="position:absolute;top:0.5rem;right:0.5rem;z-index:2;width:28px;height:28px;border-radius:50%;background:rgba(7,9,13,0.7);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center;">✕</button>
+          <div id="blogMediaContent"></div>
+        </div>
+      </div>
+
+      <!-- Attached files list -->
+      <div id="blogAttachList" style="display:none;padding:0 1.5rem 0.6rem;">
+        <div id="blogAttachItems" style="display:flex;flex-direction:column;gap:0.4rem;"></div>
+      </div>
+
+      <!-- Action bar — FB-style with icons -->
+      <div style="border-top:1px solid var(--border);padding:0.8rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.6rem;">
+        <div style="display:flex;gap:0.3rem;flex-wrap:wrap;">
+          <!-- Photo from gallery -->
+          <button onclick="openBlogMediaPicker('image')" title="Add Photo from Cloud Gallery" style="display:flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:0.78rem;font-family:'Outfit',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='#4CAF50';this.style.color='#81c784'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">
+            🖼️ <span>Photo</span>
+          </button>
+          <!-- Video from gallery -->
+          <button onclick="openBlogMediaPicker('video')" title="Add Video from Cloud Gallery" style="display:flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:0.78rem;font-family:'Outfit',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='#2196F3';this.style.color='#64b5f6'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">
+            🎬 <span>Video</span>
+          </button>
+          <!-- Upload new file directly -->
+          <button onclick="document.getElementById('blogFileUpload').click()" title="Upload new file" style="display:flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:0.78rem;font-family:'Outfit',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">
+            📎 <span>File</span>
+          </button>
+          <input type="file" id="blogFileUpload" multiple accept="image/*,video/*,audio/*,.pdf,.doc,.docx" style="display:none" onchange="handleBlogFileUpload(event)"/>
+          <!-- Any file from gallery -->
+          <button onclick="openBlogMediaPicker('other')" title="Attach from Cloud Files" style="display:flex;align-items:center;gap:0.4rem;padding:0.5rem 0.9rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:0.78rem;font-family:'Outfit',sans-serif;transition:all 0.2s;" onmouseover="this.style.borderColor='#9c27b0';this.style.color='#ce93d8'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text2)'">
+            ☁️ <span>Cloud</span>
+          </button>
+        </div>
+        <div style="display:flex;gap:0.5rem;align-items:center;">
+          <button onclick="previewBlog()" style="padding:0.6rem 1.1rem;border-radius:100px;border:1px solid rgba(201,169,110,0.3);background:rgba(201,169,110,0.05);color:var(--gold);cursor:pointer;font-size:0.78rem;font-family:'Outfit',sans-serif;">👁️</button>
+          <button onclick="clearBlogForm()" style="padding:0.6rem 1.1rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;font-size:0.78rem;font-family:'Outfit',sans-serif;">Clear</button>
+          <button class="form-submit" style="width:auto;padding:0.65rem 1.6rem;border-radius:100px;" id="blogSubmitBtn" onclick="publishBlog()">🚀 Publish</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Media Picker Modal (pick from cloud gallery) -->
+    <div id="blogMediaPickerModal" style="display:none;position:fixed;inset:0;z-index:9500;background:rgba(7,9,13,0.97);backdrop-filter:blur(20px);overflow-y:auto;padding:2rem;">
+      <div style="max-width:900px;margin:2rem auto;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);">
+          <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;" id="mediaPickerTitle">☁️ Pick from Cloud Gallery</h3>
+          <button onclick="closeBlogMediaPicker()" style="width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid var(--border);color:var(--text2);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;">✕</button>
+        </div>
+        <div id="mediaPickerGrid" style="padding:1.2rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:0.8rem;min-height:200px;">
+          <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted);">⏳ Loading files...</div>
+        </div>
       </div>
     </div>
 
@@ -2147,13 +2251,31 @@ async function deleteSong(id){
 }
 
 function testPlaySong(url, title, emoji){
-  // Play in music player popup
-  document.getElementById('mpTrackName').textContent = title;
-  document.getElementById('mpDisc').textContent = emoji||'🎵';
-  document.getElementById('mpAudio').src = url;
-  document.getElementById('mpAudio').play();
+  // Load and play song in the floating music player
+  const nameEl = document.getElementById('mpTrackName') || document.getElementById('mpSong');
+  const artistEl = document.getElementById('mpTrackArtist') || document.getElementById('mpArtist');
+  const discEl = document.getElementById('mpDisc');
+  if(nameEl) nameEl.textContent = title;
+  if(artistEl) artistEl.textContent = 'Rijan Thapa Kaji';
+  if(discEl) discEl.textContent = emoji||'🎵';
+
+  const mpAudio = document.getElementById('mpAudio');
+  mpAudio.src = url;
+  mpAudio.play().catch(()=>{});
   setPlaying(true);
-  document.getElementById('musicPlayer').classList.add('open');
+
+  // Show the floating music player (remove hidden, ensure open)
+  const player = document.getElementById('musicPlayer');
+  player.classList.remove('hidden');
+  player.classList.add('open');
+
+  // Hide the open-btn if present
+  const openBtn = document.getElementById('mpOpenBtn');
+  if(openBtn) openBtn.classList.remove('show');
+
+  // Close the Music Manager dashboard tab → switch to gallery so user sees the player
+  switchTab('gallery');
+  showToast('🎵 Now playing: ' + title, 'success');
 }
 
 async function refreshPlaylist(){
@@ -3057,9 +3179,166 @@ function toggleMusic(){
 initMusicPlayer();
 
 // ═══════════════════════════════════════════
-//  BLOG SYSTEM
+//  BLOG SYSTEM — Facebook-style with media
 // ═══════════════════════════════════════════
 const coverClasses = ['blog-cover-1','blog-cover-2','blog-cover-3','blog-cover-4','blog-cover-5','blog-cover-6'];
+
+// Blog media state
+let blogMediaUrl = '';
+let blogMediaType = ''; // 'image' | 'video' | 'file'
+let blogAttachments = []; // [{url, name, type}]
+let blogMediaPickerMode = 'image'; // what we're picking
+
+function openBlogMediaPicker(mode){
+  blogMediaPickerMode = mode;
+  const titles = {image:'🖼️ Pick a Photo', video:'🎬 Pick a Video', other:'☁️ Pick from Cloud Files'};
+  document.getElementById('mediaPickerTitle').textContent = titles[mode]||'Pick File';
+  document.getElementById('blogMediaPickerModal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+  renderMediaPickerGrid();
+}
+
+function closeBlogMediaPicker(){
+  document.getElementById('blogMediaPickerModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function renderMediaPickerGrid(){
+  const grid = document.getElementById('mediaPickerGrid');
+  let files = allFiles || [];
+  if(blogMediaPickerMode === 'image') files = files.filter(f=>getCat(f)==='image');
+  else if(blogMediaPickerMode === 'video') files = files.filter(f=>getCat(f)==='video');
+  // 'other' shows all
+
+  if(files.length === 0){
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted);">
+      <div style="font-size:2.5rem;margin-bottom:0.8rem;">📂</div>
+      <p>No files found. Upload files in the Gallery tab first!</p>
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = '';
+  files.forEach(file => {
+    const cat = getCat(file);
+    const item = document.createElement('div');
+    item.style.cssText = 'position:relative;border:2px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all 0.2s;aspect-ratio:1;';
+    item.onmouseover = () => { item.style.borderColor = 'var(--gold)'; item.style.transform = 'scale(1.03)'; };
+    item.onmouseout = () => { item.style.borderColor = 'var(--border)'; item.style.transform = 'scale(1)'; };
+
+    let inner = '';
+    if(cat === 'image'){
+      inner = `<img src="${file.url}" style="width:100%;height:100%;object-fit:cover;display:block;"/>`;
+    } else if(cat === 'video'){
+      inner = `<video src="${file.url}#t=0.5" muted preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block;"></video>
+               <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);">
+                 <div style="width:36px;height:36px;border-radius:50%;background:rgba(201,169,110,0.9);display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#07090d;">▶</div>
+               </div>`;
+    } else {
+      inner = `<div style="width:100%;height:100%;background:var(--surface);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.4rem;">
+                 <span style="font-size:2rem;">${getFileEmoji(file)}</span>
+                 <span style="font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);">${getExt(file.name)}</span>
+               </div>`;
+    }
+    inner += `<div style="position:absolute;bottom:0;left:0;right:0;padding:0.4rem 0.5rem;background:linear-gradient(transparent,rgba(7,9,13,0.8));font-size:0.6rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${file.name}</div>`;
+
+    item.innerHTML = inner;
+    item.onclick = () => selectBlogMedia(file, cat);
+    grid.appendChild(item);
+  });
+}
+
+function selectBlogMedia(file, cat){
+  if(blogMediaPickerMode === 'other'){
+    // Attach as link/file
+    blogAttachments.push({url: file.url, name: file.name, type: cat});
+    renderBlogAttachments();
+    closeBlogMediaPicker();
+    showToast('📎 File attached!', 'success');
+    return;
+  }
+  // Set as main media (photo/video)
+  blogMediaUrl = file.url;
+  blogMediaType = cat;
+  renderBlogMediaPreview();
+  closeBlogMediaPicker();
+}
+
+function renderBlogMediaPreview(){
+  const preview = document.getElementById('blogMediaPreview');
+  const content = document.getElementById('blogMediaContent');
+  if(!blogMediaUrl){ preview.style.display = 'none'; return; }
+  preview.style.display = 'block';
+  if(blogMediaType === 'image'){
+    content.innerHTML = `<img src="${blogMediaUrl}" style="width:100%;max-height:400px;object-fit:cover;display:block;border-radius:8px;"/>`;
+  } else if(blogMediaType === 'video'){
+    content.innerHTML = `<video src="${blogMediaUrl}" controls playsinline style="width:100%;max-height:400px;border-radius:8px;display:block;background:#000;"></video>`;
+  } else {
+    content.innerHTML = `<div style="padding:1.5rem;text-align:center;"><div style="font-size:2.5rem;margin-bottom:0.5rem;">🎵</div><div style="font-size:0.85rem;color:var(--text2);">${blogMediaUrl.split('/').pop()}</div></div>`;
+  }
+}
+
+function removeBlogMedia(){
+  blogMediaUrl = '';
+  blogMediaType = '';
+  document.getElementById('blogMediaPreview').style.display = 'none';
+}
+
+function renderBlogAttachments(){
+  const wrap = document.getElementById('blogAttachList');
+  const items = document.getElementById('blogAttachItems');
+  if(blogAttachments.length === 0){ wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  items.innerHTML = '';
+  blogAttachments.forEach((att, i) => {
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.8rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;';
+    div.innerHTML = `<span style="font-size:1.1rem;">${att.type==='image'?'🖼️':att.type==='video'?'🎬':att.type==='audio'?'🎵':'📎'}</span>
+      <span style="flex:1;font-size:0.78rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${att.name}</span>
+      <a href="${att.url}" target="_blank" style="font-size:0.7rem;color:var(--gold);text-decoration:none;flex-shrink:0;">View ↗</a>
+      <button onclick="removeBlogAttachment(${i})" style="width:22px;height:22px;border-radius:50%;background:transparent;border:1px solid rgba(232,112,112,0.3);color:#e87070;cursor:pointer;font-size:0.65rem;flex-shrink:0;">✕</button>`;
+    items.appendChild(div);
+  });
+}
+
+function removeBlogAttachment(i){
+  blogAttachments.splice(i, 1);
+  renderBlogAttachments();
+}
+
+async function handleBlogFileUpload(e){
+  const files = Array.from(e.target.files);
+  if(!files.length) return;
+  showToast('⬆️ Uploading...', '');
+  // Upload via Cloudinary (reuse existing upload logic)
+  for(const file of files){
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', UPLOAD_PRESET);
+      const rt = file.type.startsWith('video/') ? 'video' : file.type.startsWith('audio/') ? 'video' : 'image';
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${rt}/upload`, {method:'POST', body:fd});
+      const data = await res.json();
+      if(data.secure_url){
+        const cat = file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : 'other';
+        if(!blogMediaUrl && (cat==='image'||cat==='video')){
+          blogMediaUrl = data.secure_url;
+          blogMediaType = cat;
+          renderBlogMediaPreview();
+        } else {
+          blogAttachments.push({url: data.secure_url, name: file.name, type: cat});
+          renderBlogAttachments();
+        }
+        showToast('✅ File uploaded & attached!', 'success');
+      }
+    } catch(err){
+      showToast('❌ Upload failed: '+err.message, 'error');
+    }
+  }
+  e.target.value = '';
+}
+
+
 
 async function loadBlog(){
   const grid = document.getElementById('blogGrid');
@@ -3080,12 +3359,26 @@ async function loadBlog(){
       const card = document.createElement('div');
       card.className='blog-card';
       card.onclick=()=>openBlogModal(post);
+
+      // Cover: use actual image if available, else colored cover
+      let coverHTML = '';
+      if(post.media_url && post.media_type==='image'){
+        coverHTML = `<div class="blog-cover" style="background:#0a0d13;padding:0;"><img src="${post.media_url}" style="width:100%;height:100%;object-fit:cover;display:block;opacity:0.92;"/></div>`;
+      } else if(post.media_url && post.media_type==='video'){
+        coverHTML = `<div class="blog-cover ${coverClasses[i%6]}" style="position:relative;">
+          <video src="${post.media_url}#t=0.5" muted preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.7;"></video>
+          <div style="position:relative;z-index:1;font-size:2.5rem;">▶</div>
+        </div>`;
+      } else {
+        coverHTML = `<div class="blog-cover ${coverClasses[i%6]}">${post.emoji||'✍️'}</div>`;
+      }
+
       card.innerHTML=`
-        <div class="blog-cover ${coverClasses[i%6]}">${post.emoji||'✍️'}</div>
+        ${coverHTML}
         <div class="blog-body">
           <div class="blog-cat">${post.category||'General'}</div>
-          <h3 class="blog-title">${post.title}</h3>
-          <p class="blog-excerpt">${(post.content||'').slice(0,120)}...</p>
+          <h3 class="blog-title">${post.title||'Story'}</h3>
+          <p class="blog-excerpt">${(post.content||'').slice(0,120)}${post.content&&post.content.length>120?'...':''}</p>
           <div class="blog-footer">
             <span class="blog-date">📅 ${date}</span>
             <span class="blog-read">Read more →</span>
@@ -3101,9 +3394,49 @@ async function loadBlog(){
 function openBlogModal(post){
   document.getElementById('bModalEmoji').textContent = post.emoji||'✍️';
   document.getElementById('bModalCat').textContent = post.category||'';
-  document.getElementById('bModalTitle').textContent = post.title;
+  document.getElementById('bModalTitle').textContent = post.title||'';
   document.getElementById('bModalDate').textContent = new Date(post.created_at).toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
-  document.getElementById('bModalContent').textContent = post.content||'';
+
+  // Render content with media
+  const contentEl = document.getElementById('bModalContent');
+  let html = '';
+
+  // Main media
+  if(post.media_url){
+    if(post.media_type==='image'){
+      html += `<div style="margin-bottom:1.2rem;border-radius:10px;overflow:hidden;"><img src="${post.media_url}" style="width:100%;max-height:480px;object-fit:cover;display:block;"/></div>`;
+    } else if(post.media_type==='video'){
+      html += `<div style="margin-bottom:1.2rem;border-radius:10px;overflow:hidden;"><video src="${post.media_url}" controls playsinline style="width:100%;max-height:400px;background:#000;display:block;"></video></div>`;
+    }
+  }
+
+  // Text content
+  if(post.content){
+    const paragraphs = (post.content||'').split('\n').filter(l=>l.trim());
+    html += paragraphs.map(p=>`<p style="color:var(--text2);line-height:1.9;margin-bottom:1rem;font-size:0.96rem;">${p}</p>`).join('');
+  }
+
+  // Attachments
+  if(post.attachments){
+    try {
+      const atts = JSON.parse(post.attachments);
+      if(atts && atts.length){
+        html += `<div style="margin-top:1.2rem;border-top:1px solid var(--border);padding-top:1rem;">
+          <div style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">Attachments</div>
+          <div style="display:flex;flex-direction:column;gap:0.4rem;">`;
+        atts.forEach(att => {
+          html += `<a href="${att.url}" target="_blank" style="display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0.8rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;text-decoration:none;color:var(--text2);font-size:0.8rem;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+            <span>${att.type==='image'?'🖼️':att.type==='video'?'🎬':att.type==='audio'?'🎵':'📎'}</span>
+            <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${att.name}</span>
+            <span style="color:var(--gold);font-size:0.72rem;flex-shrink:0;">↗ Open</span>
+          </a>`;
+        });
+        html += `</div></div>`;
+      }
+    } catch(e){}
+  }
+
+  contentEl.innerHTML = html || `<p style="color:var(--muted);">No content.</p>`;
   document.getElementById('blogModal').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -3118,21 +3451,24 @@ async function publishBlog(){
   const content = document.getElementById('blogContent')?.value.trim();
   const category = document.getElementById('blogCat')?.value;
   const emoji = document.getElementById('blogEmoji')?.value||'✍️';
-  if(!title||!content){showToast('⚠️ Title ra Content likhnus!','error');return;}
+  if(!content && !blogMediaUrl){showToast('⚠️ Write something or add a photo/video!','error');return;}
 
   const btn = document.getElementById('blogSubmitBtn');
   if(btn){btn.disabled=true;btn.textContent='Saving...';}
 
+  // Build media metadata
+  const media_url = blogMediaUrl || null;
+  const media_type = blogMediaType || null;
+  const attachments_json = blogAttachments.length ? JSON.stringify(blogAttachments) : null;
+
   try {
     if(editingBlogId){
-      // UPDATE existing post
-      const {error} = await sb.from('blog_posts').update({title,content,category,emoji}).eq('id',editingBlogId);
+      const {error} = await sb.from('blog_posts').update({title:title||'Untitled',content:content||'',category,emoji,media_url,media_type,attachments:attachments_json}).eq('id',editingBlogId);
       if(error) throw error;
       showToast('✅ Post updated!','success');
       cancelBlogEdit();
     } else {
-      // CREATE new post
-      const {error} = await sb.from('blog_posts').insert({title,content,category,emoji});
+      const {error} = await sb.from('blog_posts').insert({title:title||'',content:content||'',category,emoji,media_url,media_type,attachments:attachments_json});
       if(error) throw error;
       showToast('🚀 Blog post published!','success');
       clearBlogForm();
@@ -3142,7 +3478,7 @@ async function publishBlog(){
   } catch(e){
     showToast('❌ '+e.message,'error');
   } finally {
-    if(btn){btn.disabled=false;btn.textContent=editingBlogId?'💾 Update Post':'🚀 Publish Post';}
+    if(btn){btn.disabled=false;btn.textContent=editingBlogId?'💾 Update Post':'🚀 Publish';}
   }
 }
 
@@ -3151,6 +3487,12 @@ function clearBlogForm(){
     const el=document.getElementById(id);
     if(el) el.value='';
   });
+  // Reset media
+  blogMediaUrl = '';
+  blogMediaType = '';
+  blogAttachments = [];
+  renderBlogMediaPreview();
+  renderBlogAttachments();
 }
 
 // Load blog on page load
