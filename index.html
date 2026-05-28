@@ -1213,46 +1213,142 @@ section+section::before{
 </section>
 
 <!-- SOCIAL -->
+<style>
+.social-orbs{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:0.12;animation:orbFloat 8s ease-in-out infinite;}
+.orb1{width:300px;height:300px;background:#4267B2;top:-80px;left:-80px;animation-delay:0s;}
+.orb2{width:250px;height:250px;background:#E1306C;top:20%;right:-60px;animation-delay:2s;}
+.orb3{width:200px;height:200px;background:#FF0000;bottom:-60px;left:30%;animation-delay:4s;}
+.orb4{width:180px;height:180px;background:#69C9D0;bottom:10%;right:20%;animation-delay:6s;}
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.05);}}
+.social-grid-3d{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;position:relative;z-index:1;}
+.social-grid-3d .card-wide{grid-column:1/-1;}
+.s3d-card{position:relative;border-radius:20px;padding:1.8rem;text-decoration:none;display:block;overflow:hidden;transition:transform 0.4s cubic-bezier(.22,1,.36,1),box-shadow 0.4s;cursor:pointer;}
+.s3d-card::before{content:'';position:absolute;inset:0;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px);z-index:0;}
+.s3d-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3),transparent);z-index:1;}
+.s3d-card:hover{transform:translateY(-10px) rotateX(3deg) scale(1.02);}
+.s3d-card.fb{background:linear-gradient(135deg,rgba(66,103,178,0.3),rgba(66,103,178,0.08));box-shadow:0 8px 32px rgba(66,103,178,0.15);}
+.s3d-card.ig{background:linear-gradient(135deg,rgba(225,48,108,0.3),rgba(253,179,75,0.08));box-shadow:0 8px 32px rgba(225,48,108,0.15);}
+.s3d-card.yt{background:linear-gradient(135deg,rgba(255,0,0,0.3),rgba(255,0,0,0.05));box-shadow:0 8px 32px rgba(255,0,0,0.15);}
+.s3d-card.tt{background:linear-gradient(135deg,rgba(105,201,208,0.25),rgba(0,0,0,0.2));box-shadow:0 8px 32px rgba(105,201,208,0.15);}
+.s3d-card:hover.fb{box-shadow:0 30px 60px rgba(66,103,178,0.4);}
+.s3d-card:hover.ig{box-shadow:0 30px 60px rgba(225,48,108,0.4);}
+.s3d-card:hover.yt{box-shadow:0 30px 60px rgba(255,0,0,0.4);}
+.s3d-card:hover.tt{box-shadow:0 30px 60px rgba(105,201,208,0.4);}
+.s3d-inner{position:relative;z-index:2;}
+.s3d-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;}
+.s3d-logo{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;border:1px solid rgba(255,255,255,0.2);}
+.s3d-logo.fb{background:linear-gradient(135deg,#4267B2,#5b7fc4);}
+.s3d-logo.ig{background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);}
+.s3d-logo.yt{background:linear-gradient(135deg,#FF0000,#cc0000);}
+.s3d-logo.tt{background:linear-gradient(135deg,#010101,#1a1a2e);}
+.s3d-platform{font-size:1.1rem;font-weight:600;color:var(--text);letter-spacing:0.02em;}
+.s3d-handle{font-size:0.78rem;color:var(--text2);margin-top:2px;}
+.s3d-badge{margin-left:auto;padding:0.25rem 0.7rem;border-radius:100px;font-size:0.7rem;font-weight:500;letter-spacing:0.05em;}
+.s3d-badge.active{background:rgba(76,175,80,0.15);color:#81c784;border:1px solid rgba(76,175,80,0.2);}
+.s3d-badge.hot{background:rgba(255,100,0,0.15);color:#ff8c42;border:1px solid rgba(255,100,0,0.2);}
+.s3d-stats{display:flex;gap:1.5rem;margin-bottom:1.2rem;}
+.s3d-stat-val{font-size:1.1rem;font-weight:700;color:var(--text);display:block;}
+.s3d-stat-label{font-size:0.7rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.08em;}
+.s3d-bar-wrap{height:3px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;margin-bottom:1.2rem;}
+.s3d-bar-fill{height:100%;border-radius:3px;}
+.s3d-bar-fill.fb{background:linear-gradient(90deg,#4267B2,#7b9fd4);}
+.s3d-bar-fill.ig{background:linear-gradient(90deg,#f09433,#bc1888);}
+.s3d-bar-fill.yt{background:linear-gradient(90deg,#FF0000,#ff6b6b);}
+.s3d-bar-fill.tt{background:linear-gradient(90deg,#69C9D0,#EE1D52);}
+.s3d-cta{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.8rem;font-weight:500;color:var(--gold);border:1px solid rgba(201,169,110,0.25);padding:0.4rem 1rem;border-radius:100px;background:rgba(201,169,110,0.05);}
+.s3d-shine{position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse 30% 20% at 60% 40%,rgba(255,255,255,0.06),transparent);pointer-events:none;border-radius:20px;}
+.s3d-particle{position:absolute;width:3px;height:3px;border-radius:50%;opacity:0;animation:particleRise 3s ease-in infinite;}
+@keyframes particleRise{0%{opacity:0;transform:translateY(0) scale(0);}20%{opacity:0.6;}80%{opacity:0.2;}100%{opacity:0;transform:translateY(-80px) scale(1.5);}}
+</style>
+
 <section id="social">
-  <div class="section-inner">
-    <div class="reveal">
-      <div class="s-label">Social Media</div>
-      <h2 class="s-title">My Social World</h2>
+  <div class="section-inner" style="position:relative;">
+    <div class="reveal" style="text-align:center;margin-bottom:4rem;">
+      <div class="s-label" style="justify-content:center;">Connect With Me</div>
+      <h2 class="s-title">My Social Universe</h2>
+      <p style="color:var(--text2);font-size:0.95rem;max-width:420px;margin:1rem auto 0;">Follow my journey across platforms — music, mountains &amp; moments 🇳🇵</p>
     </div>
-    <div class="platform-tabs reveal">
-      <button class="ptab active-fb" onclick="showFeed('fb',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#6b9ae8"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        Facebook
-      </button>
-      <button class="ptab" onclick="showFeed('ig',this)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#e86891"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        Instagram
-      </button>
+    <div class="social-orbs">
+      <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div><div class="orb orb4"></div>
     </div>
-    <div id="feed-fb" class="reveal">
-      <div class="feed-notice">
-        <div class="feed-notice-icon">📘</div>
-        <p>Connect your Facebook page to display posts here automatically.<br/><strong>How to set up:</strong> Use Facebook's official <a href="https://developers.facebook.com/docs/plugins/page-plugin" target="_blank">Page Plugin embed code</a>.<br/><br/>For now, follow me directly on Facebook! 👇</p>
-        <br/><a href="https://www.facebook.com/profile.php?id=61588937017778" target="_blank" class="btn btn-ghost">Visit My Facebook →</a>
-      </div>
-    </div>
-    <div id="feed-ig" class="reveal" style="display:none;">
-      <div class="ig-grid">
-        <div class="ig-card"><div class="ig-img g1"><div class="ig-emoji">🏔️</div><div class="ig-overlay">❤️ 142 &nbsp; 💬 18</div></div><div class="ig-body"><div class="ig-meta"><div class="ig-avatar">R</div><span class="ig-user">rijanthapa_</span><span class="ig-time">2d ago</span></div><p class="ig-caption">Mountains heal the soul. Nepal is truly magical 🏔️ #Nepal #Himalayas</p><div class="ig-stats"><span>❤️ 142</span><span>💬 18</span></div></div></div>
-        <div class="ig-card"><div class="ig-img g2"><div class="ig-emoji">🎵</div><div class="ig-overlay">❤️ 231 &nbsp; 💬 42</div></div><div class="ig-body"><div class="ig-meta"><div class="ig-avatar">R</div><span class="ig-user">rijanthapa_</span><span class="ig-time">5d ago</span></div><p class="ig-caption">Late night melodies 🎶 Music is my language. #MusicLover #Nepal</p><div class="ig-stats"><span>❤️ 231</span><span>💬 42</span></div></div></div>
-        <div class="ig-card"><div class="ig-img g5"><div class="ig-emoji">🌄</div><div class="ig-overlay">❤️ 89 &nbsp; 💬 11</div></div><div class="ig-body"><div class="ig-meta"><div class="ig-avatar">R</div><span class="ig-user">rijanthapa_</span><span class="ig-time">1w ago</span></div><p class="ig-caption">Golden hour never disappoints 🌄 #GoldenHour #Grateful</p><div class="ig-stats"><span>❤️ 89</span><span>💬 11</span></div></div></div>
-        <div class="ig-card"><div class="ig-img g6"><div class="ig-emoji">🎸</div><div class="ig-overlay">❤️ 178 &nbsp; 💬 29</div></div><div class="ig-body"><div class="ig-meta"><div class="ig-avatar">R</div><span class="ig-user">rijanthapa_</span><span class="ig-time">2w ago</span></div><p class="ig-caption">New strings, new vibes 🎸 #Guitar #Music</p><div class="ig-stats"><span>❤️ 178</span><span>💬 29</span></div></div></div>
-      </div>
-    </div>
-    <div class="socials-row reveal">
-      <a href="https://www.facebook.com/profile.php?id=61588937017778" target="_blank" class="soc-card fb"><div class="soc-icon">📘</div><div class="soc-name">Facebook</div><div class="soc-handle">Rijan Thapa Kaji</div><div class="soc-cta">Follow →</div></a>
-      <a href="https://www.instagram.com/rijanthapkajisarkar/" target="_blank" class="soc-card ig"><div class="soc-icon">📸</div><div class="soc-name">Instagram</div><div class="soc-handle">@rijanthapkajisarkar</div><div class="soc-cta">Follow →</div></a>
-      <a href="https://www.youtube.com/@rijanthapakaji" target="_blank" class="soc-card yt"><div class="soc-icon">🎬</div><div class="soc-name">YouTube</div><div class="soc-handle">@rijanthapakaji</div><div class="soc-cta">Subscribe →</div></a>
-      <a href="https://www.tiktok.com/@kaji_mr_rezan_yt" target="_blank" class="soc-card tt"><div class="soc-icon">🎵</div><div class="soc-name">TikTok</div><div class="soc-handle">@kaji_mr_rezan_yt</div><div class="soc-cta">Follow →</div></a>
+    <div class="social-grid-3d reveal">
+      <a href="https://www.instagram.com/rijanthapkajisarkar/" target="_blank" class="s3d-card ig card-wide">
+        <div class="s3d-shine"></div>
+        <div class="s3d-particle" style="left:10%;bottom:20%;background:#f09433;animation-delay:0s;animation-duration:2.5s;"></div>
+        <div class="s3d-particle" style="left:50%;bottom:15%;background:#bc1888;animation-delay:1s;animation-duration:2s;"></div>
+        <div class="s3d-particle" style="left:85%;bottom:10%;background:#f09433;animation-delay:1.8s;animation-duration:3s;"></div>
+        <div class="s3d-inner">
+          <div class="s3d-header">
+            <div class="s3d-logo ig">📸</div>
+            <div><div class="s3d-platform">Instagram</div><div class="s3d-handle">@rijanthapkajisarkar</div></div>
+            <span class="s3d-badge active">✦ Most Active</span>
+          </div>
+          <div class="s3d-stats">
+            <div><span class="s3d-stat-val">Photos</span><span class="s3d-stat-label">Gallery</span></div>
+            <div><span class="s3d-stat-val">Reels</span><span class="s3d-stat-label">Videos</span></div>
+            <div><span class="s3d-stat-val">Stories</span><span class="s3d-stat-label">Daily Life</span></div>
+            <div><span class="s3d-stat-val">Nepal 🏔️</span><span class="s3d-stat-label">Vibes</span></div>
+          </div>
+          <div class="s3d-bar-wrap"><div class="s3d-bar-fill ig" style="width:88%"></div></div>
+          <span class="s3d-cta">Follow on Instagram →</span>
+        </div>
+      </a>
+      <a href="https://www.youtube.com/@rijanthapakaji" target="_blank" class="s3d-card yt">
+        <div class="s3d-shine"></div>
+        <div class="s3d-particle" style="left:20%;bottom:10%;background:#FF0000;animation-delay:0.3s;"></div>
+        <div class="s3d-particle" style="left:60%;bottom:15%;background:#ff6b6b;animation-delay:1.2s;"></div>
+        <div class="s3d-inner">
+          <div class="s3d-header">
+            <div class="s3d-logo yt">🎬</div>
+            <div><div class="s3d-platform">YouTube</div><div class="s3d-handle">@rijanthapakaji</div></div>
+          </div>
+          <div class="s3d-stats">
+            <div><span class="s3d-stat-val">Music</span><span class="s3d-stat-label">Videos</span></div>
+            <div><span class="s3d-stat-val">Vlogs</span><span class="s3d-stat-label">Travel</span></div>
+          </div>
+          <div class="s3d-bar-wrap"><div class="s3d-bar-fill yt" style="width:72%"></div></div>
+          <span class="s3d-cta">Subscribe →</span>
+        </div>
+      </a>
+      <a href="https://www.facebook.com/rijuthapakaji" target="_blank" class="s3d-card fb">
+        <div class="s3d-shine"></div>
+        <div class="s3d-particle" style="left:30%;bottom:10%;background:#4267B2;animation-delay:0.7s;"></div>
+        <div class="s3d-inner">
+          <div class="s3d-header">
+            <div class="s3d-logo fb">📘</div>
+            <div><div class="s3d-platform">Facebook</div><div class="s3d-handle">Rijan Thapa Kaji</div></div>
+          </div>
+          <div class="s3d-stats">
+            <div><span class="s3d-stat-val">Posts</span><span class="s3d-stat-label">Updates</span></div>
+            <div><span class="s3d-stat-val">Photos</span><span class="s3d-stat-label">Albums</span></div>
+          </div>
+          <div class="s3d-bar-wrap"><div class="s3d-bar-fill fb" style="width:65%"></div></div>
+          <span class="s3d-cta">Follow →</span>
+        </div>
+      </a>
+      <a href="https://www.tiktok.com/@kaji_mr_rezan_yt" target="_blank" class="s3d-card tt card-wide">
+        <div class="s3d-shine"></div>
+        <div class="s3d-particle" style="left:15%;bottom:10%;background:#69C9D0;animation-delay:0.2s;"></div>
+        <div class="s3d-particle" style="left:70%;bottom:10%;background:#EE1D52;animation-delay:1.6s;"></div>
+        <div class="s3d-inner">
+          <div class="s3d-header">
+            <div class="s3d-logo tt">🎵</div>
+            <div><div class="s3d-platform">TikTok</div><div class="s3d-handle">@kaji_mr_rezan_yt</div></div>
+            <span class="s3d-badge hot">🔥 Trending</span>
+          </div>
+          <div class="s3d-stats">
+            <div><span class="s3d-stat-val">Short</span><span class="s3d-stat-label">Videos</span></div>
+            <div><span class="s3d-stat-val">Music</span><span class="s3d-stat-label">Trends</span></div>
+            <div><span class="s3d-stat-val">Nepal</span><span class="s3d-stat-label">Content</span></div>
+          </div>
+          <div class="s3d-bar-wrap"><div class="s3d-bar-fill tt" style="width:78%"></div></div>
+          <span class="s3d-cta">Follow on TikTok →</span>
+        </div>
+      </a>
     </div>
   </div>
 </section>
-
 <!-- CONTACT -->
 <section id="contact">
   <div class="section-inner">
@@ -1280,7 +1376,7 @@ section+section::before{
         </div>
         <span class="cm-arrow">→</span>
       </a>
-      <a href="https://www.facebook.com/profile.php?id=61588937017778" target="_blank" class="cm">
+      <a href="https://www.facebook.com/rijuthapakaji" target="_blank" class="cm">
         <div class="cm-icon">📘</div>
         <div class="cm-info">
           <div class="cm-label">Facebook</div>
