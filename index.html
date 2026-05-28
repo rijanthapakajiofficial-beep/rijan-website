@@ -1163,37 +1163,6 @@ section+section::before{
 </div>
 
 <!-- MUSIC PLAYER -->
-<div id="musicPlayer">
-  <div class="mp-header">
-    <span class="mp-title">🎵 Music Player</span>
-    <button class="mp-close" onclick="toggleMusic()">✕</button>
-  </div>
-  <div class="mp-track-info">
-    <div class="mp-disc" id="mpDisc">🎵</div>
-    <div>
-      <div class="mp-track-name" id="mpTrackName">Select a song</div>
-      <div class="mp-track-artist" id="mpTrackArtist">Rijan Thapa Kaji</div>
-    </div>
-  </div>
-  <div class="mp-progress" id="mpProgress" onclick="seekMusic(event)">
-    <div class="mp-progress-fill" id="mpFill"></div>
-  </div>
-  <div class="mp-times">
-    <span id="mpCurrent">0:00</span>
-    <span id="mpDuration">0:00</span>
-  </div>
-  <div class="mp-controls">
-    <button class="mp-btn" onclick="prevSong()">⏮</button>
-    <button class="mp-play-btn" id="mpPlayBtn" onclick="togglePlay()">▶</button>
-    <button class="mp-btn" onclick="nextSong()">⏭</button>
-  </div>
-  <div class="mp-playlist" id="mpPlaylist"></div>
-  <audio id="mpAudio"></audio>
-</div>
-
-<!-- FLOATING BUTTONS -->
-<div id="visitorCounter"><div class="visitor-dot"></div><span id="visitorCount">...</span> online</div>
-<button id="musicToggle" onclick="toggleMusic()" title="Music Player">🎵</button>
 <button id="themeToggle" onclick="toggleTheme()" title="Toggle Dark/Light">🌙</button>
 <button id="langToggle" onclick="toggleLang()">🇳🇵 NP</button>
 
@@ -1448,7 +1417,7 @@ section+section::before{
 </div>
 
 <!-- MUSIC PLAYER -->
-<div id="musicPlayer">
+<div id="musicPlayer" class="hidden">
   <div class="mp-header">
     <span class="mp-label">🎵 Now Playing</span>
     <div class="mp-close" onclick="toggleMusicPlayer()">✕</div>
@@ -1475,7 +1444,7 @@ section+section::before{
   </div>
   <audio id="mpAudio"></audio>
 </div>
-<button id="mpOpenBtn" onclick="toggleMusicPlayer()" title="Music Player">🎵</button>
+<button id="mpOpenBtn" onclick="toggleMusicPlayer()" title="Music Player" style="display:none;">🎵</button>
 
 <!-- SCROLL TO TOP -->
 <div id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
@@ -1613,7 +1582,8 @@ function doLogin(){
     document.getElementById('private-dashboard').style.display='block';
     document.getElementById('private-dashboard').scrollIntoView({behavior:'smooth'});
     loadCloudFiles();
-    refreshPlaylist(); // Load songs from Supabase
+    refreshPlaylist();
+    document.getElementById('mpOpenBtn').style.display='flex';
   } else {
     err.style.display='block';
     document.getElementById('loginPass').value='';
@@ -1631,6 +1601,12 @@ function doLogout(){
   document.getElementById('loginPass').value='';
   document.getElementById('private').scrollIntoView({behavior:'smooth'});
   allFiles=[];
+  // Hide music player on logout
+  const mp = document.getElementById('musicPlayer');
+  mp.classList.add('hidden');
+  document.getElementById('mpOpenBtn').style.display='none';
+  const a = document.getElementById('mpAudio');
+  if(a){ a.pause(); a.src=''; }
 }
 
 // ═══════════════════════════════════════════════════
@@ -3240,7 +3216,8 @@ function setPlaying(state){
   isPlaying = state;
   document.getElementById('mpPlayBtn').textContent = state ? '⏸' : '▶';
   document.getElementById('mpDisc').classList.toggle('spinning', state);
-  document.getElementById('musicToggle').classList.toggle('playing', state);
+  const mt = document.getElementById('musicToggle');
+  if(mt) mt.classList.toggle('playing', state);
 }
 
 function prevSong(){ currentSong=(currentSong-1+playlist.length)%playlist.length; playSong(currentSong); }
@@ -3269,7 +3246,11 @@ audio.addEventListener('ended', nextSong);
 
 function toggleMusic(){
   const player = document.getElementById('musicPlayer');
-  player.classList.toggle('open');
+  player.classList.toggle('hidden');
+}
+function toggleMusicPlayer(){
+  const player = document.getElementById('musicPlayer');
+  player.classList.toggle('hidden');
 }
 
 initMusicPlayer();
