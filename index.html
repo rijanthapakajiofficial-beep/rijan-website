@@ -1511,8 +1511,10 @@ async function loadCloudFiles(){
   try{
     const {data,error}=await sb.from('files').select('*').order('uploaded_at',{ascending:false});
     if(error) throw error;
-    allFiles=(data||[]).filter(f=>!f.trashed);
-    trashedFiles=(data||[]).filter(f=>f.trashed);
+    const all=data||[];
+    // Support tables both with and without the trashed column
+    allFiles=all.filter(f=>!f.trashed);
+    trashedFiles=all.filter(f=>f.trashed);
     renderFiles();
     updateStats();
     updateSidebarCounts();
@@ -1700,11 +1702,18 @@ function renderFiles(){
 
 function renderFolders(grid){
   const folders={};
-  allFiles.forEach(f=>{if(f.folder_name){if(!folders[f.folder_name])folders[f.folder_name]=[];folders[f.folder_name].push(f);}});
+  allFiles.forEach(f=>{
+    // Support both folder_name column and path-based grouping
+    const fn=f.folder_name||(f.name&&f.name.includes('/')?f.name.split('/')[0]:null);
+    if(fn){
+      if(!folders[fn]) folders[fn]=[];
+      folders[fn].push(f);
+    }
+  });
   const list=Object.entries(folders);
   document.getElementById('fileCount').textContent=list.length+' folders';
   if(list.length===0){
-    grid.innerHTML=`<div class="empty-state"><div class="empty-icon">🗂️</div><div class="empty-title">No folders yet</div><div class="empty-sub">Use Upload Folder to create one</div></div>`;
+    grid.innerHTML=`<div class="empty-state"><div class="empty-icon">🗂️</div><div class="empty-title">No folders yet</div><div class="empty-sub">Use "Upload Folder" button to upload a whole folder</div></div>`;
     return;
   }
   grid.innerHTML='';
@@ -1713,40 +1722,92 @@ function renderFolders(grid){
     card.className='folder-card';
     const previews=files.slice(0,4).map(f=>{
       const cat=getCat(f);
-      if(cat==='image') return `<img src="${f.url}" loading="lazy"/>`;
-      if(cat==='video') return `<video src="${f.url}#t=0.5" preload="metadata" muted></video>`;
-      return `<div style="display:flex;align-items:center;justify-content:center;background:var(--surface);font-size:1.2rem;">${getFileEmoji(f)}</div>`;
-    }).join('');
+      if(cat==='image') return `<img src="${f.url}" loading="lazy" style="width:100%;height:100%;object-fit:cover;"/>`;
+      if(cat==='video') return `<video src="${f.url}#t=0.5" preload="metadata" muted style="width:100%;height:100%;object-fit:cover;"></video>`;
+      return `<div style="display:flex;align-items:center;justify-content:center;background:var(--surface);font-size:1.4rem;width:100%;height:100%;">${getFileEmoji(f)}</div>`;
+    });
+    // Fill to 4 slots
+    while(previews.length<4) previews.push(`<div style="background:var(--surface);width:100%;height:100%;"></div>`);
     const totalSize=files.reduce((a,f)=>a+(f.size||0),0);
+    const safeName=name.replace(/'/g,"\\'");
     card.innerHTML=`
-      <div class="folder-thumb">${previews||'<div class="folder-thumb-empty">🗂️</div>'}</div>
-      <div class="folder-info"><div class="folder-name">🗂️ ${name}</div><div class="folder-meta">${files.length} files · ${formatSize(totalSize)}</div></div>
+      <div class="folder-thumb">${previews.join('')}</div>
+      <div class="folder-info">
+        <div class="folder-name">🗂️ ${name}</div>
+        <div class="folder-meta">${files.length} file${files.length!==1?'s':''} · ${formatSize(totalSize)||'—'}</div>
+      </div>
       <div class="folder-actions">
-        <button class="f-action" onclick="openFolder('${name}')">👁️ Open</button>
-        <button class="f-action danger" onclick="deleteFolder('${name}')">🗑️ Delete</button>
+        <button class="f-action" onclick="event.stopPropagation();openFolder('${safeName}')">👁️ Open</button>
+        <button class="f-action danger" onclick="event.stopPropagation();deleteFolder('${safeName}')">🗑️ Delete</button>
       </div>`;
+    card.onclick=()=>openFolder(name);
     grid.appendChild(card);
   });
 }
 
 function openFolder(name){
-  searchQuery=`folder:${name}`;
-  currentSidebarView='all';
-  const filesInFolder=allFiles.filter(f=>f.folder_name===name);
   const grid=document.getElementById('filesGrid');
+  grid.className=`files-grid${currentViewMode==='list'?' list-view':''}`;
+  // Match by folder_name OR by path prefix
+  const filesInFolder=allFiles.filter(f=>
+    f.folder_name===name ||
+    (f.name&&f.name.startsWith(name+'/'))
+  );
   document.getElementById('driveTitle').textContent=`🗂️ ${name}`;
-  document.getElementById('fileCount').textContent=filesInFolder.length+' files';
-  grid.innerHTML='';
-  if(filesInFolder.length===0){
+  document.getElementById('fileCount').textContent=filesInFolder.length+' file'+(filesInFolder.length!==1?'s':'');
+
+  // Add back breadcrumb
+  document.getElementById('breadcrumb').innerHTML=`
+    <span class="breadcrumb-item" onclick="setSidebarView('folders',document.getElementById('sb-folders'))">Folders</span>
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-item" style="color:var(--text);">🗂️ ${name}</span>`;
+
+  if(!filesInFolder.length){
     grid.innerHTML=`<div class="empty-state"><div class="empty-icon">🗂️</div><div class="empty-title">Empty folder</div></div>`;
     return;
   }
-  // Temporarily override and render folder files
-  const prevAllFiles=allFiles;
-  allFiles=filesInFolder;
-  searchQuery='';
-  renderFiles();
-  allFiles=prevAllFiles;
+
+  // Render the files inside the folder
+  const mediaFiles=filesInFolder.filter(f=>['image','video'].includes(getCat(f)));
+  grid.innerHTML='';
+  filesInFolder.forEach(file=>{
+    const cat=getCat(file);
+    const mediaIdx=mediaFiles.indexOf(file);
+    const tags=getAiTags(file);
+
+    const card=document.createElement('div');
+    card.className=`file-card${selectedFiles.has(file.id)?' selected':''}`;
+    card.oncontextmenu=e=>{e.preventDefault();showCtxMenu(e,file);};
+
+    let mediaHTML='';
+    if(cat==='image'){
+      mediaHTML=`<div class="file-thumb" onclick="openImageModal('${file.url}','${file.name.replace(/'/g,"\\'")}',${mediaIdx})"><img src="${file.url}" loading="lazy"/><span class="file-type-badge">📷</span></div>`;
+    }else if(cat==='video'){
+      mediaHTML=`<div class="file-thumb" onclick="openVideoModal('${file.url}','${file.name.replace(/'/g,"\\'")}',${mediaIdx})"><video src="${file.url}#t=0.5" preload="metadata" muted playsinline style="width:100%;height:100%;object-fit:cover;"></video><div class="play-overlay"><div class="play-btn">▶</div></div><span class="file-type-badge">🎬</span></div>`;
+    }else if(cat==='audio'){
+      mediaHTML=`<div class="file-thumb" onclick="playAudioPreview('${file.url}','${file.name.replace(/'/g,"\\'")}','${file.type||''}')"><div class="file-type-icon">🎵</div><span class="file-type-badge">Audio</span></div>`;
+    }else{
+      mediaHTML=`<div class="file-thumb" onclick="window.open('${file.url}','_blank')" style="cursor:pointer;"><div class="file-type-icon">${getFileEmoji(file)}</div><span class="file-type-badge">${getExt(file.name)}</span></div>`;
+    }
+
+    const tagsHTML=tags.length?`<div class="ai-tags">${tags.map(t=>`<span class="ai-tag">${t}</span>`).join('')}</div>`:'';
+
+    card.innerHTML=`
+      <div class="file-checkbox" onclick="event.stopPropagation();toggleSelect(${file.id},this.closest('.file-card'))">✓</div>
+      ${mediaHTML}
+      <div class="file-info">
+        <div class="file-name" title="${file.name}">${file.name}</div>
+        <div class="file-meta">${formatSize(file.size||0)}</div>
+      </div>
+      ${tagsHTML}
+      <div class="file-actions">
+        <button class="f-action" onclick="event.stopPropagation();forceDownload('${file.url}','${file.name.replace(/'/g,"\\'")}')">⬇️</button>
+        <button class="f-action" onclick="event.stopPropagation();copyToClipboard('${file.url}')">🔗</button>
+        ${cat==='image'?`<button class="f-action" onclick="event.stopPropagation();runAiOnFile(${file.id})">🤖</button>`:''}
+        <button class="f-action danger" onclick="event.stopPropagation();trashFile(${file.id})">🗑️</button>
+      </div>`;
+    grid.appendChild(card);
+  });
 }
 
 async function deleteFolder(name){
@@ -1869,18 +1930,27 @@ async function uploadFiles(files,folderName=null){
 // TRASH / RESTORE / PERMANENT DELETE
 // ══════════════════════════════════
 async function trashFile(id){
-  if(!confirm('Move to trash?')) return;
-  await sb.from('files').update({trashed:true}).eq('id',id);
-  showToast('🗑️ Moved to trash','success');
-  await loadCloudFiles();
+  if(!confirm('Delete this file? This cannot be undone.')) return;
+  try{
+    // Try soft-delete first (trashed column), fall back to hard delete
+    const {error}=await sb.from('files').update({trashed:true}).eq('id',id);
+    if(error){
+      // Column doesn't exist — hard delete
+      await sb.from('files').delete().eq('id',id);
+    }
+    showToast('🗑️ File deleted!','success');
+    await loadCloudFiles();
+  }catch(e){showToast('❌ '+e.message,'error');}
 }
 async function restoreFile(id){
-  await sb.from('files').update({trashed:false}).eq('id',id);
-  showToast('♻️ File restored!','success');
-  await loadCloudFiles();
+  try{
+    await sb.from('files').update({trashed:false}).eq('id',id);
+    showToast('♻️ Restored!','success');
+    await loadCloudFiles();
+  }catch(e){showToast('❌ '+e.message,'error');}
 }
 async function permanentDelete(id){
-  if(!confirm('Permanently delete? This cannot be undone!')) return;
+  if(!confirm('Permanently delete? Cannot be undone!')) return;
   await sb.from('files').delete().eq('id',id);
   showToast('💀 Permanently deleted','success');
   await loadCloudFiles();
