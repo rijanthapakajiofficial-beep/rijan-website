@@ -2305,14 +2305,15 @@ async function sendReply(id,toEmail,toName){
       emailjs.init({publicKey: EJS_KEY});
     }
 
-    await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
-      to_name:    toName,
-      to_email:   toEmail,
-      from_name:  'Rijan Thapa Kaji',
-      from_email: 'rijanthapakajiofficial@gmail.com',
-      subject:    'Reply from Rijan Thapa Kaji 🙏',
-      message:    `Namaste ${toName}! 🙏\n\nThank you for reaching out!\n\n${text}\n\n---\nRijan Thapa Kaji 🇳🇵\nInstagram: @rijanthapkajisarkar`,
-      reason:     'Reply from Rijan',
+    // template_e7yff1h = Customer Confirmation template
+    // To Email = {{to_email}} — fan ko email ma directly jaanchha
+    await emailjs.send(EJS_SERVICE, 'template_e7yff1h', {
+      to_email:   toEmail,      // fan ko email — To Email field ma jaanchha
+      to_name:    toName,       // fan ko naam
+      from_name:  toName,       // template ma {{from_name}} xa — fan ko naam
+      from_email: toEmail,      // template ma {{from_email}} xa
+      message:    text,         // Rijan le lekheko reply
+      reason:     'Reply from Rijan Thapa Kaji 🙏',
     });
 
     showToast(`✅ Reply sent to ${toName} at ${toEmail}!`,'success');
