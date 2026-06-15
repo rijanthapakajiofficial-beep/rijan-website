@@ -2276,15 +2276,54 @@ function toggleReply(id){
 async function sendReply(id,toEmail,toName){
   const text=document.getElementById(`replyText-${id}`).value.trim();
   if(!text){showToast('⚠️ Write a reply first!','error');return;}
+
+  const sendBtn=document.querySelector(`#msg-${id} .msg-send-reply`);
+  if(sendBtn){sendBtn.textContent='Sending…';sendBtn.disabled=true;}
+
   try{
-    await sb.from('messages').update({replied:true,reply_text:text,replied_at:new Date().toISOString()}).eq('id',id);
-    const payload={access_key:W3F_KEY,subject:`Reply from Rijan Thapa Kaji 🙏`,from_name:'Rijan Thapa Kaji',email:toEmail,name:toName,message:`Namaste ${toName}! 🙏\n\nRijan replies:\n\n${text}\n\n— Rijan Thapa Kaji 🇳🇵`,replyto:'rijanthapakajiofficial@gmail.com'};
-    const res=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    const data=await res.json();
-    if(!data.success) throw new Error(data.message);
-    showToast(`✅ Reply sent to ${toName}!`,'success');
+    // 1. Save reply to Supabase
+    await sb.from('messages').update({
+      replied:true,
+      reply_text:text,
+      replied_at:new Date().toISOString()
+    }).eq('id',id);
+
+    // 2. Send email to fan via EmailJS
+    // EmailJS can send TO any email address — Web3Forms cannot
+    const EJS_SERVICE   = 'service_i14r6zk';
+    const EJS_TEMPLATE  = 'template_zo0l14w';
+    const EJS_KEY       = 'hRLKlFAYLVAOSM8TA';
+
+    // Load EmailJS if not already loaded
+    if(typeof emailjs === 'undefined'){
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src='https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+        s.onload=res;s.onerror=rej;
+        document.head.appendChild(s);
+      });
+      emailjs.init({publicKey: EJS_KEY});
+    }
+
+    await emailjs.send(EJS_SERVICE, EJS_TEMPLATE, {
+      to_name:    toName,
+      to_email:   toEmail,
+      from_name:  'Rijan Thapa Kaji',
+      from_email: 'rijanthapakajiofficial@gmail.com',
+      subject:    'Reply from Rijan Thapa Kaji 🙏',
+      message:    `Namaste ${toName}! 🙏\n\nThank you for reaching out!\n\n${text}\n\n---\nRijan Thapa Kaji 🇳🇵\nInstagram: @rijanthapkajisarkar`,
+      reason:     'Reply from Rijan',
+    });
+
+    showToast(`✅ Reply sent to ${toName} at ${toEmail}!`,'success');
     loadMessages();
-  }catch(e){showToast('❌ '+e.message,'error');}
+  }catch(e){
+    console.error('Reply error:',e);
+    // Even if email fails, the reply is saved in Supabase
+    showToast('⚠️ Saved but email failed: '+e.message,'error');
+    if(sendBtn){sendBtn.textContent='📤 Send Reply';sendBtn.disabled=false;}
+    loadMessages();
+  }
 }
 
 async function deleteMessage(id){
@@ -2531,9 +2570,10 @@ async function publishBlog(){
       showToast('✅ Updated!','success');cancelBlogEdit();
     }else{
       await sb.from('blog_posts').insert(payload);
-      showToast('🚀 Published!','success');clearBlogForm();
+      showToast('🚀 Published! Scroll down to see it in the Blog section 👇','success');clearBlogForm();
     }
-    loadMyBlogPosts();loadBlog();
+    loadMyBlogPosts();
+    await loadBlog();
   }catch(e){showToast('❌ '+e.message,'error');}
   finally{btn.disabled=false;btn.textContent=editingBlogId?'💾 Update':'🚀 Publish';}
 }
@@ -2601,26 +2641,45 @@ async function loadMyBlogPosts(){
 // PUBLIC BLOG
 // ══════════════════════════════════
 async function loadBlog(){
-  const grid=document.getElementById('blogGrid');
-  if(!grid) return;
-  const {data}=await sb.from('blog_posts').select('*').order('created_at',{ascending:false});
-  if(!data||!data.length){
-    grid.innerHTML='<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">✍️</div><div class="empty-title">No blog posts yet</div><div class="empty-sub">Write your first story from the dashboard</div></div>';
-    return;
+  // Select ALL blogGrid elements (there may be duplicates in HTML)
+  const grids = document.querySelectorAll('#blogGrid');
+  if(!grids.length) return;
+  try{
+    const {data,error} = await sb.from('blog_posts').select('*').order('created_at',{ascending:false});
+    if(error) throw error;
+    const coverCls=['blog-cover-1','blog-cover-2','blog-cover-3','blog-cover-4','blog-cover-5','blog-cover-6'];
+    grids.forEach(grid=>{
+      grid.innerHTML='';
+      if(!data||!data.length){
+        grid.innerHTML='<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">✍️</div><div class="empty-title">No posts yet</div><div class="empty-sub">Write your first story from the dashboard!</div></div>';
+        return;
+      }
+      data.forEach((post,i)=>{
+        const date=new Date(post.created_at).toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
+        const card=document.createElement('div');
+        card.className='blog-card';
+        card.onclick=()=>openBlogModal(post);
+        const mediaUrl=post.media_url||null;
+        const mediaType=post.media_type||null;
+        let cover='';
+        if(mediaUrl&&mediaType==='image'){
+          cover=`<div class="blog-cover" style="background:#0a0d13;height:160px;position:relative;overflow:hidden;"><img src="${mediaUrl}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.92;" loading="lazy"/></div>`;
+        }else if(mediaUrl&&mediaType==='video'){
+          cover=`<div class="blog-cover ${coverCls[i%6]}" style="height:160px;position:relative;overflow:hidden;"><video src="${mediaUrl}#t=0.5" muted preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.7;pointer-events:none;"></video><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:2.5rem;">▶</div></div>`;
+        }else{
+          cover=`<div class="blog-cover ${coverCls[i%6]}" style="height:160px;display:flex;align-items:center;justify-content:center;"><span style="font-size:3.5rem;">${post.emoji||'✍️'}</span></div>`;
+        }
+        const excerpt=(post.content||'').replace(/\n/g,' ').trim();
+        card.innerHTML=`${cover}<div class="blog-body"><div class="blog-cat">${post.category||'General'}</div><h3 class="blog-title">${post.title||'Story'}</h3><p class="blog-excerpt">${excerpt.slice(0,120)}${excerpt.length>120?'…':''}</p><div class="blog-footer"><span class="blog-date">📅 ${date}</span><span class="blog-read">Read more →</span></div></div>`;
+        grid.appendChild(card);
+      });
+    });
+  }catch(e){
+    console.error('Blog load error:',e);
+    document.querySelectorAll('#blogGrid').forEach(g=>{
+      g.innerHTML=`<div class="empty-state" style="grid-column:1/-1;"><div class="empty-icon">⚠️</div><div class="empty-title">Could not load posts</div><div class="empty-sub">${e.message}</div></div>`;
+    });
   }
-  grid.innerHTML='';
-  const coverCls=['blog-cover-1','blog-cover-2','blog-cover-3','blog-cover-4','blog-cover-5','blog-cover-6'];
-  data.forEach((post,i)=>{
-    const date=new Date(post.created_at).toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
-    const card=document.createElement('div');
-    card.className='blog-card';card.onclick=()=>openBlogModal(post);
-    let cover='';
-    if(post.media_url&&post.media_type==='image') cover=`<div class="blog-cover" style="background:#0a0d13;padding:0;"><img src="${post.media_url}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.92;" loading="lazy"/></div>`;
-    else if(post.media_url&&post.media_type==='video') cover=`<div class="blog-cover ${coverCls[i%6]}" style="position:relative;"><video src="${post.media_url}#t=0.5" muted preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.7;"></video><div style="position:relative;z-index:1;font-size:2.5rem;">▶</div></div>`;
-    else cover=`<div class="blog-cover ${coverCls[i%6]}"><span style="position:relative;z-index:1;">${post.emoji||'✍️'}</span></div>`;
-    card.innerHTML=`${cover}<div class="blog-body"><div class="blog-cat">${post.category||'General'}</div><h3 class="blog-title">${post.title||'Story'}</h3><p class="blog-excerpt">${(post.content||'').slice(0,120)}${(post.content||'').length>120?'…':''}</p><div class="blog-footer"><span class="blog-date">📅 ${date}</span><span class="blog-read">Read more →</span></div></div>`;
-    grid.appendChild(card);
-  });
 }
 
 function openBlogModal(post){
