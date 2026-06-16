@@ -1892,39 +1892,118 @@ function handleFolderUpload(e){
 }
 function handleUpload(e){uploadFiles(e.target.files,null);}
 
-async function uploadFiles(files,folderName=null){
+async function uploadFiles(files, folderName=null){
   if(!files||!files.length) return;
-  const pw=document.getElementById('uploadProgressWrap');
-  const fill=document.getElementById('uploadFill');
-  const status=document.getElementById('uploadStatus');
-  pw.style.display='block';
-  let done=0;const total=files.length;
+  const pw   = document.getElementById('uploadProgressWrap');
+  const fill = document.getElementById('uploadFill');
+  const status = document.getElementById('uploadStatus');
+  pw.style.display = 'block';
+  let done=0; const total=files.length;
 
   for(const file of Array.from(files)){
-    status.textContent=`Uploading ${file.name} (${done+1}/${total})…`;
+    status.textContent = `⬆️ Uploading ${file.name} (${done+1}/${total})… ${formatSize(file.size)}`;
     try{
-      const fd=new FormData();
-      fd.append('file',file);fd.append('upload_preset',CLD_PRESET);fd.append('folder','rijan-private');
-      const isVid=file.type.startsWith('video/');
-      const isImg=file.type.startsWith('image/');
-      const rt=isVid?'video':isImg?'image':'raw';
-      const res=await fetch(`https://api.cloudinary.com/v1_1/${CLD_CLOUD}/${rt}/upload`,{method:'POST',body:fd});
-      const data=await res.json();
-      if(data.error) throw new Error(data.error.message);
-      let url=data.secure_url;
-      if(!isVid&&!isImg&&url.includes('/image/upload/')) url=url.replace('/image/upload/','/raw/upload/');
-      await sb.from('files').insert({name:file.name,url,type:file.type,size:file.size,resource_type:rt,folder_name:folderName||null,uploaded_at:new Date().toISOString(),trashed:false});
-      showToast(`✅ ${file.name} uploaded!`,'success');
-    }catch(e){showToast(`❌ ${file.name}: ${e.message}`,'error');}
-    done++;fill.style.width=Math.round((done/total)*100)+'%';
+      const url = await uploadToCloudinary(file);
+      await sb.from('files').insert({
+        name:          file.name,
+        url:           url,
+        type:          file.type || '',
+        size:          file.size,
+        resource_type: getResourceType(file),
+        folder_name:   folderName || null,
+        uploaded_at:   new Date().toISOString(),
+        trashed:       false
+      });
+      showToast(`✅ ${file.name} uploaded!`, 'success');
+    }catch(e){
+      showToast(`❌ ${file.name}: ${e.message}`, 'error');
+    }
+    done++;
+    fill.style.width = Math.round((done/total)*100) + '%';
   }
 
-  status.textContent=`✅ ${done} file(s) done!`;
-  setTimeout(()=>{pw.style.display='none';fill.style.width='0%';status.textContent='';},3000);
-  document.getElementById('fileInput').value='';
-  document.getElementById('folderInput').value='';
+  status.textContent = `✅ ${done} / ${total} files uploaded!`;
+  setTimeout(()=>{
+    pw.style.display='none';
+    fill.style.width='0%';
+    status.textContent='';
+  }, 3000);
+  document.getElementById('fileInput').value = '';
+  document.getElementById('folderInput').value = '';
   await loadCloudFiles();
 }
+
+// Smart resource type detection — every file type handled
+function getResourceType(file){
+  const t = (file.type || '').toLowerCase();
+  const name = (file.name || '').toLowerCase();
+  const ext = name.split('.').pop();
+
+  // Images
+  if(t.startsWith('image/')) return 'image';
+
+  // Videos
+  if(t.startsWith('video/')) return 'video';
+
+  // Audio — Cloudinary uses 'video' for audio too
+  if(t.startsWith('audio/')) return 'video';
+  if(['mp3','wav','ogg','flac','m4a','aac','wma','opus'].includes(ext)) return 'video';
+
+  // Video extensions
+  if(['mp4','mov','avi','mkv','webm','wmv','flv','m4v','3gp'].includes(ext)) return 'video';
+
+  // Image extensions
+  if(['jpg','jpeg','png','gif','webp','svg','bmp','ico','tiff','heic','heif'].includes(ext)) return 'image';
+
+  // Everything else = raw (zip, pdf, docx, xlsx, pptx, psd, ai, exe, apk etc)
+  return 'raw';
+}
+
+// Upload ONE file to Cloudinary — tries best type first, falls back to raw
+async function uploadToCloudinary(file){
+  const rt = getResourceType(file);
+
+  // Try primary resource type
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CLD_PRESET);
+  fd.append('folder', 'rijan-private');
+
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLD_CLOUD}/${rt}/upload`,
+    {method:'POST', body:fd}
+  );
+  const data = await res.json();
+
+  // If success — return URL
+  if(data.secure_url){
+    let url = data.secure_url;
+    // Fix URL for raw files that Cloudinary sometimes mislabels
+    if(rt === 'raw' && url.includes('/image/upload/')){
+      url = url.replace('/image/upload/', '/raw/upload/');
+    }
+    return url;
+  }
+
+  // If failed — fallback to raw (works for ANY file)
+  console.warn(`Primary upload (${rt}) failed for ${file.name}, trying raw...`);
+  const fd2 = new FormData();
+  fd2.append('file', file);
+  fd2.append('upload_preset', CLD_PRESET);
+  fd2.append('folder', 'rijan-private');
+
+  const res2 = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLD_CLOUD}/raw/upload`,
+    {method:'POST', body:fd2}
+  );
+  const data2 = await res2.json();
+
+  if(data2.secure_url) return data2.secure_url;
+
+  // Both failed
+  throw new Error(data2.error?.message || data.error?.message || 'Upload failed');
+}
+
 
 // ══════════════════════════════════
 // TRASH / RESTORE / PERMANENT DELETE
@@ -2396,15 +2475,26 @@ function loadAudioFiles(){
 
 async function uploadAndFillSongUrl(e){
   const file=e.target.files[0];if(!file) return;
-  showToast('⬆️ Uploading…','');
-  const fd=new FormData();fd.append('file',file);fd.append('upload_preset',CLD_PRESET);
+  showToast('⬆️ Uploading audio…','');
   try{
-    const res=await fetch(`https://api.cloudinary.com/v1_1/${CLD_CLOUD}/video/upload`,{method:'POST',body:fd});
-    const data=await res.json();
+    // Audio try: video first, then raw fallback
+    const fd=new FormData();
+    fd.append('file',file);fd.append('upload_preset',CLD_PRESET);
+    let res=await fetch(`https://api.cloudinary.com/v1_1/${CLD_CLOUD}/video/upload`,{method:'POST',body:fd});
+    let data=await res.json();
+    if(data.error){
+      // Fallback to raw
+      const fd2=new FormData();
+      fd2.append('file',file);fd2.append('upload_preset',CLD_PRESET);
+      res=await fetch(`https://api.cloudinary.com/v1_1/${CLD_CLOUD}/raw/upload`,{method:'POST',body:fd2});
+      data=await res.json();
+    }
     if(data.secure_url){
       document.getElementById('songUrl').value=data.secure_url;
       document.getElementById('songTitle').value=file.name.replace(/\.[^.]+$/,'');
-      showToast('✅ Uploaded & URL filled!','success');
+      showToast('✅ Audio uploaded & URL filled!','success');
+    }else{
+      throw new Error(data.error?.message||'Upload failed');
     }
   }catch(err){showToast('❌ '+err.message,'error');}
 }
