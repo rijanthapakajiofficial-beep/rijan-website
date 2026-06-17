@@ -1523,6 +1523,21 @@ const mpAudio = document.getElementById('mpAudio');
   setTimeout(()=>document.getElementById('loader').classList.add('done'), 2200);
 })();
 
+// SAFETY NET — loader always dismisses even if JS errors
+window.addEventListener('load', ()=>{
+  setTimeout(()=>{
+    const loaderEl2 = document.getElementById('loader');
+    if(loaderEl2) loaderEl2.classList.add('done');
+  }, 2500);
+});
+window.addEventListener('error', (e)=>{
+  console.error('JS Error:', e.message, 'at line', e.lineno);
+  setTimeout(()=>{
+    const loaderEl = document.getElementById('loader');
+    if(loaderEl) loaderEl.classList.add('done');
+  }, 500);
+});
+
 // ══════════════════════════════════
 // AOS + PARTICLES
 // ══════════════════════════════════
@@ -1661,7 +1676,7 @@ function switchDashTab(tab){
   if(tab==='messages') loadMessages();
   if(tab==='blog') loadMyBlogPosts();
   if(tab==='music'){loadSongList();loadAudioFiles();}
-  if(tab==='study') initStudyDashboard();
+  if(tab==='study'){try{initStudyDashboard();}catch(e){console.error('Study dashboard error:',e);}}
 }
 
 // ══════════════════════════════════
@@ -3607,7 +3622,7 @@ function renderStudyFiles(){
 // ══════════════════════════════════
 // INIT
 // ══════════════════════════════════
-loadBlog();
+try{ loadBlog(); }catch(e){ console.error('Blog load error:',e); }
 </script>
 </body>
 </html>
