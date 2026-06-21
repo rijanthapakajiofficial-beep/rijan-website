@@ -517,6 +517,18 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 
 @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-6px);}80%{transform:translateX(6px);}}
 
+/* ── COPY/CUT STATE ── */
+.file-card.cut-item{opacity:0.45;border-style:dashed!important;}
+.file-card.cut-item .item-checkbox{background:rgba(100,181,246,0.3);border-color:var(--info);}
+.file-card.copy-item{border-color:rgba(129,199,132,0.5)!important;box-shadow:0 0 0 2px rgba(129,199,132,0.15)!important;}
+
+/* ── MOVE FOLDER LIST ── */
+.move-folder-item{display:flex;align-items:center;gap:0.7rem;padding:0.65rem 0.9rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);cursor:pointer;transition:all 0.18s;font-size:0.82rem;color:var(--text2);}
+.move-folder-item:hover{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
+.move-folder-item.selected{border-color:var(--gold);background:var(--gold-dim);color:var(--gold);font-weight:500;}
+.move-root-item{border-style:dashed;color:var(--muted);}
+.move-root-item:hover,.move-root-item.selected{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
+
 @media(max-width:768px){
   nav{padding:1.1rem 1.5rem;}
   .nav-links a span{display:none;}
@@ -1053,11 +1065,40 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 <div class="bulk-bar" id="bulkBar">
   <span class="bulk-count" id="bulkCount">0 selected</span>
   <div class="bulk-sep"></div>
+  <button class="bulk-btn" onclick="bulkCopy()" title="Copy selected items">📋 Copy</button>
+  <button class="bulk-btn" onclick="bulkCut()" title="Cut selected items">✂️ Cut</button>
+  <button class="bulk-btn" id="pasteBtn" onclick="bulkPaste()" title="Paste here" style="display:none;">📌 Paste</button>
+  <div class="bulk-sep"></div>
+  <button class="bulk-btn" onclick="bulkMoveModal()" title="Move to folder">📂 Move</button>
   <button class="bulk-btn" onclick="bulkDownload()">⬇️ Download</button>
-  <button class="bulk-btn" onclick="bulkCopyLinks()">🔗 Copy Links</button>
   <button class="bulk-btn" onclick="bulkShare()">📤 Share</button>
   <button class="bulk-btn danger" onclick="bulkDelete()">🗑️ Delete</button>
   <button class="bulk-btn" onclick="clearSelection()">✕ Clear</button>
+</div>
+
+<!-- MOVE TO FOLDER MODAL -->
+<div class="modal-overlay" id="moveModal">
+  <div class="modal-box" style="width:min(500px,92vw);">
+    <h3 class="modal-title">📂 Move to Folder</h3>
+    <p style="font-size:0.8rem;color:var(--muted);margin-bottom:1rem;">Select destination folder:</p>
+    <div id="moveFolderList" style="display:flex;flex-direction:column;gap:0.4rem;max-height:300px;overflow-y:auto;margin-bottom:1rem;"></div>
+    <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1rem;">
+      <input id="moveNewFolderInput" class="modal-input" type="text" placeholder="Or type new folder name…" style="flex:1;"/>
+      <button class="modal-btn modal-btn-primary" onclick="confirmMoveToNew()" style="white-space:nowrap;">+ New</button>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-ghost" onclick="closeMoveModal()">Cancel</button>
+      <button class="modal-btn modal-btn-primary" id="moveConfirmBtn" onclick="confirmMove()" disabled>Move Here</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLIPBOARD TOAST -->
+<div id="clipboardBar" style="display:none;position:fixed;top:80px;left:50%;transform:translateX(-50%);background:rgba(17,22,32,0.97);border:1px solid rgba(201,169,110,0.4);border-radius:100px;padding:0.55rem 1.2rem;z-index:400;align-items:center;gap:0.8rem;backdrop-filter:blur(20px);font-size:0.78rem;color:var(--text2);white-space:nowrap;">
+  <span id="clipboardBarText">📋 0 items copied</span>
+  <div class="bulk-sep"></div>
+  <button onclick="bulkPaste()" style="padding:0.3rem 0.8rem;border-radius:100px;border:1px solid var(--gold);background:var(--gold-dim);color:var(--gold);font-size:0.72rem;cursor:pointer;font-family:'Outfit',sans-serif;">📌 Paste Here</button>
+  <button onclick="clearClipboard()" style="padding:0.3rem 0.6rem;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:0.72rem;cursor:pointer;font-family:'Outfit',sans-serif;">✕</button>
 </div>
 
 <script>
@@ -2510,6 +2551,256 @@ setTimeout(()=>{
     el.addEventListener('mouseleave',()=>{el.style.transform='';});
   });
 },3000);
+
+// ══════════════════════════════════
+// CLIPBOARD — Copy / Cut / Paste / Move
+// ══════════════════════════════════
+let clipboard = { items: [], mode: null }; // mode: 'copy' | 'cut'
+let moveTargetPath = null;
+
+// ── COPY ──────────────────────────
+function bulkCopy() {
+  if (!selectedItems.size) { showToast('⚠️ Select items first', 'error'); return; }
+  clipboard.items = [...selectedItems];
+  clipboard.mode = 'copy';
+  updateClipboardUI();
+  // Visual feedback
+  document.querySelectorAll('.file-card').forEach(c => {
+    c.classList.remove('cut-item', 'copy-item');
+    if (selectedItems.has(c.getAttribute('data-key'))) c.classList.add('copy-item');
+  });
+  showToast(`📋 ${clipboard.items.length} item${clipboard.items.length !== 1 ? 's' : ''} copied — navigate to destination and paste`, 'success');
+  clearSelection();
+}
+
+// ── CUT ───────────────────────────
+function bulkCut() {
+  if (!selectedItems.size) { showToast('⚠️ Select items first', 'error'); return; }
+  clipboard.items = [...selectedItems];
+  clipboard.mode = 'cut';
+  updateClipboardUI();
+  // Visual feedback — dim cut items
+  document.querySelectorAll('.file-card').forEach(c => {
+    c.classList.remove('cut-item', 'copy-item');
+    if (selectedItems.has(c.getAttribute('data-key'))) c.classList.add('cut-item');
+  });
+  showToast(`✂️ ${clipboard.items.length} item${clipboard.items.length !== 1 ? 's' : ''} cut — navigate to destination and paste`, 'success');
+  clearSelection();
+}
+
+// ── PASTE ─────────────────────────
+async function bulkPaste() {
+  if (!clipboard.items.length) { showToast('⚠️ Nothing in clipboard', 'error'); return; }
+  const destPath = currentPath.length > 0 ? currentPath.join('/') : null;
+  const isCut = clipboard.mode === 'cut';
+  let done = 0;
+  showToast(`⏳ ${isCut ? 'Moving' : 'Copying'} ${clipboard.items.length} items…`, '');
+
+  for (const key of clipboard.items) {
+    const [type, id] = key.split('::');
+    if (type === 'file') {
+      const file = allFiles.find(f => f.id === parseInt(id));
+      if (!file) continue;
+      try {
+        if (isCut) {
+          // Move: update folder_path
+          await sb.from('files').update({
+            folder_path: destPath,
+            folder_name: destPath ? destPath.split('/')[0] : null
+          }).eq('id', file.id);
+        } else {
+          // Copy: insert new record with same url
+          await sb.from('files').insert({
+            name: file.name,
+            url: file.url,
+            type: file.type || '',
+            size: file.size,
+            resource_type: file.resource_type || 'image',
+            folder_path: destPath,
+            folder_name: destPath ? destPath.split('/')[0] : null,
+            uploaded_at: new Date().toISOString(),
+            trashed: false
+          });
+        }
+        done++;
+      } catch (e) { showToast(`❌ ${file.name}: ${e.message}`, 'error'); }
+    } else if (type === 'folder') {
+      const folderName = id;
+      // Get all files in this folder
+      const folderFiles = allFiles.filter(f => {
+        const fp = f.folder_path || f.folder_name || '';
+        return fp === folderName || fp.startsWith(folderName + '/');
+      });
+      for (const file of folderFiles) {
+        const oldFp = file.folder_path || file.folder_name || '';
+        const newFp = destPath
+          ? destPath + '/' + oldFp
+          : oldFp;
+        try {
+          if (isCut) {
+            await sb.from('files').update({
+              folder_path: newFp,
+              folder_name: newFp.split('/')[0]
+            }).eq('id', file.id);
+          } else {
+            await sb.from('files').insert({
+              name: file.name,
+              url: file.url,
+              type: file.type || '',
+              size: file.size,
+              resource_type: file.resource_type || 'image',
+              folder_path: newFp,
+              folder_name: newFp.split('/')[0],
+              uploaded_at: new Date().toISOString(),
+              trashed: false
+            });
+          }
+          done++;
+        } catch (e) {}
+      }
+    }
+  }
+
+  showToast(`✅ ${done} item${done !== 1 ? 's' : ''} ${isCut ? 'moved' : 'copied'}!`, 'success');
+  if (isCut) clearClipboard();
+  else { clipboard.items = []; clipboard.mode = null; updateClipboardUI(); }
+  await loadCloudFiles();
+}
+
+// ── CLIPBOARD UI ──────────────────
+function updateClipboardUI() {
+  const bar = document.getElementById('clipboardBar');
+  const text = document.getElementById('clipboardBarText');
+  const pasteBtn = document.getElementById('pasteBtn');
+  if (clipboard.items.length > 0) {
+    bar.style.display = 'flex';
+    pasteBtn.style.display = 'inline-flex';
+    const icon = clipboard.mode === 'cut' ? '✂️' : '📋';
+    const action = clipboard.mode === 'cut' ? 'cut' : 'copied';
+    text.textContent = `${icon} ${clipboard.items.length} item${clipboard.items.length !== 1 ? 's' : ''} ${action}`;
+  } else {
+    bar.style.display = 'none';
+    pasteBtn.style.display = 'none';
+  }
+}
+
+function clearClipboard() {
+  clipboard = { items: [], mode: null };
+  document.querySelectorAll('.cut-item, .copy-item').forEach(c => c.classList.remove('cut-item', 'copy-item'));
+  updateClipboardUI();
+}
+
+// ── MOVE MODAL ────────────────────
+function bulkMoveModal() {
+  if (!selectedItems.size) { showToast('⚠️ Select items first', 'error'); return; }
+  moveTargetPath = null;
+  document.getElementById('moveNewFolderInput').value = '';
+  document.getElementById('moveConfirmBtn').disabled = true;
+  renderMoveFolderList();
+  document.getElementById('moveModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeMoveModal() {
+  document.getElementById('moveModal').classList.remove('open');
+  document.body.style.overflow = '';
+  moveTargetPath = null;
+}
+
+function renderMoveFolderList() {
+  const list = document.getElementById('moveFolderList');
+  list.innerHTML = '';
+
+  // Root option
+  const rootEl = document.createElement('div');
+  rootEl.className = 'move-folder-item move-root-item';
+  rootEl.innerHTML = '🏠 My Drive (Root)';
+  rootEl.onclick = () => selectMoveTarget(null, rootEl);
+  list.appendChild(rootEl);
+
+  // All unique folder paths
+  const folders = new Set();
+  allFiles.forEach(f => {
+    const fp = f.folder_path || f.folder_name || null;
+    if (!fp) return;
+    // Add all path segments
+    const parts = fp.split('/');
+    let built = '';
+    parts.forEach(p => {
+      built = built ? built + '/' + p : p;
+      folders.add(built);
+    });
+  });
+
+  // Sort and render
+  [...folders].sort().forEach(fp => {
+    // Skip if this is the current path (can't move into same location)
+    const curPath = currentPath.join('/');
+    if (fp === curPath) return;
+
+    const el = document.createElement('div');
+    el.className = 'move-folder-item';
+    const depth = fp.split('/').length - 1;
+    const indent = '  '.repeat(depth);
+    const name = fp.split('/').pop();
+    el.innerHTML = `${indent}📂 ${name} <span style="font-size:0.65rem;color:var(--muted);margin-left:auto;">${fp}</span>`;
+    el.onclick = () => selectMoveTarget(fp, el);
+    list.appendChild(el);
+  });
+
+  if (folders.size === 0 && currentPath.length > 0) {
+    list.appendChild(rootEl);
+  }
+}
+
+function selectMoveTarget(path, el) {
+  moveTargetPath = path;
+  document.querySelectorAll('.move-folder-item').forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('moveConfirmBtn').disabled = false;
+}
+
+async function confirmMove() {
+  if (moveTargetPath === undefined) return;
+  closeMoveModal();
+  // Use cut+paste logic
+  clipboard.items = [...selectedItems];
+  clipboard.mode = 'cut';
+  const savedPath = currentPath;
+  // Temporarily set path to destination
+  currentPath = moveTargetPath ? moveTargetPath.split('/') : [];
+  await bulkPaste();
+  currentPath = savedPath;
+  clearSelection();
+}
+
+async function confirmMoveToNew() {
+  const name = document.getElementById('moveNewFolderInput').value.trim();
+  if (!name) return;
+  // Build full path: currentPath + newFolderName
+  const newPath = currentPath.length > 0 ? currentPath.join('/') + '/' + name : name;
+  moveTargetPath = newPath;
+  closeMoveModal();
+  clipboard.items = [...selectedItems];
+  clipboard.mode = 'cut';
+  const savedPath = [...currentPath];
+  currentPath = newPath.split('/');
+  await bulkPaste();
+  currentPath = savedPath;
+  clearSelection();
+}
+
+// Keyboard shortcuts: Ctrl+C, Ctrl+X, Ctrl+V
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.ctrlKey || e.metaKey) {
+    if (e.key === 'c' && selectedItems.size > 0) { e.preventDefault(); bulkCopy(); }
+    if (e.key === 'x' && selectedItems.size > 0) { e.preventDefault(); bulkCut(); }
+    if (e.key === 'v' && clipboard.items.length > 0) { e.preventDefault(); bulkPaste(); }
+    if (e.key === 'a') { e.preventDefault(); toggleSelectAll(); }
+  }
+  if (e.key === 'Delete' && selectedItems.size > 0) bulkDelete();
+});
 
 // ══════════════════════════════════
 // INIT
