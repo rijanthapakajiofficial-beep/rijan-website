@@ -517,6 +517,81 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 
 @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-6px);}80%{transform:translateX(6px);}}
 
+/* ══════════════════════════════════
+   IMPROVEMENT 1 — FILE PREVIEW MODAL
+══════════════════════════════════ */
+#filePreviewModal{display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.97);backdrop-filter:blur(20px);flex-direction:column;align-items:center;justify-content:center;}
+#filePreviewModal.open{display:flex;}
+.preview-header{width:100%;display:flex;align-items:center;justify-content:space-between;padding:0.8rem 1.5rem;background:rgba(17,22,32,0.95);border-bottom:1px solid var(--border);position:fixed;top:0;left:0;right:0;z-index:2;}
+.preview-title{font-size:0.85rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%;}
+.preview-actions{display:flex;gap:0.5rem;align-items:center;}
+.preview-body{width:100%;height:100vh;padding-top:52px;display:flex;align-items:center;justify-content:center;overflow:auto;}
+#previewFrame{width:100%;height:calc(100vh - 52px);border:none;background:#fff;}
+.preview-close{width:36px;height:36px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:1rem;transition:all 0.2s;}
+.preview-close:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ══════════════════════════════════
+   IMPROVEMENT 2 — THEMES
+══════════════════════════════════ */
+body.theme-ocean{--bg:#020b18;--surface:#041525;--card:#061d30;--card2:#082540;--gold:#4fc3f7;--gold-light:#81d4fa;--gold-dim:rgba(79,195,247,0.12);--border:rgba(79,195,247,0.1);}
+body.theme-forest{--bg:#020d06;--surface:#041a09;--card:#06240d;--card2:#082e12;--gold:#81c784;--gold-light:#a5d6a7;--gold-dim:rgba(129,199,132,0.12);--border:rgba(129,199,132,0.1);}
+body.theme-purple{--bg:#0d0618;--surface:#150a27;--card:#1c0d35;--card2:#241043;--gold:#ce93d8;--gold-light:#e1bee7;--gold-dim:rgba(206,147,216,0.12);--border:rgba(206,147,216,0.1);}
+body.theme-rose{--bg:#18060a;--surface:#270912;--card:#350b18;--card2:#420e1f;--gold:#f48fb1;--gold-light:#f8bbd0;--gold-dim:rgba(244,143,177,0.12);--border:rgba(244,143,177,0.1);}
+.theme-picker{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.5rem;}
+.theme-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.2s;position:relative;}
+.theme-dot:hover,.theme-dot.active{border-color:white;transform:scale(1.15);}
+.theme-dot.active::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:white;font-weight:700;}
+
+/* ══════════════════════════════════
+   IMPROVEMENT 3 — ANALYTICS
+══════════════════════════════════ */
+#dashTab-analytics{display:none;}
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.analytics-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.2rem;}
+.analytics-card h4{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+.bar-chart{display:flex;flex-direction:column;gap:0.6rem;}
+.bar-row{display:flex;align-items:center;gap:0.8rem;}
+.bar-label{font-size:0.72rem;color:var(--text2);width:60px;flex-shrink:0;text-align:right;}
+.bar-track{flex:1;height:8px;background:var(--surface);border-radius:100px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:100px;transition:width 1s var(--transition);}
+.bar-val{font-size:0.68rem;color:var(--muted);width:35px;flex-shrink:0;}
+.donut-wrap{display:flex;align-items:center;gap:1.2rem;}
+.donut-legend{display:flex;flex-direction:column;gap:0.4rem;}
+.legend-item{display:flex;align-items:center;gap:0.5rem;font-size:0.72rem;color:var(--text2);}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.big-stat{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100px;}
+.big-stat-num{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--gold);line-height:1;}
+.big-stat-lbl{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:0.3rem;}
+
+/* ══════════════════════════════════
+   IMPROVEMENT 4 — DRAG SORT
+══════════════════════════════════ */
+.file-card.drag-source{opacity:0.4;transform:scale(0.95)!important;}
+.file-card.drag-over-card{border-color:var(--gold)!important;background:var(--gold-dim);}
+
+/* ══════════════════════════════════
+   IMPROVEMENT 5 — RECYCLE BIN TIMER
+══════════════════════════════════ */
+.trash-timer{font-size:0.6rem;color:var(--danger);margin-top:2px;}
+.trash-timer.warning{animation:blinkDot 1s ease infinite;}
+
+/* ══════════════════════════════════
+   IMPROVEMENT 6 — FILE TAGS + COLORS
+══════════════════════════════════ */
+.color-label{position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 var(--r-lg) var(--r-lg);}
+.tag-chip{display:inline-flex;align-items:center;gap:0.3rem;padding:0.15rem 0.5rem;border-radius:100px;font-size:0.6rem;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.tag-chip:hover{opacity:0.8;}
+.tag-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1rem;margin-bottom:1rem;}
+.color-options{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.5rem;}
+.color-opt{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.2s;}
+.color-opt:hover,.color-opt.selected{border-color:white;transform:scale(1.2);}
+
+/* ══════════════════════════════════
+   THEME PANEL (Settings sidebar)
+══════════════════════════════════ */
+.theme-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1rem 1.2rem;margin:0.5rem 0;}
+.theme-panel-title{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;}
+
 /* ── COPY/CUT STATE ── */
 .file-card.cut-item{opacity:0.45;border-style:dashed!important;}
 .file-card.cut-item .item-checkbox{background:rgba(100,181,246,0.3);border-color:var(--info);}
@@ -684,7 +759,21 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
       <button class="sidebar-btn" onclick="switchDashTab('messages')"><span class="sb-icon">✉️</span> Messages <span class="sb-count" id="msgBadgeSidebar"></span></button>
       <button class="sidebar-btn" onclick="switchDashTab('music')"><span class="sb-icon">🎵</span> Music Manager</button>
       <button class="sidebar-btn" onclick="switchDashTab('blog')"><span class="sb-icon">✍️</span> Write Blog</button>
+      <button class="sidebar-btn" onclick="switchDashTab('analytics')"><span class="sb-icon">📊</span> Analytics</button>
       <button class="sidebar-btn" onclick="doLogout()" style="color:var(--danger);margin-top:0.5rem;"><span class="sb-icon">🚪</span> Logout</button>
+
+      <!-- THEME PANEL -->
+      <div class="theme-panel">
+        <div class="theme-panel-title">🎨 Theme</div>
+        <div class="theme-picker">
+          <div class="theme-dot active" style="background:linear-gradient(135deg,#c9a96e,#07090d);" onclick="setTheme('default',this)" title="Default Gold"></div>
+          <div class="theme-dot" style="background:linear-gradient(135deg,#4fc3f7,#020b18);" onclick="setTheme('ocean',this)" title="Ocean Blue"></div>
+          <div class="theme-dot" style="background:linear-gradient(135deg,#81c784,#020d06);" onclick="setTheme('forest',this)" title="Forest Green"></div>
+          <div class="theme-dot" style="background:linear-gradient(135deg,#ce93d8,#0d0618);" onclick="setTheme('purple',this)" title="Royal Purple"></div>
+          <div class="theme-dot" style="background:linear-gradient(135deg,#f48fb1,#18060a);" onclick="setTheme('rose',this)" title="Rose Pink"></div>
+          <div class="theme-dot" style="background:linear-gradient(135deg,#fff,#f5f0e8);" onclick="setTheme('light',this)" title="Light Mode"></div>
+        </div>
+      </div>
 
       <div class="sidebar-storage">
         <div style="font-size:0.7rem;font-weight:500;color:var(--text);margin-bottom:0.4rem;">☁️ Storage</div>
@@ -1031,6 +1120,54 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 <!-- CONTEXT MENU -->
 <div class="ctx-menu" id="ctxMenu" style="display:none;"></div>
 
+<!-- SHARE MODAL -->
+<div class="modal-overlay" id="shareModal">
+  <div class="modal-box" style="width:min(480px,92vw);">
+    <h3 class="modal-title">📤 Share File</h3>
+    <div id="shareFileInfo" style="display:flex;align-items:center;gap:0.8rem;padding:0.8rem;background:var(--surface);border-radius:var(--r);margin-bottom:1.2rem;">
+      <span id="shareFileIcon" style="font-size:1.6rem;">📄</span>
+      <div><div id="shareFileName" style="font-size:0.85rem;color:var(--text);"></div><div id="shareFileSize" style="font-size:0.7rem;color:var(--muted);margin-top:2px;"></div></div>
+    </div>
+
+    <!-- Direct Link -->
+    <div style="margin-bottom:1rem;">
+      <div style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;">🔗 Direct Link</div>
+      <div style="display:flex;gap:0.5rem;">
+        <input id="shareDirectLink" type="text" class="modal-input" readonly style="font-size:0.75rem;color:var(--gold);cursor:pointer;" onclick="this.select()"/>
+        <button class="modal-btn modal-btn-primary" onclick="copyShareLink('shareDirectLink')" style="white-space:nowrap;padding:0.6rem 0.9rem;">📋 Copy</button>
+      </div>
+    </div>
+
+    <!-- Share Platforms -->
+    <div style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">📱 Share Via</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;margin-bottom:1.2rem;">
+      <button onclick="shareVia('whatsapp')" style="padding:0.6rem 0.4rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:0.72rem;font-family:'Outfit',sans-serif;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:0.3rem;" onmouseover="this.style.borderColor='#25D366';this.style.color='#25D366'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <span style="font-size:1.3rem;">💬</span>WhatsApp
+      </button>
+      <button onclick="shareVia('facebook')" style="padding:0.6rem 0.4rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:0.72rem;font-family:'Outfit',sans-serif;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:0.3rem;" onmouseover="this.style.borderColor='#4267B2';this.style.color='#4267B2'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <span style="font-size:1.3rem;">📘</span>Facebook
+      </button>
+      <button onclick="shareVia('twitter')" style="padding:0.6rem 0.4rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:0.72rem;font-family:'Outfit',sans-serif;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:0.3rem;" onmouseover="this.style.borderColor='#1DA1F2';this.style.color='#1DA1F2'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <span style="font-size:1.3rem;">🐦</span>Twitter
+      </button>
+      <button onclick="shareVia('telegram')" style="padding:0.6rem 0.4rem;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-size:0.72rem;font-family:'Outfit',sans-serif;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:0.3rem;" onmouseover="this.style.borderColor='#0088cc';this.style.color='#0088cc'" onmouseout="this.style.borderColor='';this.style.color=''">
+        <span style="font-size:1.3rem;">✈️</span>Telegram
+      </button>
+    </div>
+
+    <!-- QR Code -->
+    <div style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;">📷 QR Code</div>
+    <div style="text-align:center;padding:1rem;background:white;border-radius:var(--r);margin-bottom:1.2rem;">
+      <img id="shareQR" src="" style="width:140px;height:140px;display:block;margin:0 auto;" alt="QR Code"/>
+    </div>
+
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-ghost" onclick="closeShareModal()">Close</button>
+      <button class="modal-btn modal-btn-primary" onclick="forceDownload(currentShareFile?.url, currentShareFile?.name)">⬇️ Download</button>
+    </div>
+  </div>
+</div>
+
 <!-- MEDIA PICKER -->
 <div id="mediaPickerModal">
   <div class="media-picker-inner">
@@ -1060,6 +1197,77 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   <audio id="mpAudio"></audio>
 </div>
 <button id="mpOpenBtn" onclick="toggleMusicPlayer()">🎵</button>
+
+<!-- FILE PREVIEW MODAL -->
+<div id="filePreviewModal">
+  <div class="preview-header">
+    <span class="preview-title" id="previewTitle">File Preview</span>
+    <div class="preview-actions">
+      <a class="action-btn" id="previewDownloadBtn" download style="text-decoration:none;">⬇️ Download</a>
+      <button class="action-btn" onclick="copyToClipboard(document.getElementById('previewDownloadBtn').href)">🔗 Copy Link</button>
+      <div class="preview-close" onclick="closeFilePreview()">✕</div>
+    </div>
+  </div>
+  <div class="preview-body">
+    <div id="previewContent" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"></div>
+  </div>
+</div>
+
+<!-- TAG/COLOR LABEL MODAL -->
+<div class="modal-overlay" id="tagModal">
+  <div class="modal-box" style="width:min(420px,92vw);">
+    <h3 class="modal-title">🏷️ Tags & Color Label</h3>
+    <div style="font-size:0.72rem;color:var(--muted);margin-bottom:0.8rem;">Color Label:</div>
+    <div class="color-options" id="colorOptions">
+      <div class="color-opt" style="background:#e87070;" onclick="selectColor('#e87070',this)" title="Red"></div>
+      <div class="color-opt" style="background:#ffb74d;" onclick="selectColor('#ffb74d',this)" title="Orange"></div>
+      <div class="color-opt" style="background:#fff176;" onclick="selectColor('#fff176',this)" title="Yellow"></div>
+      <div class="color-opt" style="background:#81c784;" onclick="selectColor('#81c784',this)" title="Green"></div>
+      <div class="color-opt" style="background:#64b5f6;" onclick="selectColor('#64b5f6',this)" title="Blue"></div>
+      <div class="color-opt" style="background:#ce93d8;" onclick="selectColor('#ce93d8',this)" title="Purple"></div>
+      <div class="color-opt" style="background:#c9a96e;" onclick="selectColor('#c9a96e',this)" title="Gold"></div>
+      <div class="color-opt" style="background:#5c6470;border:1px dashed rgba(255,255,255,0.2);" onclick="selectColor(null,this)" title="None">✕</div>
+    </div>
+    <div style="font-size:0.72rem;color:var(--muted);margin:1rem 0 0.5rem;">Custom Tags (comma separated):</div>
+    <input class="modal-input" id="tagInput" type="text" placeholder="e.g. Nepal, 2024, Favorite…"/>
+    <div class="modal-actions">
+      <button class="modal-btn modal-btn-ghost" onclick="closeTagModal()">Cancel</button>
+      <button class="modal-btn modal-btn-primary" onclick="saveTagsAndColor()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ANALYTICS TAB (sidebar link adds this) -->
+<div id="dashTab-analytics" style="display:none;">
+  <div class="drive-header"><h2 class="drive-title">📊 Analytics</h2></div>
+  <div class="analytics-grid">
+    <div class="analytics-card">
+      <h4>Storage by Type</h4>
+      <div class="bar-chart" id="storageByType"></div>
+    </div>
+    <div class="analytics-card">
+      <h4>File Count</h4>
+      <canvas id="donutChart" width="200" height="120"></canvas>
+      <div id="donutLegend" class="donut-legend" style="margin-top:0.5rem;"></div>
+    </div>
+    <div class="analytics-card">
+      <h4>Total Files</h4>
+      <div class="big-stat"><span class="big-stat-num" id="analyticsTotalFiles">—</span><span class="big-stat-lbl">Files</span></div>
+    </div>
+    <div class="analytics-card">
+      <h4>Storage Used</h4>
+      <div class="big-stat"><span class="big-stat-num" id="analyticsStorageUsed">—</span><span class="big-stat-lbl">of 25 GB</span></div>
+    </div>
+  </div>
+  <div class="analytics-card" style="margin-bottom:1rem;">
+    <h4>Upload Activity (Last 7 Days)</h4>
+    <div id="activityChart" style="display:flex;align-items:flex-end;gap:0.5rem;height:80px;margin-top:0.8rem;"></div>
+  </div>
+  <div class="analytics-card">
+    <h4>Top File Types</h4>
+    <div id="topTypes" style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem;"></div>
+  </div>
+</div>
 
 <!-- BULK BAR -->
 <div class="bulk-bar" id="bulkBar">
@@ -2803,9 +3011,597 @@ document.addEventListener('keydown', e => {
 });
 
 // ══════════════════════════════════
+// SHARE FEATURE
+// ══════════════════════════════════
+let currentShareFile = null;
+
+function openShareModal(file) {
+  currentShareFile = file;
+  const cat = getCat(file);
+  const icons = { image:'🖼️', video:'🎬', audio:'🎵', pdf:'📄', other:'📁' };
+
+  document.getElementById('shareFileIcon').textContent = icons[cat] || '📁';
+  document.getElementById('shareFileName').textContent = file.name;
+  document.getElementById('shareFileSize').textContent = formatSize(file.size || 0) + ' · ' + cat.toUpperCase();
+  document.getElementById('shareDirectLink').value = file.url;
+
+  // Generate QR Code using free API
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(file.url)}&bgcolor=ffffff&color=07090d&margin=10`;
+  document.getElementById('shareQR').src = qrUrl;
+
+  document.getElementById('shareModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeShareModal() {
+  document.getElementById('shareModal').classList.remove('open');
+  document.body.style.overflow = '';
+  currentShareFile = null;
+}
+
+function copyShareLink(inputId) {
+  const val = document.getElementById(inputId).value;
+  copyToClipboard(val);
+  showToast('🔗 Link copied!', 'success');
+}
+
+function shareVia(platform) {
+  if (!currentShareFile) return;
+  const url = encodeURIComponent(currentShareFile.url);
+  const text = encodeURIComponent(`Check out this file: ${currentShareFile.name}`);
+  const links = {
+    whatsapp: `https://wa.me/?text=${text}%20${url}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+    twitter:  `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+    telegram: `https://t.me/share/url?url=${url}&text=${text}`
+  };
+  if (links[platform]) window.open(links[platform], '_blank');
+}
+
+// Add share to context menu
+function showCtxMenu(e, file) {
+  ctxTargetFile = file;
+  const menu = document.getElementById('ctxMenu');
+  menu.innerHTML = `
+    <div class="ctx-item" onclick="ctxAction('preview')">👁️ Preview</div>
+    <div class="ctx-item" onclick="ctxAction('download')">⬇️ Download</div>
+    <div class="ctx-item" onclick="ctxAction('copy-link')">🔗 Copy Link</div>
+    <div class="ctx-item" onclick="ctxAction('share')">📤 Share</div>
+    <div class="ctx-item" onclick="ctxAction('rename')">✏️ Rename</div>
+    <div class="ctx-item" onclick="ctxAction('ai-scan')">🤖 AI Scan</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" onclick="ctxAction('cut')">✂️ Cut</div>
+    <div class="ctx-item" onclick="ctxAction('copy')">📋 Copy</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item danger" onclick="ctxAction('delete')">🗑️ Delete</div>`;
+  menu.style.display = 'block';
+  menu.style.left = Math.min(e.clientX, window.innerWidth - 200) + 'px';
+  menu.style.top = Math.min(e.clientY, window.innerHeight - 300) + 'px';
+}
+
+function ctxAction(action) {
+  hideCtxMenu();
+  if (!ctxTargetFile) return;
+  const f = ctxTargetFile;
+  if (action === 'preview') { const cat = getCat(f); if (cat === 'image') openImageModal(f.url, f.name); else if (cat === 'video') openVideoModal(f.url, f.name); }
+  if (action === 'download') forceDownload(f.url, f.name);
+  if (action === 'copy-link') copyToClipboard(f.url);
+  if (action === 'share') openShareModal(f);
+  if (action === 'rename') openRenameModal(f);
+  if (action === 'ai-scan') runAiOnFile(f.id);
+  if (action === 'delete') trashFile(f.id);
+  if (action === 'cut') { selectedItems.add(`file::${f.id}`); updateBulkBar(); bulkCut(); }
+  if (action === 'copy') { selectedItems.add(`file::${f.id}`); updateBulkBar(); bulkCopy(); }
+}
+
+// ══════════════════════════════════════════════
+// WEBSITE IMPROVEMENTS
+// ══════════════════════════════════════════════
+
+// 1. SMOOTH IMAGE LOADING — lazy load with fade
+function setupLazyImages() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const img = e.target;
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+          img.style.opacity = '0';
+          img.onload = () => { img.style.transition = 'opacity 0.4s'; img.style.opacity = '1'; };
+          obs.unobserve(img);
+        }
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('img[data-src]').forEach(img => obs.observe(img));
+}
+
+// 2. KEYBOARD NAVIGATION in modals
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeVideoModal(); closeImageModal(); closeBlogModal();
+    hideCtxMenu(); closeRenameModal(); closeMoveModal();
+    closeShareModal();
+    document.getElementById('mediaPickerModal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+  if (e.key === 'ArrowRight') navigateMedia(1);
+  if (e.key === 'ArrowLeft') navigateMedia(-1);
+  // Ctrl shortcuts
+  if ((e.ctrlKey || e.metaKey) && !e.target.closest('input,textarea')) {
+    if (e.key === 'c' && selectedItems.size) { e.preventDefault(); bulkCopy(); }
+    if (e.key === 'x' && selectedItems.size) { e.preventDefault(); bulkCut(); }
+    if (e.key === 'v' && clipboard.items.length) { e.preventDefault(); bulkPaste(); }
+    if (e.key === 'a') { e.preventDefault(); toggleSelectAll(); }
+  }
+  if (e.key === 'Delete' && selectedItems.size && !e.target.closest('input,textarea')) bulkDelete();
+});
+
+// 3. DRAG AND DROP anywhere on drive main
+document.addEventListener('dragover', e => {
+  if (document.getElementById('private-dashboard').style.display !== 'none') {
+    e.preventDefault();
+    document.getElementById('dropZone').classList.add('drag-over');
+  }
+});
+document.addEventListener('dragleave', e => {
+  if (!e.relatedTarget) document.getElementById('dropZone')?.classList.remove('drag-over');
+});
+document.addEventListener('drop', e => {
+  if (document.getElementById('private-dashboard').style.display !== 'none') {
+    e.preventDefault();
+    document.getElementById('dropZone')?.classList.remove('drag-over');
+    if (e.dataTransfer.files.length) uploadFiles(e.dataTransfer.files);
+  }
+});
+
+// 4. DOUBLE CLICK to open file/folder
+document.addEventListener('dblclick', e => {
+  const card = e.target.closest('.file-card');
+  if (!card) return;
+  const key = card.getAttribute('data-key');
+  if (!key) return;
+  const [type, id] = key.split('::');
+  if (type === 'folder') {
+    navigateToFolder(id);
+  } else if (type === 'file') {
+    const file = allFiles.find(f => f.id === parseInt(id));
+    if (!file) return;
+    const cat = getCat(file);
+    if (cat === 'image') openImageModal(file.url, file.name);
+    else if (cat === 'video') openVideoModal(file.url, file.name);
+    else if (cat === 'audio') playAudioPreview(file.url, file.name, file.type);
+    else window.open(file.url, '_blank');
+  }
+});
+
+// 5. SEARCH: highlight matching text
+function highlightText(text, query) {
+  if (!query) return text;
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return text.replace(regex, '<mark style="background:rgba(201,169,110,0.3);color:var(--gold);border-radius:2px;">$1</mark>');
+}
+
+// 6. PASTE from clipboard bar updates dynamically
+function updatePasteBtn() {
+  const btn = document.getElementById('pasteBtn');
+  if (btn) btn.style.display = clipboard.items.length > 0 ? 'inline-flex' : 'none';
+}
+
+// 7. BACK BUTTON support (browser history)
+window.addEventListener('popstate', e => {
+  if (currentPath.length > 0) {
+    currentPath.pop();
+    renderBreadcrumb();
+    renderDriveView();
+  }
+});
+
+// Override navigateToFolder to push history
+const _origNavigateToFolder = navigateToFolder;
+window.navigateToFolder = function(name) {
+  history.pushState({ path: [...currentPath, name] }, '', '');
+  _origNavigateToFolder(name);
+};
+
+// ══════════════════════════════════
+// IMPROVEMENT 1 — FILE PREVIEW
+// ══════════════════════════════════
+function openFilePreview(file) {
+  const cat = getCat(file);
+  const content = document.getElementById('previewContent');
+  document.getElementById('previewTitle').textContent = file.name;
+  document.getElementById('previewDownloadBtn').href = file.url;
+  document.getElementById('previewDownloadBtn').download = file.name;
+
+  if (cat === 'image') {
+    content.innerHTML = `<img src="${file.url}" style="max-width:95vw;max-height:calc(100vh - 80px);object-fit:contain;border-radius:8px;"/>`;
+  } else if (cat === 'video') {
+    content.innerHTML = `<video src="${file.url}" controls autoplay playsinline style="max-width:95vw;max-height:calc(100vh - 80px);border-radius:8px;background:#000;"></video>`;
+  } else if (cat === 'audio') {
+    content.innerHTML = `<div style="text-align:center;padding:3rem;"><div style="font-size:5rem;margin-bottom:1rem;">🎵</div><div style="color:var(--text);margin-bottom:1.5rem;font-size:1.1rem;">${file.name}</div><audio src="${file.url}" controls autoplay style="width:min(400px,90vw);"></audio></div>`;
+  } else if (file.type && file.type.includes('pdf')) {
+    content.innerHTML = `<iframe src="${file.url}" id="previewFrame" style="width:95vw;height:calc(100vh - 60px);border:none;border-radius:8px;"></iframe>`;
+  } else if (file.type && (file.type.includes('word') || file.type.includes('document'))) {
+    // Use Google Docs viewer for Word files
+    const viewUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(file.url)}&embedded=true`;
+    content.innerHTML = `<iframe src="${viewUrl}" id="previewFrame" style="width:95vw;height:calc(100vh - 60px);border:none;border-radius:8px;"></iframe>`;
+  } else if (file.type && (file.type.includes('excel') || file.type.includes('sheet'))) {
+    const viewUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(file.url)}`;
+    content.innerHTML = `<iframe src="${viewUrl}" id="previewFrame" style="width:95vw;height:calc(100vh - 60px);border:none;border-radius:8px;"></iframe>`;
+  } else if (file.type && file.type.includes('text')) {
+    // Fetch and show text content
+    fetch(file.url).then(r => r.text()).then(text => {
+      content.innerHTML = `<pre style="background:var(--card);padding:2rem;border-radius:8px;color:var(--text2);font-size:0.82rem;line-height:1.7;max-width:90vw;max-height:calc(100vh - 80px);overflow:auto;white-space:pre-wrap;">${text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`;
+    }).catch(() => showNoPreview(file, content));
+  } else {
+    showNoPreview(file, content);
+  }
+
+  document.getElementById('filePreviewModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function showNoPreview(file, content) {
+  content.innerHTML = `<div style="text-align:center;padding:3rem;">
+    <div style="font-size:5rem;margin-bottom:1rem;">${getFileEmoji(file)}</div>
+    <div style="color:var(--text);font-size:1.1rem;margin-bottom:0.5rem;">${file.name}</div>
+    <div style="color:var(--muted);font-size:0.82rem;margin-bottom:1.5rem;">Preview not available for this file type</div>
+    <a href="${file.url}" download="${file.name}" class="btn btn-primary" style="text-decoration:none;">⬇️ Download File</a>
+  </div>`;
+}
+
+function closeFilePreview() {
+  document.getElementById('filePreviewModal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('previewContent').innerHTML = '';
+}
+
+// ══════════════════════════════════
+// IMPROVEMENT 2 — THEMES
+// ══════════════════════════════════
+function setTheme(theme, el) {
+  // Remove all theme classes
+  document.body.classList.remove('light-mode','theme-ocean','theme-forest','theme-purple','theme-rose');
+  // Apply new theme
+  if (theme === 'light') document.body.classList.add('light-mode');
+  else if (theme !== 'default') document.body.classList.add('theme-' + theme);
+  // Update active dot
+  document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+  if (el) el.classList.add('active');
+  // Save
+  localStorage.setItem('rijan-theme', theme);
+  isDark = theme !== 'light';
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+  showToast('🎨 Theme changed!', 'success');
+}
+
+// Load saved theme
+(function loadSavedTheme() {
+  const saved = localStorage.getItem('rijan-theme');
+  if (saved && saved !== 'default') {
+    const dots = document.querySelectorAll('.theme-dot');
+    const idx = ['default','ocean','forest','purple','rose','light'].indexOf(saved);
+    setTheme(saved, dots[idx] || null);
+  }
+})();
+
+// Override toggleTheme to work with theme system
+function toggleTheme() {
+  const current = localStorage.getItem('rijan-theme') || 'default';
+  if (current === 'light') setTheme('default', document.querySelectorAll('.theme-dot')[0]);
+  else setTheme('light', document.querySelectorAll('.theme-dot')[5]);
+}
+
+// ══════════════════════════════════
+// IMPROVEMENT 3 — ANALYTICS
+// ══════════════════════════════════
+function switchDashTab(tab) {
+  ['gallery','messages','music','blog','analytics'].forEach(t => {
+    const el = document.getElementById('dashTab-' + t);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+  });
+  if (tab === 'messages') loadMessages();
+  if (tab === 'blog') loadMyBlogPosts();
+  if (tab === 'music') { loadSongList(); loadAudioFiles(); }
+  if (tab === 'analytics') renderAnalytics();
+}
+
+function renderAnalytics() {
+  const photos = allFiles.filter(f => getCat(f) === 'image');
+  const videos = allFiles.filter(f => getCat(f) === 'video');
+  const audios = allFiles.filter(f => getCat(f) === 'audio');
+  const docs   = allFiles.filter(f => getCat(f) === 'pdf');
+  const others = allFiles.filter(f => getCat(f) === 'other');
+
+  const totalBytes = allFiles.reduce((a, f) => a + (f.size || 0), 0);
+  const usedMB = (totalBytes / 1048576).toFixed(1);
+
+  document.getElementById('analyticsTotalFiles').textContent = allFiles.length;
+  document.getElementById('analyticsStorageUsed').textContent = usedMB + ' MB';
+
+  // Bar chart by type
+  const types = [
+    { label: '📷 Photo', count: photos.length, color: '#c9a96e' },
+    { label: '🎬 Video', count: videos.length, color: '#64b5f6' },
+    { label: '🎵 Audio', count: audios.length, color: '#81c784' },
+    { label: '📄 PDF',   count: docs.length,   color: '#f48fb1' },
+    { label: '📁 Other', count: others.length,  color: '#ce93d8' },
+  ];
+  const maxCount = Math.max(...types.map(t => t.count), 1);
+  document.getElementById('storageByType').innerHTML = types.map(t => `
+    <div class="bar-row">
+      <span class="bar-label">${t.label}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${(t.count/maxCount*100).toFixed(0)}%;background:${t.color};"></div></div>
+      <span class="bar-val">${t.count}</span>
+    </div>`).join('');
+
+  // Donut canvas
+  const canvas = document.getElementById('donutChart');
+  if (canvas && canvas.getContext) {
+    const ctx = canvas.getContext('2d');
+    const data = types.map(t => t.count);
+    const colors = types.map(t => t.color);
+    const total = data.reduce((a, b) => a + b, 0) || 1;
+    let startAngle = -Math.PI / 2;
+    ctx.clearRect(0, 0, 200, 120);
+    data.forEach((val, i) => {
+      const slice = (val / total) * Math.PI * 2;
+      ctx.beginPath();
+      ctx.moveTo(60, 60);
+      ctx.arc(60, 60, 50, startAngle, startAngle + slice);
+      ctx.closePath();
+      ctx.fillStyle = colors[i];
+      ctx.fill();
+      startAngle += slice;
+    });
+    // Donut hole
+    ctx.beginPath();
+    ctx.arc(60, 60, 28, 0, Math.PI * 2);
+    ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--card') || '#111620';
+    ctx.fill();
+    // Center text
+    ctx.fillStyle = '#c9a96e';
+    ctx.font = 'bold 14px Outfit';
+    ctx.textAlign = 'center';
+    ctx.fillText(allFiles.length, 60, 65);
+  }
+  document.getElementById('donutLegend').innerHTML = types.map(t =>
+    `<div class="legend-item"><div class="legend-dot" style="background:${t.color};"></div>${t.label}: ${t.count}</div>`
+  ).join('');
+
+  // Activity chart (last 7 days)
+  const actEl = document.getElementById('activityChart');
+  const days = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const dateStr = d.toISOString().split('T')[0];
+    const count = allFiles.filter(f => (f.uploaded_at || '').startsWith(dateStr)).length;
+    days.push({ label: d.toLocaleDateString('en-US', { weekday: 'short' }), count });
+  }
+  const maxDay = Math.max(...days.map(d => d.count), 1);
+  actEl.innerHTML = days.map(d => `
+    <div style="display:flex;flex-direction:column;align-items:center;gap:0.3rem;flex:1;">
+      <div style="width:100%;background:var(--gold);border-radius:4px 4px 0 0;height:${Math.max((d.count/maxDay*70),2)}px;transition:height 0.8s var(--transition);"></div>
+      <span style="font-size:0.6rem;color:var(--muted);">${d.label}</span>
+      <span style="font-size:0.6rem;color:var(--gold);">${d.count}</span>
+    </div>`).join('');
+
+  // Top types
+  document.getElementById('topTypes').innerHTML = types
+    .sort((a, b) => b.count - a.count)
+    .map(t => `
+      <div style="display:flex;align-items:center;gap:0.8rem;">
+        <span style="font-size:0.85rem;">${t.label}</span>
+        <div style="flex:1;height:6px;background:var(--surface);border-radius:100px;overflow:hidden;">
+          <div style="width:${(t.count/maxCount*100).toFixed(0)}%;height:100%;background:${t.color};border-radius:100px;transition:width 1s;"></div>
+        </div>
+        <span style="font-size:0.7rem;color:var(--muted);min-width:25px;text-align:right;">${t.count}</span>
+      </div>`).join('');
+}
+
+// ══════════════════════════════════
+// IMPROVEMENT 4 — DRAG SORT
+// ══════════════════════════════════
+let dragSrcKey = null;
+
+function enableDragSort(card) {
+  card.setAttribute('draggable', 'true');
+  card.addEventListener('dragstart', e => {
+    dragSrcKey = card.getAttribute('data-key');
+    card.classList.add('drag-source');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  card.addEventListener('dragend', () => {
+    card.classList.remove('drag-source');
+    document.querySelectorAll('.drag-over-card').forEach(c => c.classList.remove('drag-over-card'));
+  });
+  card.addEventListener('dragover', e => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragSrcKey !== card.getAttribute('data-key')) card.classList.add('drag-over-card');
+  });
+  card.addEventListener('dragleave', () => card.classList.remove('drag-over-card'));
+  card.addEventListener('drop', e => {
+    e.preventDefault();
+    card.classList.remove('drag-over-card');
+    const destKey = card.getAttribute('data-key');
+    if (!dragSrcKey || dragSrcKey === destKey) return;
+    const [srcType, srcId] = dragSrcKey.split('::');
+    const [destType, destId] = destKey.split('::');
+    // Drag file INTO folder
+    if (srcType === 'file' && destType === 'folder') {
+      const file = allFiles.find(f => f.id === parseInt(srcId));
+      if (file) {
+        const destPath = [...currentPath, destId].join('/');
+        sb.from('files').update({ folder_path: destPath, folder_name: destPath.split('/')[0] }).eq('id', file.id)
+          .then(() => { showToast(`📂 Moved to ${destId}`, 'success'); loadCloudFiles(); });
+      }
+    }
+  });
+}
+
+// Patch renderGridItems to enable drag sort
+const _origRenderGridItems = renderGridItems;
+window.renderGridItems = function(subFolders, files, node, grid) {
+  _origRenderGridItems(subFolders, files, node, grid);
+  // Enable drag sort on all cards after render
+  setTimeout(() => {
+    document.querySelectorAll('.file-card[data-key]').forEach(enableDragSort);
+  }, 100);
+};
+
+// ══════════════════════════════════
+// IMPROVEMENT 5 — RECYCLE BIN AUTO DELETE (30 days)
+// ══════════════════════════════════
+async function checkTrashExpiry() {
+  if (!trashedFiles.length) return;
+  const now = Date.now();
+  const THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
+  const expired = trashedFiles.filter(f => {
+    const deletedAt = new Date(f.trashed_at || f.uploaded_at || 0).getTime();
+    return now - deletedAt > THIRTY_DAYS;
+  });
+  if (expired.length) {
+    await sb.from('files').delete().in('id', expired.map(f => f.id));
+    showToast(`🗑️ ${expired.length} files auto-deleted (30 days expired)`, 'success');
+    await loadCloudFiles();
+  }
+}
+
+// Auto-delete trashed column with timestamp
+async function trashFile(id) {
+  if (!confirm('Delete this file? It will be auto-deleted after 30 days.')) return;
+  try {
+    const { error } = await sb.from('files').update({
+      trashed: true,
+      trashed_at: new Date().toISOString()
+    }).eq('id', id);
+    if (error) await sb.from('files').delete().eq('id', id);
+    showToast('🗑️ Moved to Trash', 'success');
+    await loadCloudFiles();
+  } catch (e) { showToast('❌ ' + e.message, 'error'); }
+}
+
+// ══════════════════════════════════
+// IMPROVEMENT 6 — FILE TAGS + COLOR LABELS
+// ══════════════════════════════════
+let tagTargetFileId = null;
+let selectedColor = null;
+
+function openTagModal(fileId) {
+  tagTargetFileId = fileId;
+  const file = allFiles.find(f => f.id === fileId);
+  if (!file) return;
+  // Load existing tags
+  const existingTags = file.custom_tags ? JSON.parse(file.custom_tags).join(', ') : '';
+  document.getElementById('tagInput').value = existingTags;
+  selectedColor = file.color_label || null;
+  // Mark current color
+  document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('selected'));
+  if (selectedColor) {
+    const opt = document.querySelector(`.color-opt[style*="${selectedColor}"]`);
+    if (opt) opt.classList.add('selected');
+  }
+  document.getElementById('tagModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeTagModal() {
+  document.getElementById('tagModal').classList.remove('open');
+  document.body.style.overflow = '';
+  tagTargetFileId = null; selectedColor = null;
+}
+
+function selectColor(color, el) {
+  selectedColor = color;
+  document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+async function saveTagsAndColor() {
+  if (!tagTargetFileId) return;
+  const rawTags = document.getElementById('tagInput').value;
+  const tags = rawTags.split(',').map(t => t.trim()).filter(Boolean);
+  try {
+    await sb.from('files').update({
+      custom_tags: tags.length ? JSON.stringify(tags) : null,
+      color_label: selectedColor
+    }).eq('id', tagTargetFileId);
+    showToast('✅ Tags saved!', 'success');
+    closeTagModal();
+    await loadCloudFiles();
+  } catch (e) { showToast('❌ ' + e.message, 'error'); }
+}
+
+// Add tag button to file context menu
+const _origShowCtxMenu = showCtxMenu;
+window.showCtxMenu = function(e, file) {
+  ctxTargetFile = file;
+  const menu = document.getElementById('ctxMenu');
+  menu.innerHTML = `
+    <div class="ctx-item" onclick="openFilePreview(allFiles.find(f=>f.id===${file.id}))">👁️ Preview</div>
+    <div class="ctx-item" onclick="ctxAction('download')">⬇️ Download</div>
+    <div class="ctx-item" onclick="ctxAction('copy-link')">🔗 Copy Link</div>
+    <div class="ctx-item" onclick="openShareModal(allFiles.find(f=>f.id===${file.id}))">📤 Share</div>
+    <div class="ctx-item" onclick="openTagModal(${file.id})">🏷️ Tags & Color</div>
+    <div class="ctx-item" onclick="ctxAction('rename')">✏️ Rename</div>
+    <div class="ctx-item" onclick="ctxAction('ai-scan')">🤖 AI Scan</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item" onclick="selectedItems.add('file::${file.id}');updateBulkBar();bulkCut()">✂️ Cut</div>
+    <div class="ctx-item" onclick="selectedItems.add('file::${file.id}');updateBulkBar();bulkCopy()">📋 Copy</div>
+    <div class="ctx-sep"></div>
+    <div class="ctx-item danger" onclick="ctxAction('delete')">🗑️ Delete</div>`;
+  menu.style.display = 'block';
+  menu.style.left = Math.min(e.clientX, window.innerWidth - 200) + 'px';
+  menu.style.top = Math.min(e.clientY, window.innerHeight - 350) + 'px';
+};
+
+// Render color label on file cards
+const _origRenderGridItemsTag = window.renderGridItems;
+window.renderGridItems = function(subFolders, files, node, grid) {
+  _origRenderGridItemsTag(subFolders, files, node, grid);
+  // Add color labels and custom tags
+  setTimeout(() => {
+    files.forEach(file => {
+      if (!file.color_label && !file.custom_tags) return;
+      const card = grid.querySelector(`[data-key="file::${file.id}"]`);
+      if (!card) return;
+      // Color label strip at bottom
+      if (file.color_label) {
+        const strip = document.createElement('div');
+        strip.className = 'color-label';
+        strip.style.background = file.color_label;
+        card.appendChild(strip);
+      }
+      // Custom tag chips
+      if (file.custom_tags) {
+        try {
+          const tags = JSON.parse(file.custom_tags);
+          const tagsWrap = document.createElement('div');
+          tagsWrap.style.cssText = 'display:flex;flex-wrap:wrap;gap:0.25rem;padding:0 0.7rem 0.5rem;';
+          tags.forEach(tag => {
+            const chip = document.createElement('span');
+            chip.className = 'tag-chip';
+            chip.style.cssText = `background:${file.color_label || 'var(--gold-dim)'};border:1px solid ${file.color_label || 'rgba(201,169,110,0.2)'};color:${file.color_label ? 'white' : 'var(--gold)'};`;
+            chip.textContent = tag;
+            tagsWrap.appendChild(chip);
+          });
+          card.appendChild(tagsWrap);
+        } catch(e) {}
+      }
+    });
+  }, 150);
+};
+
+// Run trash expiry check on load
+setTimeout(checkTrashExpiry, 5000);
+
+// ══════════════════════════════════
 // INIT
 // ══════════════════════════════════
 loadBlog();
+setupLazyImages();
 </script>
 </body>
 </html>
