@@ -139,7 +139,205 @@ section{padding:7rem 2rem;}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 15px rgba(201,169,110,0.1);}50%{box-shadow:0 0 35px rgba(201,169,110,0.35);}}
 @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
 
-/* PUBLIC BLOG */
+/* ══════════════════════
+   FAMILY TREE SECTION
+══════════════════════ */
+#family{
+  background:var(--bg);
+  padding:7rem 2rem;
+  position:relative;
+  overflow:hidden;
+}
+.family-bg-glow{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%,rgba(201,169,110,0.07) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 30% at 15% 85%,rgba(126,184,201,0.04) 0%,transparent 50%),
+    radial-gradient(ellipse 40% 30% at 85% 85%,rgba(201,169,110,0.05) 0%,transparent 50%);
+}
+.family-tree-wrap{
+  max-width:860px;margin:0 auto;
+  display:flex;flex-direction:column;align-items:center;
+  position:relative;z-index:1;
+}
+.gen-label{
+  font-size:0.58rem;letter-spacing:0.38em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1.8rem;
+  display:flex;align-items:center;gap:1.2rem;width:100%;justify-content:center;
+}
+.gen-label::before,.gen-label::after{
+  content:'';flex:1;max-width:120px;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,169,110,0.25),transparent);
+}
+.gen-row{
+  display:flex;justify-content:center;align-items:flex-start;gap:0;
+  width:100%;position:relative;
+}
+/* Couple layout: card + bridge + card */
+.couple-wrap{
+  display:flex;align-items:center;gap:0;
+}
+.person-card{
+  width:195px;
+  background:linear-gradient(155deg,rgba(17,22,32,0.98) 0%,rgba(22,28,39,0.95) 100%);
+  border:1px solid rgba(201,169,110,0.16);
+  border-radius:20px;
+  padding:1.8rem 1.2rem 1.5rem;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.4s var(--transition),box-shadow 0.4s,border-color 0.4s;
+}
+.person-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:0.5;transition:opacity 0.3s;
+}
+.person-card::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(201,169,110,0.05) 0%,transparent 60%);
+}
+.person-card:hover{
+  transform:translateY(-10px) scale(1.02);
+  border-color:rgba(201,169,110,0.4);
+  box-shadow:0 28px 65px rgba(0,0,0,0.55),0 0 50px rgba(201,169,110,0.1);
+}
+.person-card:hover::before{opacity:1;}
+.person-card.me-card{
+  width:230px;
+  border-color:rgba(201,169,110,0.3);
+  background:linear-gradient(155deg,rgba(25,32,46,0.99) 0%,rgba(32,40,56,0.98) 100%);
+  box-shadow:0 0 60px rgba(201,169,110,0.12),0 24px 60px rgba(0,0,0,0.5);
+}
+.person-card.me-card::before{opacity:0.9;}
+.person-avatar{
+  width:86px;height:86px;border-radius:50%;
+  margin:0 auto 1.1rem;position:relative;z-index:1;
+}
+.me-card .person-avatar{width:106px;height:106px;}
+.person-avatar img{
+  width:100%;height:100%;object-fit:cover;border-radius:50%;
+  border:2px solid rgba(201,169,110,0.28);
+  display:block;transition:border-color 0.3s,transform 0.4s;
+}
+.person-card:hover .person-avatar img{
+  border-color:rgba(201,169,110,0.65);
+  transform:scale(1.04);
+}
+.avatar-ring{
+  position:absolute;inset:-5px;border-radius:50%;
+  border:1px solid rgba(201,169,110,0.18);
+  animation:ringPulse 3.5s ease infinite;pointer-events:none;
+}
+.me-card .avatar-ring{border-color:rgba(201,169,110,0.35);animation-duration:2.2s;}
+@keyframes ringPulse{
+  0%,100%{opacity:0.25;transform:scale(1);}
+  50%{opacity:0.75;transform:scale(1.06);}
+}
+.person-role{
+  font-size:0.56rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:0.35rem;opacity:0.75;position:relative;z-index:1;
+}
+.person-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;font-weight:300;color:var(--text);
+  margin-bottom:1rem;line-height:1.3;position:relative;z-index:1;
+}
+.me-card .person-name{font-size:1.35rem;}
+.person-meta{
+  display:flex;flex-direction:column;gap:0.5rem;
+  position:relative;z-index:1;
+}
+.person-meta-row{
+  display:flex;align-items:center;gap:0.5rem;
+  background:rgba(255,255,255,0.025);
+  border:1px solid rgba(255,255,255,0.04);
+  border-radius:8px;padding:0.4rem 0.65rem;
+}
+.pm-icon{font-size:0.8rem;flex-shrink:0;width:16px;text-align:center;}
+.pm-text{display:flex;flex-direction:column;align-items:flex-start;gap:0.05rem;min-width:0;}
+.pm-label{font-size:0.54rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);}
+.pm-val{font-size:0.72rem;color:var(--text2);}
+
+/* Marriage bridge */
+.marriage-bridge{
+  display:flex;flex-direction:column;align-items:center;
+  gap:0.3rem;padding:0 0.6rem;flex-shrink:0;
+  align-self:center;margin-top:-30px;
+}
+.m-line{
+  width:36px;height:1px;
+  background:linear-gradient(90deg,rgba(201,169,110,0.4),rgba(201,169,110,0.85),rgba(201,169,110,0.4));
+}
+.m-heart{
+  font-size:0.88rem;
+  animation:heartbeat 2.2s ease infinite;
+}
+@keyframes heartbeat{
+  0%,100%{transform:scale(1);}
+  14%{transform:scale(1.28);}
+  28%{transform:scale(1);}
+  42%{transform:scale(1.18);}
+  56%{transform:scale(1);}
+}
+
+/* Generation connector (vertical) */
+.gen-connector{
+  width:100%;height:68px;
+  position:relative;margin:0;
+}
+.gen-connector svg{
+  position:absolute;top:0;left:0;
+  width:100%;height:68px;
+  overflow:visible;
+}
+
+/* Crown / future badge */
+.future-badge{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#07090d;font-size:0.56rem;letter-spacing:0.2em;font-weight:600;
+  padding:0.22rem 1rem;border-radius:0 0 10px 10px;
+  text-transform:uppercase;white-space:nowrap;z-index:5;
+}
+
+/* Family summary bar */
+.family-summary{
+  width:100%;margin-top:4rem;
+  display:grid;grid-template-columns:repeat(5,1fr);gap:1px;
+  background:rgba(201,169,110,0.15);
+  border:1px solid rgba(201,169,110,0.18);
+  border-radius:18px;overflow:hidden;
+}
+.fs-cell{
+  background:linear-gradient(155deg,rgba(17,22,32,0.98),rgba(22,28,39,0.95));
+  padding:1.4rem 0.8rem;text-align:center;
+  transition:background 0.3s;
+}
+.fs-cell:hover{background:rgba(28,36,50,0.99);}
+.fs-num{
+  display:block;font-family:'Cormorant Garamond',serif;
+  font-size:1.6rem;font-weight:300;color:var(--gold);
+  line-height:1;margin-bottom:0.4rem;
+}
+.fs-label{font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+
+/* Light mode overrides */
+body.light-mode .person-card{
+  background:linear-gradient(155deg,rgba(232,226,214,0.98),rgba(220,212,198,0.95));
+}
+body.light-mode .person-card.me-card{
+  background:linear-gradient(155deg,rgba(220,213,200,0.99),rgba(208,200,186,0.98));
+}
+body.light-mode .person-meta-row{
+  background:rgba(0,0,0,0.04);
+  border-color:rgba(0,0,0,0.06);
+}
+body.light-mode .family-summary .fs-cell{
+  background:linear-gradient(155deg,rgba(232,226,214,0.98),rgba(220,212,198,0.95));
+}
+
+/* BLOG */
 #blog{background:var(--surface);padding:7rem 2rem;position:relative;}
 .blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;}
 .blog-card{background:linear-gradient(145deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 0.35s var(--transition);cursor:pointer;}
@@ -229,8 +427,7 @@ section{padding:7rem 2rem;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
 .form-submit{padding:0.9rem 2rem;background:var(--gold);color:#07090d;border:none;border-radius:100px;font-family:'Outfit',sans-serif;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-weight:500;transition:all 0.3s;}
 .form-submit:hover{background:var(--gold-light);box-shadow:0 8px 30px rgba(201,169,110,0.3);}
-#cf_success{display:none;text-align:center;padding:0.8rem;background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.3);border-radius:8px;color:var(--success);font-size:0.85rem;margin-bottom:0.8rem;}
-#cf_error{display:none;text-align:center;padding:0.8rem;background:rgba(232,112,112,0.1);border:1px solid rgba(232,112,112,0.3);border-radius:8px;color:var(--danger);font-size:0.85rem;margin-bottom:0.8rem;}
+#cf_success{display:none;}#cf_error{display:none;}
 
 /* MUSIC PLAYER */
 #musicPlayer{position:fixed;bottom:2rem;right:2rem;z-index:500;width:310px;background:linear-gradient(145deg,rgba(17,22,32,0.98),rgba(22,28,39,0.98));border:1px solid rgba(201,169,110,0.25);border-radius:16px;padding:1.2rem;box-shadow:0 20px 60px rgba(0,0,0,0.5);backdrop-filter:blur(32px);transition:transform 0.4s var(--transition);}
@@ -277,8 +474,6 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 #cursor-dot{position:fixed;width:8px;height:8px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);mix-blend-mode:difference;}
 #cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid rgba(201,169,110,0.6);border-radius:50%;pointer-events:none;z-index:99997;transform:translate(-50%,-50%);transition:width 0.3s,height 0.3s,opacity 0.3s,border-color 0.3s;}
 #cursor-ring.hovering{width:55px;height:55px;border-color:rgba(201,169,110,0.9);background:rgba(201,169,110,0.05);}
-
-/* ADMIN LINK */
 .admin-link{position:fixed;bottom:2rem;left:2rem;z-index:400;padding:0.45rem 1rem;border-radius:100px;background:var(--card);border:1px solid var(--border);font-size:0.68rem;color:var(--muted);text-decoration:none;transition:all 0.25s;opacity:0.5;}
 .admin-link:hover{opacity:1;border-color:var(--gold);color:var(--gold);}
 
@@ -289,6 +484,16 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   .bio-portrait{position:static;}
   .form-row{grid-template-columns:1fr;}
   .social-grid-3d,.contact-methods-row{grid-template-columns:1fr;}
+  .couple-wrap{flex-direction:column;gap:1rem;align-items:center;}
+  .marriage-bridge{flex-direction:row;gap:0.4rem;margin-top:0;}
+  .m-line{width:50px;}
+  .person-card{width:200px!important;}
+  .family-summary{grid-template-columns:repeat(3,1fr);}
+}
+@media(max-width:480px){
+  .person-card{width:175px!important;}
+  .family-summary{grid-template-columns:1fr 1fr;}
+  .family-summary .fs-cell:last-child{grid-column:1/-1;}
 }
 </style>
 </head>
@@ -314,6 +519,7 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   <ul class="nav-links">
     <li><a href="#home" class="active">🏠 <span>Home</span></a></li>
     <li><a href="#bio">✦ <span>About</span></a></li>
+    <li><a href="#family">🌳 <span>Family</span></a></li>
     <li><a href="#blog">✍️ <span>Blog</span></a></li>
     <li><a href="#social">📸 <span>Social</span></a></li>
     <li><a href="#contact">✉ <span>Connect</span></a></li>
@@ -377,9 +583,9 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
         <h2 class="s-title" id="bioTitle">A passionate soul<br/>from the mountains</h2>
         <div id="bioText">
           <p>Hey there! I'm <strong>Rijan Thapa Kaji</strong> — a music-loving, adventure-chasing creative from the beautiful land of Nepal. 🇳🇵</p>
-          <p>I carry the pride of the Thapa Kaji heritage — a lineage of strength, honor, and deep roots in Nepali culture. Grounded yet ever-curious, traditional yet forward-looking.</p>
-          <p>Whether I'm strumming a melody, exploring hidden trails in the Himalayas, or capturing life through a lens, I pour my heart into everything I do.</p>
-          <p>Follow along on my journey, connect with me, or just say hello. Let's make something memorable together. 🙏</p>
+          <p>I carry the pride of the <strong>Thapa Kaji heritage</strong> — a lineage of strength, honor, and deep roots in Nepali culture. My grandfather Tirtha Bahadur Thapa planted the seeds of this family tree in 2022 BS, and every generation since has blossomed from that proud foundation.</p>
+          <p>Whether I'm strumming a melody that echoes through Himalayan valleys, hiking hidden trails above the clouds, or capturing fleeting golden-hour moments through a lens — I pour my whole heart into it. Music is my language, the mountains are my home, and stories are what I leave behind.</p>
+          <p>Born in 2064 BS into a family that taught me to love deeply and live fully, I'm on a journey to create, explore, and connect. Scroll down to meet the people who made me who I am. 🙏</p>
         </div>
         <div class="bio-divider"></div>
         <div class="bio-stats-row">
@@ -387,7 +593,259 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
           <div class="bio-stat"><span class="bio-stat-em">🏔️</span><span class="bio-stat-label">Mountains</span></div>
           <div class="bio-stat"><span class="bio-stat-em">✨</span><span class="bio-stat-label">Creator</span></div>
         </div>
+        <div style="margin-top:1.6rem;">
+          <a href="#family" class="btn btn-ghost" style="font-size:0.78rem;">🌳 Meet My Family →</a>
+        </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAMILY GENERATION TREE -->
+<section id="family">
+  <div class="family-bg-glow"></div>
+  <div class="section-inner">
+
+    <!-- Header -->
+    <div class="reveal" style="text-align:center;margin-bottom:4rem;">
+      <div class="s-label" style="justify-content:center;">Heritage &amp; Roots</div>
+      <h2 class="s-title" style="text-align:center;">🌳 My Family<br/>Generation</h2>
+      <p style="color:var(--text2);font-size:0.95rem;max-width:440px;margin:0.8rem auto 0;line-height:1.85;">
+        Three Generations &nbsp;·&nbsp; One Family &nbsp;·&nbsp; Endless Love
+      </p>
+    </div>
+
+    <div class="family-tree-wrap">
+
+      <!-- ── GENERATION I: GRANDPARENTS ── -->
+      <div class="gen-label reveal">Generation I &nbsp;·&nbsp; The Roots</div>
+
+      <div class="gen-row reveal">
+        <div class="couple-wrap">
+
+          <!-- Grandfather -->
+          <div class="person-card">
+            <div class="person-avatar">
+              <img src="https://res.cloudinary.com/dvd5bjlpa/image/upload/v1782329782/rijan-private/658823286_1897897404933086_5228059262653062470_n_et2q8r.jpg" alt="Tirtha Bahadur Thapa" loading="lazy"/>
+              <div class="avatar-ring"></div>
+            </div>
+            <div class="person-role">👴 Grand Father</div>
+            <div class="person-name">Tirtha Bahadur<br/>Thapa</div>
+            <div class="person-meta">
+              <div class="person-meta-row">
+                <span class="pm-icon">📅</span>
+                <div class="pm-text">
+                  <span class="pm-label">Birthday</span>
+                  <span class="pm-val">2022 BS</span>
+                </div>
+              </div>
+              <div class="person-meta-row">
+                <span class="pm-icon">💍</span>
+                <div class="pm-text">
+                  <span class="pm-label">Married</span>
+                  <span class="pm-val">2038 BS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Marriage bridge -->
+          <div class="marriage-bridge">
+            <div class="m-line"></div>
+            <span class="m-heart">❤️</span>
+            <div class="m-line"></div>
+          </div>
+
+          <!-- Grandmother -->
+          <div class="person-card">
+            <div class="person-avatar">
+              <img src="https://res.cloudinary.com/dvd5bjlpa/image/upload/v1782329780/rijan-private/IMG_0148_u4o93u.jpg" alt="Khagisara Thapa" loading="lazy"/>
+              <div class="avatar-ring"></div>
+            </div>
+            <div class="person-role">👵 Grand Mother</div>
+            <div class="person-name">Khagisara<br/>Thapa</div>
+            <div class="person-meta">
+              <div class="person-meta-row">
+                <span class="pm-icon">📅</span>
+                <div class="pm-text">
+                  <span class="pm-label">Birthday</span>
+                  <span class="pm-val">2024 BS</span>
+                </div>
+              </div>
+              <div class="person-meta-row">
+                <span class="pm-icon">💍</span>
+                <div class="pm-text">
+                  <span class="pm-label">Married</span>
+                  <span class="pm-val">2038 BS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Connector G1 → G2 -->
+      <div class="gen-connector reveal">
+        <svg viewBox="0 0 860 68" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="vg1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#c9a96e" stop-opacity="0.3"/>
+            </linearGradient>
+          </defs>
+          <line x1="430" y1="2" x2="430" y2="66" stroke="url(#vg1)" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <circle cx="430" cy="34" r="4.5" fill="#c9a96e" opacity="0.55"/>
+          <circle cx="430" cy="34" r="9" fill="#c9a96e" opacity="0.1"/>
+        </svg>
+      </div>
+
+      <!-- ── GENERATION II: PARENTS ── -->
+      <div class="gen-label reveal reveal-delay">Generation II &nbsp;·&nbsp; The Branch</div>
+
+      <div class="gen-row reveal reveal-delay">
+        <div class="couple-wrap">
+
+          <!-- Father -->
+          <div class="person-card">
+            <div class="person-avatar">
+              <img src="https://res.cloudinary.com/dvd5bjlpa/image/upload/v1782329783/rijan-private/MYXJ_20200212115313_fast-1-1_dpmc5p.jpg" alt="Ammar Singh Thapa" loading="lazy"/>
+              <div class="avatar-ring"></div>
+            </div>
+            <div class="person-role">👨 Father</div>
+            <div class="person-name">Ammar Singh<br/>Thapa</div>
+            <div class="person-meta">
+              <div class="person-meta-row">
+                <span class="pm-icon">📅</span>
+                <div class="pm-text">
+                  <span class="pm-label">Birthday</span>
+                  <span class="pm-val">2042 BS</span>
+                </div>
+              </div>
+              <div class="person-meta-row">
+                <span class="pm-icon">💍</span>
+                <div class="pm-text">
+                  <span class="pm-label">Married</span>
+                  <span class="pm-val">2060 BS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Marriage bridge -->
+          <div class="marriage-bridge">
+            <div class="m-line"></div>
+            <span class="m-heart">❤️</span>
+            <div class="m-line"></div>
+          </div>
+
+          <!-- Mother -->
+          <div class="person-card">
+            <div class="person-avatar">
+              <img src="https://res.cloudinary.com/dvd5bjlpa/image/upload/v1782329784/rijan-private/IMG_4076_cmt9zm.jpg" alt="Bhagawati Thapa" loading="lazy"/>
+              <div class="avatar-ring"></div>
+            </div>
+            <div class="person-role">👩 Mother</div>
+            <div class="person-name">Bhagawati<br/>Thapa</div>
+            <div class="person-meta">
+              <div class="person-meta-row">
+                <span class="pm-icon">📅</span>
+                <div class="pm-text">
+                  <span class="pm-label">Birthday</span>
+                  <span class="pm-val">2042 BS</span>
+                </div>
+              </div>
+              <div class="person-meta-row">
+                <span class="pm-icon">💍</span>
+                <div class="pm-text">
+                  <span class="pm-label">Married</span>
+                  <span class="pm-val">2060 BS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Connector G2 → G3 -->
+      <div class="gen-connector reveal reveal-delay">
+        <svg viewBox="0 0 860 68" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="vg2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#c9a96e" stop-opacity="0.3"/>
+              <stop offset="100%" stop-color="#c9a96e" stop-opacity="0.9"/>
+            </linearGradient>
+          </defs>
+          <line x1="430" y1="2" x2="430" y2="66" stroke="url(#vg2)" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <circle cx="430" cy="34" r="4.5" fill="#c9a96e" opacity="0.65"/>
+          <circle cx="430" cy="34" r="10" fill="#c9a96e" opacity="0.12"/>
+          <circle cx="430" cy="34" r="16" fill="#c9a96e" opacity="0.05"/>
+        </svg>
+      </div>
+
+      <!-- ── GENERATION III: ME ── -->
+      <div class="gen-label reveal reveal-delay2">Generation III &nbsp;·&nbsp; The Future</div>
+
+      <div class="gen-row reveal reveal-delay2">
+        <div class="person-card me-card">
+          <div class="future-badge">🌟 The Future</div>
+          <div class="person-avatar" style="margin-top:1.2rem;">
+            <img src="https://res.cloudinary.com/dvd5bjlpa/image/upload/v1778895997/rijan-private/73860-A_d9rgrb.jpg" alt="Rijan Thapa Kaji" loading="lazy"/>
+            <div class="avatar-ring"></div>
+          </div>
+          <div class="person-role">👤 Me</div>
+          <div class="person-name">Rijan Thapa Kaji</div>
+          <div class="person-meta">
+            <div class="person-meta-row">
+              <span class="pm-icon">📅</span>
+              <div class="pm-text">
+                <span class="pm-label">Birthday</span>
+                <span class="pm-val">2064 BS</span>
+              </div>
+            </div>
+            <div class="person-meta-row">
+              <span class="pm-icon">🇳🇵</span>
+              <div class="pm-text">
+                <span class="pm-label">Origin</span>
+                <span class="pm-val">Nepal</span>
+              </div>
+            </div>
+            <div class="person-meta-row">
+              <span class="pm-icon">🎵</span>
+              <div class="pm-text">
+                <span class="pm-label">Passion</span>
+                <span class="pm-val">Music &amp; Mountains</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Family Summary -->
+      <div class="family-summary reveal">
+        <div class="fs-cell">
+          <span class="fs-num">2022</span>
+          <span class="fs-label">Oldest Birthday BS</span>
+        </div>
+        <div class="fs-cell">
+          <span class="fs-num">2064</span>
+          <span class="fs-label">Youngest Birthday BS</span>
+        </div>
+        <div class="fs-cell">
+          <span class="fs-num">2038</span>
+          <span class="fs-label">Grandparents Wed BS</span>
+        </div>
+        <div class="fs-cell">
+          <span class="fs-num">2060</span>
+          <span class="fs-label">Parents Wed BS</span>
+        </div>
+        <div class="fs-cell">
+          <span class="fs-num">5</span>
+          <span class="fs-label">Total Members</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -396,7 +854,7 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 <section id="blog">
   <div class="section-inner">
     <div class="reveal" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:3rem;">
-      <div><div class="s-label">Blog & Stories</div><h2 class="s-title">My Stories &<br/>Adventures</h2></div>
+      <div><div class="s-label">Blog &amp; Stories</div><h2 class="s-title">My Stories &amp;<br/>Adventures</h2></div>
     </div>
     <div class="blog-grid reveal" id="blogGrid">
       <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--muted);">Loading stories…</div>
@@ -457,7 +915,7 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   <div class="section-inner">
     <div class="reveal" style="text-align:center;margin-bottom:4rem;">
       <div class="s-label" style="justify-content:center;">Get In Touch</div>
-      <h2 class="s-title">Let's Connect & Meet Up</h2>
+      <h2 class="s-title">Let's Connect &amp; Meet Up</h2>
       <p style="color:var(--text2);font-size:0.97rem;max-width:500px;margin:0 auto;">Whether you want to collaborate, grab a coffee, go on a hike, or just say hello — my door is always open! 🙏</p>
     </div>
     <div class="contact-methods-row reveal">
@@ -494,6 +952,7 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   <p class="footer-copy" id="footerCopy">© 2025 · Made with ❤️ from Nepal 🇳🇵</p>
   <ul class="footer-links">
     <li><a href="#home">Home</a></li><li><a href="#bio">About</a></li>
+    <li><a href="#family">Family</a></li>
     <li><a href="#blog">Blog</a></li><li><a href="#social">Social</a></li><li><a href="#contact">Contact</a></li>
   </ul>
 </footer>
@@ -524,41 +983,29 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 <button id="mpOpenBtn" onclick="toggleMusicPlayer()">🎵</button>
 
 <script>
-// ═══════════════════════════════
-// CONFIG — public read only
-// ═══════════════════════════════
-const SUPABASE_URL = 'https://zuosiubpdxohlnhpvctz.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1b3NpdWJwZHhvaGxuaHB2Y3R6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3Mjg3NzksImV4cCI6MjA5NDMwNDc3OX0.z6O5ZiMj_osKREOF_Nh9QjyLcq22wCl19kO6ZZrwcXE';
-const W3F_KEY      = 'd53e8f7b-fa59-47e2-8baf-3d2982a82a5d';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://zuosiubpdxohlnhpvctz.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1b3NpdWJwZHhvaGxuaHB2Y3R6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3Mjg3NzksImV4cCI6MjA5NDMwNDc3OX0.z6O5ZiMj_osKREOF_Nh9QjyLcq22wCl19kO6ZZrwcXE';
+const W3F_KEY='d53e8f7b-fa59-47e2-8baf-3d2982a82a5d';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-// ═══════════════════════════════
-// LOADER
-// ═══════════════════════════════
 (function(){
-  const name = "RIJAN THAPA KAJI";
-  const el = document.getElementById('loaderName');
+  const name="RIJAN THAPA KAJI";
+  const el=document.getElementById('loaderName');
   name.split('').forEach((ch,i)=>{
-    const s = document.createElement('span');
-    s.textContent = ch===' '?'\u00A0':ch;
+    const s=document.createElement('span');
+    s.textContent=ch===' '?'\u00A0':ch;
     s.style.animationDelay=(0.08+i*0.07)+'s';
     el.appendChild(s);
   });
   setTimeout(()=>document.getElementById('loader').classList.add('done'),2200);
 })();
 
-// ═══════════════════════════════
-// AOS + PARTICLES
-// ═══════════════════════════════
 setTimeout(()=>{
   if(typeof AOS!=='undefined') AOS.init({duration:800,easing:'cubic-bezier(0.22,1,0.36,1)',once:true,offset:80});
   if(typeof particlesJS!=='undefined') particlesJS('particles-js',{particles:{number:{value:55,density:{enable:true,value_area:900}},color:{value:'#c9a96e'},shape:{type:'circle'},opacity:{value:0.25,random:true,anim:{enable:true,speed:0.8,opacity_min:0.05}},size:{value:2.5,random:true,anim:{enable:true,speed:2,size_min:0.3}},line_linked:{enable:true,distance:140,color:'#c9a96e',opacity:0.08,width:1},move:{enable:true,speed:0.8,direction:'none',random:true,out_mode:'out'}},interactivity:{detect_on:'canvas',events:{onhover:{enable:true,mode:'grab'},onclick:{enable:true,mode:'push'}},modes:{grab:{distance:180,line_linked:{opacity:0.25}},push:{particles_nb:3}}}});
 },2600);
 
-// ═══════════════════════════════
-// NAV ACTIVE
-// ═══════════════════════════════
-const navLinks = document.querySelectorAll('.nav-links a');
+const navLinks=document.querySelectorAll('.nav-links a');
 window.addEventListener('scroll',()=>{
   let cur='';
   document.querySelectorAll('section[id]').forEach(s=>{if(window.scrollY>=s.offsetTop-180) cur=s.id;});
@@ -568,26 +1015,17 @@ window.addEventListener('scroll',()=>{
   document.getElementById('scroll-progress').style.width=Math.min(pct,100)+'%';
 },{passive:true});
 
-// ═══════════════════════════════
-// REVEAL
-// ═══════════════════════════════
 const revObs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('visible');});
 },{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
 
-// ═══════════════════════════════
-// TOAST
-// ═══════════════════════════════
 function showToast(msg,type=''){
   const t=document.getElementById('toast');
   t.textContent=msg;t.className='toast show '+type;
   clearTimeout(t._t);t._t=setTimeout(()=>t.className='toast',3000);
 }
 
-// ═══════════════════════════════
-// THEME
-// ═══════════════════════════════
 let isDark=true;
 function toggleTheme(){
   isDark=!isDark;
@@ -597,9 +1035,6 @@ function toggleTheme(){
 }
 if(localStorage.getItem('rtk-theme')==='light'){isDark=false;document.body.classList.add('light-mode');document.getElementById('themeBtn').textContent='🌙';}
 
-// ═══════════════════════════════
-// LANGUAGE
-// ═══════════════════════════════
 let currentLang='en';
 const translations={
   en:{heroSub:'Nepal · Music · Mountains',heroDesc:'A creative soul from the Himalayas — chasing melodies, summits, and moments worth remembering.'},
@@ -613,9 +1048,6 @@ function toggleLang(){
   document.getElementById('langIcon').textContent=currentLang==='en'?'🇳🇵':'🇬🇧';
 }
 
-// ═══════════════════════════════
-// CURSOR
-// ═══════════════════════════════
 const dot=document.getElementById('cursor-dot');
 const ring=document.getElementById('cursor-ring');
 let mX=0,mY=0,rX=0,rY=0;
@@ -624,21 +1056,15 @@ if(!isMobile){
   document.body.style.cursor='none';
   document.addEventListener('mousemove',e=>{mX=e.clientX;mY=e.clientY;dot.style.left=mX+'px';dot.style.top=mY+'px';});
   (function anim(){rX+=(mX-rX)*0.12;rY+=(mY-rY)*0.12;ring.style.left=rX+'px';ring.style.top=rY+'px';requestAnimationFrame(anim);})();
-  document.querySelectorAll('a,button,.btn,.s3d-card,.blog-card,.cm').forEach(el=>{
+  document.querySelectorAll('a,button,.btn,.s3d-card,.blog-card,.cm,.person-card').forEach(el=>{
     el.addEventListener('mouseenter',()=>ring.classList.add('hovering'));
     el.addEventListener('mouseleave',()=>ring.classList.remove('hovering'));
   });
 }else{dot.style.display='none';ring.style.display='none';}
 
-// ═══════════════════════════════
-// VISITOR COUNT (random)
-// ═══════════════════════════════
 document.getElementById('visitorCount').textContent=Math.floor(Math.random()*8)+3;
 setInterval(()=>{document.getElementById('visitorCount').textContent=Math.floor(Math.random()*8)+3;},30000);
 
-// ═══════════════════════════════
-// SITE SETTINGS (customization from admin)
-// ═══════════════════════════════
 async function loadSiteSettings(){
   try{
     const{data}=await sb.from('site_settings').select('*').single();
@@ -655,7 +1081,6 @@ async function loadSiteSettings(){
     if(data.accent_color){
       const r=document.documentElement;
       r.style.setProperty('--gold',data.accent_color);
-      // simple lighter version
       r.style.setProperty('--gold-light',data.accent_color+'cc');
     }
     const navLogo=document.querySelector('.nav-logo');
@@ -663,9 +1088,6 @@ async function loadSiteSettings(){
   }catch(e){}
 }
 
-// ═══════════════════════════════
-// PUBLIC BLOG
-// ═══════════════════════════════
 async function loadBlog(){
   const grid=document.getElementById('blogGrid');
   try{
@@ -713,9 +1135,6 @@ function closeBlogModal(){
   document.body.style.overflow='';
 }
 
-// ═══════════════════════════════
-// CONTACT FORM
-// ═══════════════════════════════
 async function handleContactSubmit(btn){
   const name=document.getElementById('cf_name').value.trim();
   const email=document.getElementById('cf_email').value.trim();
@@ -749,9 +1168,6 @@ async function handleContactSubmit(btn){
   }
 }
 
-// ═══════════════════════════════
-// MUSIC PLAYER
-// ═══════════════════════════════
 const playlist=[];let currentSong=0;let isPlaying=false;let shuffleMode=false;
 const mpAudio=document.getElementById('mpAudio');
 
@@ -765,18 +1181,14 @@ async function loadPublicPlaylist(){
     }
   }catch(e){}
 }
-
 function toggleMusicPlayer(){
   const mp=document.getElementById('musicPlayer');
   mp.classList.toggle('hidden');
-  if(!mp.classList.contains('hidden')&&playlist.length&&!mpAudio.src){
-    loadTrack(false);
-  }
+  if(!mp.classList.contains('hidden')&&playlist.length&&!mpAudio.src) loadTrack(false);
 }
 function togglePlay(){
   if(!playlist.length){showToast('🎵 No songs available','');return;}
-  if(isPlaying){mpAudio.pause();setPlaying(false);}
-  else{mpAudio.play().catch(()=>{});setPlaying(true);}
+  if(isPlaying){mpAudio.pause();setPlaying(false);}else{mpAudio.play().catch(()=>{});setPlaying(true);}
 }
 function setPlaying(state){
   isPlaying=state;
@@ -789,10 +1201,7 @@ function nextTrack(){
   else currentSong=(currentSong+1)%playlist.length;
   loadTrack();
 }
-function toggleShuffle(){
-  shuffleMode=!shuffleMode;
-  document.getElementById('mpShuffle').style.color=shuffleMode?'var(--gold)':'var(--text2)';
-}
+function toggleShuffle(){shuffleMode=!shuffleMode;document.getElementById('mpShuffle').style.color=shuffleMode?'var(--gold)':'var(--text2)';}
 function loadTrack(autoPlay=true){
   const s=playlist[currentSong];if(!s) return;
   document.getElementById('mpSong').textContent=s.title;
@@ -814,9 +1223,6 @@ mpAudio.addEventListener('timeupdate',()=>{
 });
 mpAudio.addEventListener('ended',nextTrack);
 
-// ═══════════════════════════════
-// PARALLAX
-// ═══════════════════════════════
 window.addEventListener('scroll',()=>{
   const sy=window.scrollY;
   const hg=document.querySelector('.hero-grid');
@@ -825,11 +1231,8 @@ window.addEventListener('scroll',()=>{
   if(hn&&sy<600) hn.style.transform=`translateY(${sy*0.2}px)`;
 },{passive:true});
 
-// ═══════════════════════════════
-// TILT
-// ═══════════════════════════════
 setTimeout(()=>{
-  document.querySelectorAll('.s3d-card,.blog-card').forEach(el=>{
+  document.querySelectorAll('.s3d-card,.blog-card,.person-card').forEach(el=>{
     el.addEventListener('mousemove',e=>{
       const r=el.getBoundingClientRect();
       const x=(e.clientX-r.left)/r.width-0.5;
@@ -840,12 +1243,8 @@ setTimeout(()=>{
   });
 },3000);
 
-// ESC key
 document.addEventListener('keydown',e=>{if(e.key==='Escape') closeBlogModal();});
 
-// ═══════════════════════════════
-// INIT
-// ═══════════════════════════════
 loadBlog();
 loadPublicPlaylist();
 loadSiteSettings();
