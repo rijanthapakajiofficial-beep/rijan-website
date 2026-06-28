@@ -1,0 +1,47 @@
+# ══════════════════════════════════
+# robots.txt — Rijan Thapa Kaji Website
+# ══════════════════════════════════
+
+# Allow all search engines
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /sitemap.xml
+
+# Block admin dashboard from indexing
+Disallow: /admin.html
+Disallow: /admin/
+
+# Block irrelevant crawling
+Disallow: /node_modules/
+Disallow: /*.json$
+Disallow: /dist/
+
+# Sitemap location
+Sitemap: https://rijan-website.onrender.com/sitemap.xml
+
+# Crawl delay (be nice to server)
+Crawl-delay: 1
+
+# Specific search engine rules
+User-agent: Googlebot
+Allow: /
+Disallow: /admin.html
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin.html
+Crawl-delay: 2
+
+User-agent: Twitterbot
+Allow: /
+Allow: /preview.jpg
+
+User-agent: facebookexternalhit
+Allow: /
+Allow: /preview.jpg
+
+User-agent: LinkedInBot
+Allow: /
+Allow: /preview.jpg
