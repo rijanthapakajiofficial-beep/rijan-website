@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- HOME -->
+  <url>
+    <loc>https://rijan-website.onrender.com/</loc>
+    <lastmod>2025-06-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://rijan-website.onrender.com/"/>
+    <xhtml:link rel="alternate" hreflang="ne" href="https://rijan-website.onrender.com/"/>
+    <image:image>
+      <image:loc>https://rijan-website.onrender.com/preview.jpg</image:loc>
+      <image:title>Rijan Thapa Kaji — Nepal</image:title>
+      <image:caption>Rijan Thapa Kaji — A creative soul from the Himalayas</image:caption>
+    </image:image>
+  </url>
+
+  <!-- BIO SECTION -->
+  <url>
+    <loc>https://rijan-website.onrender.com/#bio</loc>
+    <lastmod>2025-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- BLOG SECTION -->
+  <url>
+    <loc>https://rijan-website.onrender.com/#blog</loc>
+    <lastmod>2025-06-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- SOCIAL SECTION -->
+  <url>
+    <loc>https://rijan-website.onrender.com/#social</loc>
+    <lastmod>2025-06-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- CONTACT SECTION -->
+  <url>
+    <loc>https://rijan-website.onrender.com/#contact</loc>
+    <lastmod>2025-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+</urlset>
