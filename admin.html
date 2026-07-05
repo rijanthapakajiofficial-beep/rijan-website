@@ -617,28 +617,36 @@ const CLD_PRESET = 'rijan-uploads';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ══════════ AUTH ══════════
-function getCreds(){ return { u: localStorage.getItem('rtk_admin_user')||'rijan', p: localStorage.getItem('rtk_admin_pass')||'rijan2025' }; }
-
-// Load credentials from Supabase on startup (global sync)
-async function syncCredsFromSupabase(){
+// Always fetch from Supabase first, fallback to defaults
+async function getCredsFromDB(){
   try{
     const{data}=await sb.from('site_settings').select('admin_username,admin_password').single();
     if(data){
-      if(data.admin_username){
-        localStorage.setItem('rtk_admin_user',data.admin_username);
-        const u=localStorage.getItem('rtk_login_user');
-        if(u) localStorage.setItem('rtk_login_user',data.admin_username);
-      }
-      if(data.admin_password) localStorage.setItem('rtk_admin_pass',data.admin_password);
+      return {
+        u: data.admin_username||'rijan',
+        p: data.admin_password||'rijan2025'
+      };
     }
   }catch(e){}
+  // Fallback to localStorage or defaults
+  return {
+    u: localStorage.getItem('rtk_admin_user')||'rijan',
+    p: localStorage.getItem('rtk_admin_pass')||'rijan2025'
+  };
 }
 
-function doLogin(){
+async function doLogin(){
   const u=document.getElementById('lu').value.trim();
   const p=document.getElementById('lp').value;
-  const c=getCreds();
+  const btn=document.querySelector('.login-btn');
+  btn.textContent='Checking…';btn.disabled=true;
+  // Always fetch from Supabase (global credentials)
+  const c=await getCredsFromDB();
+  // Also cache in localStorage for auto-login
+  localStorage.setItem('rtk_admin_user',c.u);
+  localStorage.setItem('rtk_admin_pass',c.p);
   if(u===c.u&&p===c.p){
+    btn.textContent='🔓 Enter Dashboard';btn.disabled=false;
     document.getElementById('loginErr').style.display='none';
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('dashboard').style.display='block';
@@ -650,6 +658,7 @@ function doLogin(){
     localStorage.setItem('rtk_login_user',u);
     initDashboard();
   }else{
+    btn.textContent='🔓 Enter Dashboard';btn.disabled=false;
     document.getElementById('loginErr').style.display='block';
     document.getElementById('lp').value='';
     const box=document.querySelector('.login-box');
@@ -664,9 +673,13 @@ function doLogout(){
   document.getElementById('lu').value='';
   document.getElementById('lp').value='';
 }
-window.addEventListener('DOMContentLoaded',()=>{
+window.addEventListener('DOMContentLoaded',async ()=>{
   if(localStorage.getItem('rtk_logged_in')==='1'){
-    const u=localStorage.getItem('rtk_login_user')||'rijan';
+    // Re-sync credentials from Supabase (in case changed from another device)
+    const c=await getCredsFromDB();
+    localStorage.setItem('rtk_admin_user',c.u);
+    localStorage.setItem('rtk_admin_pass',c.p);
+    const u=localStorage.getItem('rtk_login_user')||c.u;
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('dashboard').style.display='block';
     document.getElementById('sidebarUsername').textContent=u;
@@ -680,8 +693,6 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 // ══════════ INIT ══════════
 async function initDashboard(){
-  // Sync credentials from Supabase first (global)
-  await syncCredsFromSupabase();
   await Promise.all([loadFiles(),loadMessages(),loadBlogPosts(),loadSongs()]);
   loadOverviewStats();
   loadCustomization();
@@ -1413,7 +1424,7 @@ function resetColor(){const def='#c9a96e';document.getElementById('cs_accentColo
 async function changeUsername(){
   const newUser=document.getElementById('newUsername').value.trim();
   const confirmPw=document.getElementById('confirmPwForUser').value;
-  const c=getCreds();
+  const c=await getCredsFromDB();
   if(!newUser){showToast('⚠️ Enter new username','error');return;}
   if(confirmPw!==c.p){showToast('❌ Wrong current password','error');return;}
   try{
@@ -1436,7 +1447,7 @@ async function changePassword(){
   const current=document.getElementById('currentPw').value;
   const newPw=document.getElementById('newPw').value;
   const confirm=document.getElementById('confirmPw').value;
-  const c=getCreds();
+  const c=await getCredsFromDB();
   if(current!==c.p){showToast('❌ Wrong current password','error');return;}
   if(newPw.length<8){showToast('⚠️ Password must be 8+ characters','error');return;}
   if(newPw!==confirm){showToast('❌ Passwords do not match','error');return;}
