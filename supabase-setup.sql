@@ -90,3 +90,17 @@ UNION ALL SELECT 'files', count(*) from files
 UNION ALL SELECT 'messages', count(*) from messages
 UNION ALL SELECT 'blog_posts', count(*) from blog_posts
 UNION ALL SELECT 'songs', count(*) from songs;
+
+-- ══════════════════════════════════════════════
+-- ADD GLOBAL ADMIN CREDENTIALS COLUMNS
+-- Run this in Supabase SQL Editor
+-- ══════════════════════════════════════════════
+
+ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS admin_username text DEFAULT 'rijan';
+ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS admin_password text DEFAULT 'rijan2025';
+
+-- Update existing row with defaults
+UPDATE site_settings SET
+  admin_username = COALESCE(admin_username, 'rijan'),
+  admin_password = COALESCE(admin_password, 'rijan2025')
+WHERE id = 1;
