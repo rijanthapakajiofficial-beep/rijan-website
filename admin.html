@@ -619,6 +619,21 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // ══════════ AUTH ══════════
 function getCreds(){ return { u: localStorage.getItem('rtk_admin_user')||'rijan', p: localStorage.getItem('rtk_admin_pass')||'rijan2025' }; }
 
+// Load credentials from Supabase on startup (global sync)
+async function syncCredsFromSupabase(){
+  try{
+    const{data}=await sb.from('site_settings').select('admin_username,admin_password').single();
+    if(data){
+      if(data.admin_username){
+        localStorage.setItem('rtk_admin_user',data.admin_username);
+        const u=localStorage.getItem('rtk_login_user');
+        if(u) localStorage.setItem('rtk_login_user',data.admin_username);
+      }
+      if(data.admin_password) localStorage.setItem('rtk_admin_pass',data.admin_password);
+    }
+  }catch(e){}
+}
+
 function doLogin(){
   const u=document.getElementById('lu').value.trim();
   const p=document.getElementById('lp').value;
@@ -665,30 +680,12 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 // ══════════ INIT ══════════
 async function initDashboard(){
-  // Auto-fix: migrate folder_name → folder_path for legacy files
-  await fixLegacyFolderPaths();
+  // Sync credentials from Supabase first (global)
+  await syncCredsFromSupabase();
   await Promise.all([loadFiles(),loadMessages(),loadBlogPosts(),loadSongs()]);
   loadOverviewStats();
   loadCustomization();
   document.getElementById('lastSyncLabel').textContent='Synced: '+new Date().toLocaleTimeString();
-}
-
-// Migrate old folder_name data to folder_path (runs once, safe to run multiple times)
-async function fixLegacyFolderPaths(){
-  try{
-    const{data}=await sb.from('files')
-      .select('id,folder_name,folder_path')
-      .not('folder_name','is',null)
-      .is('folder_path',null);
-    if(!data||!data.length) return;
-    // Batch update
-    for(const f of data){
-      if(f.folder_name&&f.folder_name.trim()){
-        await sb.from('files').update({folder_path:f.folder_name.trim()}).eq('id',f.id);
-      }
-    }
-    console.log('✅ Migrated '+data.length+' legacy folder paths');
-  }catch(e){console.log('folder migration skipped:',e.message);}
 }
 
 // ══════════ TOAST ══════════
@@ -764,12 +761,9 @@ function fmtSize(b){if(!b)return'';if(b<1024)return b+'B';if(b<1048576)return(b/
 function buildTree(files){
   const tree={__files:[]};
   files.forEach(f=>{
-    // Use folder_path first, fallback to folder_name (legacy support)
-    let fp=f.folder_path||null;
-    if(!fp&&f.folder_name&&f.folder_name.trim())fp=f.folder_name.trim();
+    const fp=f.folder_path||f.folder_name||null;
     if(!fp){tree.__files.push(f);return;}
     const parts=fp.split('/').filter(Boolean);
-    if(!parts.length){tree.__files.push(f);return;}
     let node=tree;
     parts.forEach(p=>{if(!node[p])node[p]={__files:[]};node=node[p];});
     node.__files.push(f);
@@ -801,10 +795,10 @@ function renderFiles(){
   let subFolders=Object.keys(node).filter(k=>k!=='__files');
   let files=[...(node.__files||[])];
 
-  // Apply filter — only filter files, always show folders
+  // Apply filter
   if(currentFilter!=='all'){
     files=files.filter(f=>currentFilter==='other'?!['image','video','audio'].includes(getCat(f)):getCat(f)===currentFilter);
-    // Don't hide folders when type filter is active
+    subFolders=currentFilter==='all'?subFolders:[];
   }
   // Search
   if(searchQ){
@@ -1183,55 +1177,19 @@ function openMoveModal(){
 function closeMoveModal(){document.getElementById('moveModal').classList.remove('open');document.body.style.overflow='';}
 function renderMoveFolderList(){
   const list=document.getElementById('moveFolderList');list.innerHTML='';
-
-  // Root option
-  const rootEl=document.createElement('div');rootEl.className='mf-item root';
-  rootEl.innerHTML='🏠 My Drive (Root)';
+  const rootEl=document.createElement('div');rootEl.className='mf-item root';rootEl.innerHTML='🏠 My Drive (Root)';
   rootEl.onclick=()=>{moveTargetPath=null;document.querySelectorAll('.mf-item').forEach(i=>i.classList.remove('active'));rootEl.classList.add('active');document.getElementById('moveConfirmBtn').disabled=false;};
   list.appendChild(rootEl);
-
-  // Collect ALL unique folder paths from files
   const folders=new Set();
-  allFiles.forEach(f=>{
-    // From folder_path
-    const fp=f.folder_path||null;
-    if(fp){
-      const parts=fp.split('/').filter(Boolean);
-      let built='';
-      parts.forEach(p=>{built=built?built+'/'+p:p;folders.add(built);});
-    }
-    // From folder_name (legacy)
-    const fn=f.folder_name||null;
-    if(fn&&fn.trim()) folders.add(fn.trim());
+  allFiles.forEach(f=>{const fp=f.folder_path||f.folder_name||null;if(!fp)return;const parts=fp.split('/');let built='';parts.forEach(p=>{built=built?built+'/'+p:p;folders.add(built);});});
+  [...folders].sort().forEach(fp=>{
+    const el=document.createElement('div');el.className='mf-item';
+    const depth=fp.split('/').length-1;
+    const name=fp.split('/').pop();
+    el.innerHTML=`${'&nbsp;'.repeat(depth*4)}📂 ${name} <span style="font-size:0.62rem;color:var(--muted);margin-left:auto">${fp}</span>`;
+    el.onclick=()=>{moveTargetPath=fp;document.querySelectorAll('.mf-item').forEach(i=>i.classList.remove('active'));el.classList.add('active');document.getElementById('moveConfirmBtn').disabled=false;};
+    list.appendChild(el);
   });
-
-  // Also add folders visible in current tree view
-  const tree=buildTree(allFiles);
-  function collectFolderPaths(node,prefix=''){
-    Object.keys(node).forEach(k=>{
-      if(k==='__files') return;
-      const fullPath=prefix?prefix+'/'+k:k;
-      folders.add(fullPath);
-      collectFolderPaths(node[k],fullPath);
-    });
-  }
-  collectFolderPaths(tree);
-
-  if(folders.size===0){
-    const empty=document.createElement('div');
-    empty.style.cssText='text-align:center;padding:1rem;color:var(--muted);font-size:0.78rem';
-    empty.textContent='No folders yet — type a name below to create one';
-    list.appendChild(empty);
-  }else{
-    [...folders].sort().forEach(fp=>{
-      const el=document.createElement('div');el.className='mf-item';
-      const depth=fp.split('/').length-1;
-      const name=fp.split('/').pop();
-      el.innerHTML=`${'&nbsp;'.repeat(depth*4)}📂 <strong>${name}</strong> <span style="font-size:0.62rem;color:var(--muted);margin-left:auto">${fp}</span>`;
-      el.onclick=()=>{moveTargetPath=fp;document.querySelectorAll('.mf-item').forEach(i=>i.classList.remove('active'));el.classList.add('active');document.getElementById('moveConfirmBtn').disabled=false;};
-      list.appendChild(el);
-    });
-  }
 }
 async function confirmMove(){
   const newFolder=document.getElementById('newFolderInput').value.trim();
@@ -1452,22 +1410,29 @@ function previewColor(val){document.getElementById('colorPreview').style.backgro
 function resetColor(){const def='#c9a96e';document.getElementById('cs_accentColor').value=def;previewColor(def);}
 
 // ══════════ SECURITY ══════════
-function changeUsername(){
+async function changeUsername(){
   const newUser=document.getElementById('newUsername').value.trim();
   const confirmPw=document.getElementById('confirmPwForUser').value;
   const c=getCreds();
   if(!newUser){showToast('⚠️ Enter new username','error');return;}
   if(confirmPw!==c.p){showToast('❌ Wrong current password','error');return;}
-  localStorage.setItem('rtk_admin_user',newUser);
-  localStorage.setItem('rtk_login_user',newUser);
-  document.getElementById('sidebarUsername').textContent=newUser;
-  document.getElementById('sidebarAvatar').textContent=newUser[0].toUpperCase();
-  document.getElementById('secUsername').textContent=newUser;
-  document.getElementById('newUsername').value='';
-  document.getElementById('confirmPwForUser').value='';
-  showToast('✅ Username changed to: '+newUser,'success');
+  try{
+    // Save globally to Supabase
+    const{data:ex}=await sb.from('site_settings').select('id').single();
+    if(ex) await sb.from('site_settings').update({admin_username:newUser}).eq('id',ex.id);
+    else await sb.from('site_settings').insert({admin_username:newUser});
+    // Update localStorage too
+    localStorage.setItem('rtk_admin_user',newUser);
+    localStorage.setItem('rtk_login_user',newUser);
+    document.getElementById('sidebarUsername').textContent=newUser;
+    document.getElementById('sidebarAvatar').textContent=newUser[0].toUpperCase();
+    document.getElementById('secUsername').textContent=newUser;
+    document.getElementById('newUsername').value='';
+    document.getElementById('confirmPwForUser').value='';
+    showToast('✅ Username changed globally to: '+newUser,'success');
+  }catch(e){showToast('❌ '+e.message,'error');}
 }
-function changePassword(){
+async function changePassword(){
   const current=document.getElementById('currentPw').value;
   const newPw=document.getElementById('newPw').value;
   const confirm=document.getElementById('confirmPw').value;
@@ -1475,9 +1440,16 @@ function changePassword(){
   if(current!==c.p){showToast('❌ Wrong current password','error');return;}
   if(newPw.length<8){showToast('⚠️ Password must be 8+ characters','error');return;}
   if(newPw!==confirm){showToast('❌ Passwords do not match','error');return;}
-  localStorage.setItem('rtk_admin_pass',newPw);
-  ['currentPw','newPw','confirmPw'].forEach(id=>document.getElementById(id).value='');
-  showToast('✅ Password changed!','success');
+  try{
+    // Save globally to Supabase
+    const{data:ex}=await sb.from('site_settings').select('id').single();
+    if(ex) await sb.from('site_settings').update({admin_password:newPw}).eq('id',ex.id);
+    else await sb.from('site_settings').insert({admin_password:newPw});
+    // Update localStorage too
+    localStorage.setItem('rtk_admin_pass',newPw);
+    ['currentPw','newPw','confirmPw'].forEach(id=>document.getElementById(id).value='');
+    showToast('✅ Password changed globally!','success');
+  }catch(e){showToast('❌ '+e.message,'error');}
 }
 
 // ══════════ ANALYTICS ══════════
