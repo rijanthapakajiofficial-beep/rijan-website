@@ -404,6 +404,82 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   .form-row{grid-template-columns:1fr;}
   .social-grid-3d,.contact-methods-row{grid-template-columns:1fr;}
 }
+
+
+
+/* ── FAMILY TREE (Full Design) ── */
+.ftree-section{margin:2rem 0;padding:2rem 1.5rem;background:linear-gradient(145deg,#07090d,#0c1020);border:1px solid rgba(201,169,110,0.2);border-radius:var(--r-lg);position:relative;overflow:hidden;}
+.ftree-section::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.ftree-title{text-align:center;margin-bottom:0.3rem;}
+.ftree-title h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--text);display:flex;align-items:center;justify-content:center;gap:0.5rem;}
+.ftree-subtitle{text-align:center;font-size:0.72rem;color:var(--muted);margin-bottom:1.5rem;letter-spacing:0.1em;}
+.ftree-divider{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-bottom:1.8rem;}
+.ftree-divider::before,.ftree-divider::after{content:'';height:1px;width:60px;background:linear-gradient(90deg,transparent,rgba(201,169,110,0.4));}
+.ftree-divider::after{transform:scaleX(-1);}
+.ftree-divider span{color:var(--gold);font-size:0.8rem;}
+
+/* Generation sidebar */
+.ftree-layout{display:flex;gap:1.5rem;}
+.ftree-gens{display:flex;flex-direction:column;justify-content:space-around;gap:0;min-width:90px;padding:0.5rem 0;}
+.gen-label{display:flex;flex-direction:column;align-items:center;gap:0.3rem;position:relative;}
+.gen-label::after{content:'';position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);width:1px;height:28px;background:rgba(255,255,255,0.06);border-left:1px dashed rgba(255,255,255,0.1);}
+.gen-label:last-child::after{display:none;}
+.gen-icon{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;border:1px solid;}
+.gen-icon.g1{background:rgba(147,51,234,0.15);border-color:rgba(147,51,234,0.3);color:#a855f7;}
+.gen-icon.g2{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.3);color:#3b82f6;}
+.gen-icon.g3{background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.3);color:#22c55e;}
+.gen-num{font-size:0.55rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+.gen-name{font-size:0.75rem;font-weight:500;}
+.gen-name.g1{color:#a855f7;}
+.gen-name.g2{color:#3b82f6;}
+.gen-name.g3{color:#22c55e;}
+.gen-desc{font-size:0.6rem;color:var(--muted);font-style:italic;}
+
+/* Tree body */
+.ftree-body{flex:1;display:flex;flex-direction:column;align-items:center;gap:0;}
+
+/* Person card */
+.fperson{background:linear-gradient(145deg,rgba(17,22,32,0.9),rgba(22,28,39,0.9));border-radius:12px;padding:0.8rem 1rem;display:flex;align-items:center;gap:0.8rem;min-width:180px;max-width:220px;position:relative;transition:all 0.3s;}
+.fperson:hover{transform:translateY(-2px);}
+.fperson.gp1{border:1px solid rgba(147,51,234,0.35);box-shadow:0 4px 20px rgba(147,51,234,0.1);}
+.fperson.gp2{border:1px solid rgba(59,130,246,0.35);box-shadow:0 4px 20px rgba(59,130,246,0.1);}
+.fperson.gp3{border:1px solid rgba(34,197,94,0.35);box-shadow:0 4px 20px rgba(34,197,94,0.1);min-width:200px;}
+.fperson-crown{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:0.85rem;}
+.fperson-photo{width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid;}
+.fperson.gp1 .fperson-photo{border-color:rgba(147,51,234,0.5);}
+.fperson.gp2 .fperson-photo{border-color:rgba(59,130,246,0.5);}
+.fperson.gp3 .fperson-photo{border-color:rgba(34,197,94,0.5);width:62px;height:62px;}
+.fperson-info{flex:1;min-width:0;}
+.fperson-name{font-size:0.85rem;color:var(--text);font-weight:400;margin-bottom:0.4rem;}
+.fperson-detail{display:flex;align-items:center;gap:0.35rem;font-size:0.65rem;color:var(--muted);margin-bottom:0.18rem;}
+.fperson-detail span{color:#3b82f6;font-weight:500;}
+.fperson.gp1 .fperson-detail span{color:#a855f7;}
+.fperson.gp3 .fperson-detail span{color:#22c55e;}
+
+/* Couple row */
+.fcouple-row{display:flex;align-items:center;gap:0.5rem;justify-content:center;}
+.fheart-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;flex-shrink:0;border:1px solid;}
+.fheart-badge.g1{background:rgba(147,51,234,0.15);border-color:rgba(147,51,234,0.3);color:#a855f7;}
+.fheart-badge.g2{background:rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.3);color:#3b82f6;}
+
+/* Connector lines */
+.fconnector{display:flex;justify-content:center;align-items:flex-start;position:relative;width:100%;}
+.fconnector-v{width:1px;height:28px;background:linear-gradient(to bottom,rgba(201,169,110,0.4),rgba(201,169,110,0.15));}
+.fconnector-dot{width:8px;height:8px;border-radius:50%;margin:0 auto;}
+.fconnector-dot.g1{background:#a855f7;box-shadow:0 0 6px rgba(147,51,234,0.5);}
+.fconnector-dot.g2{background:#3b82f6;box-shadow:0 0 6px rgba(59,130,246,0.5);}
+.fconnector-dot.g3{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.5);}
+.fconnector-h{display:flex;justify-content:center;position:relative;width:280px;height:20px;}
+.fconnector-h::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:1px;height:20px;background:rgba(201,169,110,0.3);}
+.fconnector-h::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:1px;background:rgba(201,169,110,0.25);}
+
+/* Stats bar */
+.ftree-stats{display:flex;justify-content:space-around;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem;padding-top:1.2rem;border-top:1px solid rgba(255,255,255,0.05);}
+.fstat{display:flex;align-items:center;gap:0.5rem;font-size:0.72rem;}
+.fstat-icon{font-size:0.9rem;opacity:0.7;}
+.fstat-label{color:var(--muted);font-size:0.62rem;}
+.fstat-val{color:var(--text);font-weight:500;}
+
 </style>
 </head>
 <body>
@@ -490,6 +566,128 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
           <p>Follow along on my journey, connect with me, or just say hello. Let's make something memorable together. 🙏</p>
         </div>
         <div class="bio-divider"></div>
+
+                <div class="bio-divider"></div>
+
+        <!-- FAMILY TREE FULL -->
+        <div class="ftree-section reveal">
+          <div class="ftree-title">
+            <h3>🌳 My Family Generation</h3>
+          </div>
+          <div class="ftree-subtitle">Three Generations &nbsp;•&nbsp; One Family &nbsp;•&nbsp; Endless Love</div>
+          <div class="ftree-divider"><span>♥</span></div>
+
+          <div class="ftree-layout">
+            <!-- LEFT: Generation labels -->
+            <div class="ftree-gens">
+              <div class="gen-label">
+                <div class="gen-icon g1">👥</div>
+                <div class="gen-num">GENERATION 1</div>
+                <div class="gen-name g1">Grand Parents</div>
+                <div class="gen-desc">The Roots</div>
+              </div>
+              <div class="gen-label">
+                <div class="gen-icon g2">👥</div>
+                <div class="gen-num">GENERATION 2</div>
+                <div class="gen-name g2">Parents</div>
+                <div class="gen-desc">The Branch</div>
+              </div>
+              <div class="gen-label">
+                <div class="gen-icon g3">🧑</div>
+                <div class="gen-num">GENERATION 3</div>
+                <div class="gen-name g3">Me</div>
+                <div class="gen-desc">The Future</div>
+              </div>
+            </div>
+
+            <!-- RIGHT: Tree -->
+            <div class="ftree-body">
+
+              <!-- GRANDPARENTS -->
+              <div class="fcouple-row">
+                <div class="fperson gp1">
+                  <div class="fperson-crown">👑</div>
+                  <img class="fperson-photo" src="https://res.cloudinary.com/dvd5bjlpa/image/upload/c_fill,g_face,ar_1:1,w_120,q_auto,f_auto/v1782329782/rijan-private/658823286_1897897404933086_5228059262653062470_n_et2q8r.jpg" alt="Grandfather" loading="lazy"/>
+                  <div class="fperson-info">
+                    <div class="fperson-name">Grand Father</div>
+                    <div class="fperson-detail">📅 Birthday <span>2022 BS</span></div>
+                    <div class="fperson-detail">♥ Marriage <span>2038 BS</span></div>
+                  </div>
+                </div>
+                <div class="fheart-badge g1">♥</div>
+                <div class="fperson gp1">
+                  <div class="fperson-crown">👑</div>
+                  <img class="fperson-photo" src="https://res.cloudinary.com/dvd5bjlpa/image/upload/c_fill,g_face,ar_1:1,w_120,q_auto,f_auto/v1782329780/rijan-private/IMG_0148_u4o93u.jpg" alt="Grandmother" loading="lazy"/>
+                  <div class="fperson-info">
+                    <div class="fperson-name">Grand Mother</div>
+                    <div class="fperson-detail">📅 Birthday <span>2024 BS</span></div>
+                    <div class="fperson-detail">♥ Marriage <span>2038 BS</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CONNECTOR GP → P -->
+              <div style="display:flex;flex-direction:column;align-items:center;gap:0;width:100%">
+                <div class="fconnector-dot g1" style="margin-top:6px"></div>
+                <div class="fconnector-h"></div>
+                <div class="fconnector-dot g2" style="margin-bottom:2px"></div>
+              </div>
+
+              <!-- PARENTS -->
+              <div class="fcouple-row">
+                <div class="fperson gp2">
+                  <img class="fperson-photo" src="https://res.cloudinary.com/dvd5bjlpa/image/upload/c_fill,g_face,ar_1:1,w_120,q_auto,f_auto/v1782329783/rijan-private/MYXJ_20200212115313_fast-1-1_dpmc5p.jpg" alt="Father" loading="lazy"/>
+                  <div class="fperson-info">
+                    <div class="fperson-name">Father</div>
+                    <div class="fperson-detail">📅 Birthday <span>2042 BS</span></div>
+                    <div class="fperson-detail">♥ Marriage <span>2060 BS</span></div>
+                  </div>
+                </div>
+                <div class="fheart-badge g2">♥</div>
+                <div class="fperson gp2">
+                  <img class="fperson-photo" src="https://res.cloudinary.com/dvd5bjlpa/image/upload/c_fill,g_face,ar_1:1,w_120,q_auto,f_auto/v1782329784/rijan-private/IMG_4076_cmt9zm.jpg" alt="Mother" loading="lazy"/>
+                  <div class="fperson-info">
+                    <div class="fperson-name">Mother</div>
+                    <div class="fperson-detail">📅 Birthday <span>2042 BS</span></div>
+                    <div class="fperson-detail">♥ Marriage <span>2060 BS</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CONNECTOR P → ME -->
+              <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+                <div class="fconnector-dot g2" style="margin-top:6px"></div>
+                <div class="fconnector-v" style="height:32px"></div>
+                <div class="fconnector-dot g3" style="margin-bottom:4px"></div>
+              </div>
+
+              <!-- ME -->
+              <div style="display:flex;justify-content:center">
+                <div class="fperson gp3">
+                  <div class="fperson-crown">👑</div>
+                  <img class="fperson-photo" src="https://res.cloudinary.com/dvd5bjlpa/image/upload/c_fill,g_face,ar_1:1,w_140,q_auto,f_auto/v1782010983/rijan-private/73860-A_ypt9vt.jpg" alt="Rijan Thapa Kaji" loading="lazy"/>
+                  <div class="fperson-info">
+                    <div class="fperson-name" style="font-size:1rem;color:var(--gold)">Rijan Thapa Kaji</div>
+                    <div class="fperson-detail">📅 Birthday <span>2064 BS</span></div>
+                    <div class="fperson-detail" style="color:var(--muted);font-style:italic;font-size:0.62rem">The Future 🌟</div>
+                  </div>
+                </div>
+              </div>
+
+            </div><!-- /ftree-body -->
+          </div><!-- /ftree-layout -->
+
+          <!-- STATS BAR -->
+          <div class="ftree-stats">
+            <div class="fstat"><span class="fstat-icon">📅</span><div><div class="fstat-label">Oldest Birthday</div><div class="fstat-val">2022 BS</div></div></div>
+            <div class="fstat"><span class="fstat-icon">🎂</span><div><div class="fstat-label">Youngest Birthday</div><div class="fstat-val">2064 BS</div></div></div>
+            <div class="fstat"><span class="fstat-icon">♥</span><div><div class="fstat-label">Grand Parents Marriage</div><div class="fstat-val">2038 BS</div></div></div>
+            <div class="fstat"><span class="fstat-icon">💍</span><div><div class="fstat-label">Parents Marriage</div><div class="fstat-val">2060 BS</div></div></div>
+            <div class="fstat"><span class="fstat-icon">👥</span><div><div class="fstat-label">Total Members</div><div class="fstat-val">5</div></div></div>
+          </div>
+
+        </div><!-- /ftree-section -->
+
         <div class="bio-stats-row">
           <div class="bio-stat"><span class="bio-stat-em">🎵</span><span class="bio-stat-label">Music</span></div>
           <div class="bio-stat"><span class="bio-stat-em">🏔️</span><span class="bio-stat-label">Mountains</span></div>
