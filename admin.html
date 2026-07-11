@@ -495,7 +495,107 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
         </div>
 
         <!-- CUSTOMIZE -->
-        <div class="tab-pane" id="tab-customize">
+        
+        <!-- ══ PLACES VISITED ══ -->
+        <div class="tab-pane" id="tab-places">
+          <div class="card accent">
+            <div class="card-title" id="placeFormTitle">📍 Add New Place</div>
+            <div class="fg-row">
+              <div class="fg"><label>Place Name</label><input type="text" id="placeName" placeholder="Kathmandu Valley"/></div>
+              <div class="fg"><label>Emoji</label><input type="text" id="placeEmoji" placeholder="🏔️" maxlength="4" style="text-align:center;font-size:1.2rem"/></div>
+            </div>
+            <div class="fg-row">
+              <div class="fg"><label>Type</label><input type="text" id="placeType" placeholder="Capital City, Trekking Trail…"/></div>
+              <div class="fg"><label>Location</label><input type="text" id="placeLocation" placeholder="Kathmandu, Nepal"/></div>
+            </div>
+            <div class="fg"><label>Description</label><textarea id="placeDesc" rows="3" placeholder="Describe this place…"></textarea></div>
+            <div class="fg"><label>Image URL (optional)</label>
+              <div style="display:flex;gap:0.5rem">
+                <input type="url" id="placeImg" placeholder="https://…"/>
+                <button class="btn-ghost" style="white-space:nowrap" onclick="document.getElementById('placeImgUpload').click()">📷 Upload</button>
+                <input type="file" id="placeImgUpload" accept="image/*" style="display:none" onchange="uploadPlaceImg(event)"/>
+              </div>
+            </div>
+            <input type="hidden" id="editPlaceId"/>
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              <button class="btn-primary" id="placeSubmitBtn" onclick="savePlace()">➕ Add Place</button>
+              <button class="btn-ghost" id="placeCancelBtn" style="display:none" onclick="cancelPlaceEdit()">✕ Cancel</button>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;margin-top:1rem">
+            <span style="font-size:0.82rem;color:var(--text)">🗺️ All Places</span>
+            <span id="placeCount" style="font-size:0.7rem;color:var(--muted)"></span>
+          </div>
+          <div id="placeList"><div style="text-align:center;padding:2rem;color:var(--muted)">Loading…</div></div>
+        </div>
+
+        <!-- ══ TESTIMONIALS ══ -->
+        <div class="tab-pane" id="tab-testimonials">
+          <div class="card accent">
+            <div class="card-title" id="testiFormTitle">💬 Add Fan Message</div>
+            <div class="fg-row">
+              <div class="fg"><label>Name</label><input type="text" id="testiName" placeholder="Ram Thapa"/></div>
+              <div class="fg"><label>Location</label><input type="text" id="testiLoc" placeholder="Kathmandu, Nepal"/></div>
+            </div>
+            <div class="fg"><label>Message</label><textarea id="testiMsg" rows="3" placeholder="Write fan message…"></textarea></div>
+            <div class="fg-row">
+              <div class="fg"><label>Stars</label>
+                <select id="testiStars">
+                  <option value="5">★★★★★ 5 Stars</option>
+                  <option value="4">★★★★☆ 4 Stars</option>
+                  <option value="3">★★★☆☆ 3 Stars</option>
+                </select>
+              </div>
+              <div class="fg"><label>Avatar Letter</label><input type="text" id="testiAvatar" placeholder="R" maxlength="2" style="text-align:center;font-size:1.2rem"/></div>
+            </div>
+            <input type="hidden" id="editTestiId"/>
+            <div style="display:flex;gap:0.5rem">
+              <button class="btn-primary" id="testiSubmitBtn" onclick="saveTesti()">➕ Add</button>
+              <button class="btn-ghost" id="testiCancelBtn" style="display:none" onclick="cancelTestiEdit()">✕ Cancel</button>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;margin-top:1rem">
+            <span style="font-size:0.82rem;color:var(--text)">💬 All Testimonials</span>
+            <span id="testiCount" style="font-size:0.7rem;color:var(--muted)"></span>
+          </div>
+          <div id="testiList"><div style="text-align:center;padding:2rem;color:var(--muted)">Loading…</div></div>
+        </div>
+
+        <!-- ══ PROJECTS ══ -->
+        <div class="tab-pane" id="tab-projects">
+          <div class="card accent">
+            <div class="card-title" id="projFormTitle">🎨 Add Project</div>
+            <div class="fg-row">
+              <div class="fg"><label>Project Title</label><input type="text" id="projTitle" placeholder="My Music Album"/></div>
+              <div class="fg"><label>Emoji</label><input type="text" id="projEmoji" placeholder="🎵" maxlength="4" style="text-align:center;font-size:1.2rem"/></div>
+            </div>
+            <div class="fg"><label>Description</label><textarea id="projDesc" rows="3" placeholder="What is this project about?"></textarea></div>
+            <div class="fg-row">
+              <div class="fg"><label>Tags (comma separated)</label><input type="text" id="projTags" placeholder="Music, Nepal, Original"/></div>
+              <div class="fg"><label>Cover Color</label>
+                <select id="projColor">
+                  <option value="pc-1">🔵 Dark Blue</option>
+                  <option value="pc-2">🟢 Dark Green</option>
+                  <option value="pc-3">🟠 Dark Orange</option>
+                  <option value="pc-4">🟣 Dark Purple</option>
+                </select>
+              </div>
+            </div>
+            <div class="fg"><label>Project Link (optional)</label><input type="url" id="projLink" placeholder="https://youtube.com/…"/></div>
+            <input type="hidden" id="editProjId"/>
+            <div style="display:flex;gap:0.5rem">
+              <button class="btn-primary" id="projSubmitBtn" onclick="saveProject()">➕ Add Project</button>
+              <button class="btn-ghost" id="projCancelBtn" style="display:none" onclick="cancelProjEdit()">✕ Cancel</button>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.8rem;margin-top:1rem">
+            <span style="font-size:0.82rem;color:var(--text)">🎨 All Projects</span>
+            <span id="projCount" style="font-size:0.7rem;color:var(--muted)"></span>
+          </div>
+          <div id="projList"><div style="text-align:center;padding:2rem;color:var(--muted)">Loading…</div></div>
+        </div>
+
+<div class="tab-pane" id="tab-customize">
           <div class="card accent">
             <div class="card-title">🏠 Hero Section</div>
             <div class="fg-row">
