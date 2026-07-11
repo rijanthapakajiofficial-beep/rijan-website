@@ -305,7 +305,10 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
       <div class="sb-label">Content</div>
       <button class="sb-btn" onclick="showTab('blog',this)"><span class="sb-ic">✍️</span> Blog</button>
       <button class="sb-btn" onclick="showTab('music',this)"><span class="sb-ic">🎵</span> Music</button>
-      <button class="sb-btn" onclick="showTab('customize',this)"><span class="sb-ic">🎨</span> Customize Site</button>
+      <button class="sb-btn" onclick="showTab('places',this)"><span class="sb-ic">🗺️</span> Places Visited</button>
+      <button class="sb-btn" onclick="showTab('testimonials',this)"><span class="sb-ic">💬</span> Fan Love</button>
+      <button class="sb-btn" onclick="showTab('projects',this)"><span class="sb-ic">🎨</span> Projects</button>
+      <button class="sb-btn" onclick="showTab('customize',this)"><span class="sb-ic">⚙️</span> Customize Site</button>
       <div class="sb-label">Settings</div>
       <button class="sb-btn" onclick="showTab('security',this)"><span class="sb-ic">🔐</span> Security</button>
       <button class="sb-btn" onclick="showTab('analytics',this)"><span class="sb-ic">📈</span> Analytics</button>
@@ -777,7 +780,7 @@ window.addEventListener('DOMContentLoaded',async ()=>{
 
 // ══════════ INIT ══════════
 async function initDashboard(){
-  await Promise.all([loadFiles(),loadMessages(),loadBlogPosts(),loadSongs()]);
+  await Promise.all([loadFiles(),loadMessages(),loadBlogPosts(),loadSongs(),loadPlaces(),loadTestimonials(),loadProjects()]);
   loadOverviewStats();
   loadCustomization();
   document.getElementById('lastSyncLabel').textContent='Synced: '+new Date().toLocaleTimeString();
@@ -803,6 +806,9 @@ function showTab(name,btn){
   if(name==='messages') loadMessages();
   if(name==='blog') loadBlogPosts();
   if(name==='music') loadSongs();
+  if(name==='places') loadPlaces();
+  if(name==='testimonials') loadTestimonials();
+  if(name==='projects') loadProjects();
 }
 
 // ══════════ STATS ══════════
@@ -1647,6 +1653,238 @@ async function loadVisitorAnalytics(){
   }catch(e){}
 }
 
+
+// ══════════════════════════════════
+// PLACES VISITED
+// ══════════════════════════════════
+let allPlaces=[], editPlaceId=null;
+async function loadPlaces(){
+  try{
+    const{data}=await sb.from('places').select('*').order('created_at',{ascending:false});
+    allPlaces=data||[];
+    renderPlaces();
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
+function renderPlaces(){
+  const list=document.getElementById('placeList');
+  document.getElementById('placeCount').textContent=allPlaces.length+' places';
+  if(!allPlaces.length){list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No places yet</div>';return;}
+  list.innerHTML='';
+  allPlaces.forEach(p=>{
+    const div=document.createElement('div');
+    div.className='blog-admin-card';
+    div.innerHTML=`
+      <span style="font-size:1.6rem;flex-shrink:0">${p.emoji||'📍'}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:0.88rem;color:var(--text)">${p.name}</div>
+        <div style="font-size:0.68rem;color:var(--muted);margin-top:0.15rem">${p.type||''} · ${p.location||''}</div>
+        <div style="font-size:0.72rem;color:var(--text2);margin-top:0.2rem">${(p.description||'').slice(0,80)}…</div>
+      </div>
+      ${p.image_url?`<img src="${p.image_url}" style="width:50px;height:50px;object-fit:cover;border-radius:var(--r);flex-shrink:0"/>`:''}
+      <div style="display:flex;gap:0.4rem;flex-shrink:0">
+        <button onclick="editPlace(${p.id})" style="padding:0.35rem 0.7rem;border-radius:100px;border:1px solid rgba(201,169,110,0.3);background:rgba(201,169,110,0.06);color:var(--gold);cursor:pointer;font-size:0.7rem;font-family:'Outfit',sans-serif">✏️ Edit</button>
+        <button onclick="deletePlace(${p.id})" style="padding:0.35rem 0.7rem;border-radius:100px;border:1px solid rgba(232,112,112,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.7rem;font-family:'Outfit',sans-serif">🗑️</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+async function savePlace(){
+  const name=document.getElementById('placeName').value.trim();
+  if(!name){showToast('⚠️ Name required','error');return;}
+  const payload={
+    name,
+    emoji:document.getElementById('placeEmoji').value||'📍',
+    type:document.getElementById('placeType').value,
+    location:document.getElementById('placeLocation').value,
+    description:document.getElementById('placeDesc').value,
+    image_url:document.getElementById('placeImg').value||null
+  };
+  try{
+    if(editPlaceId) await sb.from('places').update(payload).eq('id',editPlaceId);
+    else await sb.from('places').insert(payload);
+    showToast(editPlaceId?'✅ Updated!':'✅ Place added!','success');
+    cancelPlaceEdit();loadPlaces();
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
+function editPlace(id){
+  const p=allPlaces.find(p=>p.id===id);if(!p)return;
+  editPlaceId=id;
+  document.getElementById('placeName').value=p.name||'';
+  document.getElementById('placeEmoji').value=p.emoji||'';
+  document.getElementById('placeType').value=p.type||'';
+  document.getElementById('placeLocation').value=p.location||'';
+  document.getElementById('placeDesc').value=p.description||'';
+  document.getElementById('placeImg').value=p.image_url||'';
+  document.getElementById('placeFormTitle').textContent='✏️ Edit Place';
+  document.getElementById('placeSubmitBtn').textContent='💾 Update';
+  document.getElementById('placeCancelBtn').style.display='inline-flex';
+  document.getElementById('placeName').scrollIntoView({behavior:'smooth'});
+}
+function cancelPlaceEdit(){
+  editPlaceId=null;
+  document.getElementById('placeFormTitle').textContent='📍 Add New Place';
+  document.getElementById('placeSubmitBtn').textContent='➕ Add Place';
+  document.getElementById('placeCancelBtn').style.display='none';
+  ['placeName','placeEmoji','placeType','placeLocation','placeDesc','placeImg'].forEach(id=>document.getElementById(id).value='');
+}
+async function deletePlace(id){if(!confirm('Delete?'))return;await sb.from('places').delete().eq('id',id);showToast('🗑️ Deleted','success');loadPlaces();}
+async function uploadPlaceImg(e){
+  const file=e.target.files[0];if(!file)return;
+  showToast('⬆️ Uploading…','');
+  try{const url=await uploadToCloud(file);document.getElementById('placeImg').value=url;showToast('✅ Image ready!','success');}
+  catch(err){showToast('❌ '+err.message,'error');}
+}
+
+// ══════════════════════════════════
+// TESTIMONIALS / FAN LOVE
+// ══════════════════════════════════
+let allTestis=[], editTestiId=null;
+async function loadTestimonials(){
+  try{
+    const{data}=await sb.from('testimonials').select('*').order('created_at',{ascending:false});
+    allTestis=data||[];
+    renderTestis();
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
+function renderTestis(){
+  const list=document.getElementById('testiList');
+  document.getElementById('testiCount').textContent=allTestis.length+' testimonials';
+  if(!allTestis.length){list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No testimonials yet</div>';return;}
+  list.innerHTML='';
+  allTestis.forEach(t=>{
+    const stars='★'.repeat(t.stars||5)+'☆'.repeat(5-(t.stars||5));
+    const div=document.createElement('div');
+    div.className='blog-admin-card';
+    div.style.cssText='flex-direction:column;align-items:flex-start;gap:0.5rem;';
+    div.innerHTML=`
+      <div style="display:flex;align-items:center;gap:0.7rem;width:100%">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#07090d;font-weight:700;flex-shrink:0">${t.avatar_letter||'A'}</div>
+        <div style="flex:1"><div style="font-size:0.88rem;color:var(--text)">${t.name}</div><div style="font-size:0.65rem;color:var(--muted)">${t.location||''} · <span style="color:var(--gold)">${stars}</span></div></div>
+        <div style="display:flex;gap:0.4rem">
+          <button onclick="editTesti(${t.id})" style="padding:0.35rem 0.7rem;border-radius:100px;border:1px solid rgba(201,169,110,0.3);background:rgba(201,169,110,0.06);color:var(--gold);cursor:pointer;font-size:0.7rem;font-family:'Outfit',sans-serif">✏️</button>
+          <button onclick="deleteTesti(${t.id})" style="padding:0.35rem 0.7rem;border-radius:100px;border:1px solid rgba(232,112,112,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.7rem;font-family:'Outfit',sans-serif">🗑️</button>
+        </div>
+      </div>
+      <div style="font-size:0.78rem;color:var(--text2);font-style:italic;padding-left:0.5rem">"${(t.message||'').slice(0,120)}…"</div>`;
+    list.appendChild(div);
+  });
+}
+async function saveTesti(){
+  const name=document.getElementById('testiName').value.trim();
+  const message=document.getElementById('testiMsg').value.trim();
+  if(!name||!message){showToast('⚠️ Name and message required','error');return;}
+  const payload={
+    name,
+    location:document.getElementById('testiLoc').value,
+    message,
+    stars:parseInt(document.getElementById('testiStars').value)||5,
+    avatar_letter:(document.getElementById('testiAvatar').value||name[0]).toUpperCase()
+  };
+  try{
+    if(editTestiId) await sb.from('testimonials').update(payload).eq('id',editTestiId);
+    else await sb.from('testimonials').insert(payload);
+    showToast(editTestiId?'✅ Updated!':'✅ Added!','success');
+    cancelTestiEdit();loadTestimonials();
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
+function editTesti(id){
+  const t=allTestis.find(t=>t.id===id);if(!t)return;
+  editTestiId=id;
+  document.getElementById('testiName').value=t.name||'';
+  document.getElementById('testiLoc').value=t.location||'';
+  document.getElementById('testiMsg').value=t.message||'';
+  document.getElementById('testiStars').value=t.stars||5;
+  document.getElementById('testiAvatar').value=t.avatar_letter||'';
+  document.getElementById('testiFormTitle').textContent='✏️ Edit Testimonial';
+  document.getElementById('testiSubmitBtn').textContent='💾 Update';
+  document.getElementById('testiCancelBtn').style.display='inline-flex';
+  document.getElementById('testiName').scrollIntoView({behavior:'smooth'});
+}
+function cancelTestiEdit(){
+  editTestiId=null;
+  document.getElementById('testiFormTitle').textContent='💬 Add Testimonial';
+  document.getElementById('testiSubmitBtn').textContent='➕ Add';
+  document.getElementById('testiCancelBtn').style.display='none';
+  ['testiName','testiLoc','testiMsg','testiAvatar'].forEach(id=>document.getElementById(id).value='');
+}
+async function deleteTesti(id){if(!confirm('Delete?'))return;await sb.from('testimonials').delete().eq('id',id);showToast('🗑️ Deleted','success');loadTestimonials();}
+
+// ══════════════════════════════════
+// PROJECTS / PORTFOLIO
+// ══════════════════════════════════
+let allProjects=[], editProjId=null;
+async function loadProjects(){
+  try{
+    const{data}=await sb.from('projects').select('*').order('created_at',{ascending:false});
+    allProjects=data||[];
+    renderProjects();
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
+function renderProjects(){
+  const list=document.getElementById('projList');
+  document.getElementById('projCount').textContent=allProjects.length+' projects';
+  if(!allProjects.length){list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No projects yet</div>';return;}
+  list.innerHTML='';
+  allProjects.forEach(p=>{
+    const tags=(p.tags||'').split(',').filter(Boolean);
+    const div=document.createElement('div');
+    div.className='blog-admin-card';
+    div.innerHTML=`
+      <span style="font-size:1.6rem;flex-shrink:0">${p.emoji||'🎨'}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:0.88rem;color:var(--text)">${p.title}</div>
+        <div style="font-size:0.72rem;color:var(--text2);margin-top:0.2rem">${(p.description||'').slice(0,80)}…</div>
+        <div style="display:flex;gap:0.3rem;margin-top:0.4rem;flex-wrap:wrap">
+          ${tags.map(t=>`<span style="padding:0.1rem 0.45rem;border-radius:100px;font-size:0.58rem;background:var(--gold-dim);border:1px solid rgba(201,169,110,0.2);color:var(--gold)">${t.trim()}</span>`).join('')}
+        </div>
+      </div>
+      <div style="display:flex;gap:0.4rem;flex-shrink:0">
+        <button onclick="editProject(${p.id})" style="padding:0.35rem 0.7rem;border-radius:100px;border:1px solid rgba(201,169,110,0.3);background:rgba(201,169,110,0.06);color:var(--gold);cursor:pointer;font-size:0.7rem;font-family:'Outfit',sans-serif">✏️ Edit</button>
+        <button onclick="deleteProject(${p.id})" style="padding:0.35rem 0.7rem;border-radius:100px;border:1px solid rgba(232,112,112,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.7rem;font-family:'Outfit',sans-serif">🗑️</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+async function saveProject(){
+  const title=document.getElementById('projTitle').value.trim();
+  if(!title){showToast('⚠️ Title required','error');return;}
+  const payload={
+    title,
+    emoji:document.getElementById('projEmoji').value||'🎨',
+    description:document.getElementById('projDesc').value,
+    tags:document.getElementById('projTags').value,
+    cover_color:document.getElementById('projColor').value,
+    link:document.getElementById('projLink').value||null
+  };
+  try{
+    if(editProjId) await sb.from('projects').update(payload).eq('id',editProjId);
+    else await sb.from('projects').insert(payload);
+    showToast(editProjId?'✅ Updated!':'✅ Project added!','success');
+    cancelProjEdit();loadProjects();
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
+function editProject(id){
+  const p=allProjects.find(p=>p.id===id);if(!p)return;
+  editProjId=id;
+  document.getElementById('projTitle').value=p.title||'';
+  document.getElementById('projEmoji').value=p.emoji||'';
+  document.getElementById('projDesc').value=p.description||'';
+  document.getElementById('projTags').value=p.tags||'';
+  document.getElementById('projColor').value=p.cover_color||'pc-1';
+  document.getElementById('projLink').value=p.link||'';
+  document.getElementById('projFormTitle').textContent='✏️ Edit Project';
+  document.getElementById('projSubmitBtn').textContent='💾 Update';
+  document.getElementById('projCancelBtn').style.display='inline-flex';
+  document.getElementById('projTitle').scrollIntoView({behavior:'smooth'});
+}
+function cancelProjEdit(){
+  editProjId=null;
+  document.getElementById('projFormTitle').textContent='🎨 Add Project';
+  document.getElementById('projSubmitBtn').textContent='➕ Add Project';
+  document.getElementById('projCancelBtn').style.display='none';
+  ['projTitle','projEmoji','projDesc','projTags','projLink'].forEach(id=>document.getElementById(id).value='');
+}
+async function deleteProject(id){if(!confirm('Delete?'))return;await sb.from('projects').delete().eq('id',id);showToast('🗑️ Deleted','success');loadProjects();}
 // ══════════ KEYBOARD SHORTCUTS ══════════
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'){

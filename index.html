@@ -927,39 +927,8 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
     <div class="map-embed reveal">
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.0!2d85.3240!3d27.7172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb198a307baabf%3A0xb978d6bcea9a9ef!2sKathmandu%2C%20Nepal!5e0!3m2!1sen!2snp!4v1" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
-    <div class="places-grid reveal">
-      <div class="place-card">
-        <div style="height:140px;background:linear-gradient(135deg,#1a2e0a,#2e5a10);display:flex;align-items:center;justify-content:center;font-size:3rem;">🏔️</div>
-        <div class="place-info">
-          <div class="place-name">Kathmandu Valley</div>
-          <div class="place-type">Capital City</div>
-          <div class="place-desc">The cultural heart of Nepal — temples, history and vibrant city life.</div>
-        </div>
-      </div>
-      <div class="place-card">
-        <div style="height:140px;background:linear-gradient(135deg,#0a1a2e,#105a8a);display:flex;align-items:center;justify-content:center;font-size:3rem;">🌊</div>
-        <div class="place-info">
-          <div class="place-name">Pokhara</div>
-          <div class="place-type">Lake City</div>
-          <div class="place-desc">Phewa Lake, Annapurna views and the most beautiful city in Nepal.</div>
-        </div>
-      </div>
-      <div class="place-card">
-        <div style="height:140px;background:linear-gradient(135deg,#2e1a0a,#8a5a10);display:flex;align-items:center;justify-content:center;font-size:3rem;">🌿</div>
-        <div class="place-info">
-          <div class="place-name">Chitwan</div>
-          <div class="place-type">National Park</div>
-          <div class="place-desc">Wildlife safari, jungle adventure and natural beauty of the Terai.</div>
-        </div>
-      </div>
-      <div class="place-card">
-        <div style="height:140px;background:linear-gradient(135deg,#1a0a2e,#5a1080);display:flex;align-items:center;justify-content:center;font-size:3rem;">⛰️</div>
-        <div class="place-info">
-          <div class="place-name">Langtang</div>
-          <div class="place-type">Trekking Trail</div>
-          <div class="place-desc">High altitude trekking through stunning Himalayan landscapes.</div>
-        </div>
-      </div>
+    <div class="places-grid reveal" id="publicPlaces">
+      <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">Loading places…</div>
     </div>
   </div>
 </section>
@@ -973,32 +942,8 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
       <div class="s-label" style="justify-content:center;">Fan Love</div>
       <h2 class="s-title">What People Say 💬</h2>
     </div>
-    <div class="testimonials-grid reveal" id="testimonialGrid">
-      <!-- Static testimonials + dynamic from messages -->
-      <div class="testimonial-card">
-        <div class="testi-quote">"</div>
-        <div class="testi-text">Rijan's music captures the soul of Nepal. Every song feels like a journey through the mountains. Truly talented artist!</div>
-        <div class="testi-author">
-          <div class="testi-avatar">S</div>
-          <div><div class="testi-name">Sita Sharma</div><div class="testi-loc">📍 Kathmandu</div><div class="testi-stars">★★★★★</div></div>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testi-quote">"</div>
-        <div class="testi-text">Amazing photographer! His shots of the Himalayas are breathtaking. Following his journey has inspired me to explore Nepal more.</div>
-        <div class="testi-author">
-          <div class="testi-avatar">R</div>
-          <div><div class="testi-name">Ram Thapa</div><div class="testi-loc">📍 Pokhara</div><div class="testi-stars">★★★★★</div></div>
-        </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testi-quote">"</div>
-        <div class="testi-text">Love the content! Rijan brings Nepal to the world through his music and travel videos. Keep up the amazing work! 🇳🇵</div>
-        <div class="testi-author">
-          <div class="testi-avatar">P</div>
-          <div><div class="testi-name">Priya KC</div><div class="testi-loc">📍 Lalitpur</div><div class="testi-stars">★★★★★</div></div>
-        </div>
-      </div>
+    <div class="testimonials-grid reveal" id="publicTestis">
+      <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">Loading…</div>
     </div>
   </div>
 </section>
@@ -1012,39 +957,8 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
       <div class="s-label" style="justify-content:center;">Portfolio</div>
       <h2 class="s-title">My Creative Projects 🎨</h2>
     </div>
-    <div class="portfolio-grid reveal">
-      <div class="portfolio-card">
-        <div class="portfolio-cover pc-1"><span>🎵</span></div>
-        <div class="portfolio-info">
-          <div class="portfolio-title">Original Music Albums</div>
-          <div class="portfolio-desc">Original Nepali songs blending traditional melodies with modern production. Available on YouTube and streaming platforms.</div>
-          <div class="portfolio-tags"><span class="p-tag">Music</span><span class="p-tag">Nepal</span><span class="p-tag">Original</span></div>
-        </div>
-      </div>
-      <div class="portfolio-card">
-        <div class="portfolio-cover pc-2"><span>📸</span></div>
-        <div class="portfolio-info">
-          <div class="portfolio-title">Nepal Photography Series</div>
-          <div class="portfolio-desc">A visual journey through Nepal — landscapes, culture, people and the majestic Himalayas captured through my lens.</div>
-          <div class="portfolio-tags"><span class="p-tag">Photography</span><span class="p-tag">Himalaya</span><span class="p-tag">Nepal</span></div>
-        </div>
-      </div>
-      <div class="portfolio-card">
-        <div class="portfolio-cover pc-3"><span>🎬</span></div>
-        <div class="portfolio-info">
-          <div class="portfolio-title">YouTube Travel Vlogs</div>
-          <div class="portfolio-desc">Travel documentaries exploring Nepal's hidden gems, trekking routes and cultural heritage for global audiences.</div>
-          <div class="portfolio-tags"><span class="p-tag">YouTube</span><span class="p-tag">Travel</span><span class="p-tag">Vlog</span></div>
-        </div>
-      </div>
-      <div class="portfolio-card">
-        <div class="portfolio-cover pc-4"><span>🌐</span></div>
-        <div class="portfolio-info">
-          <div class="portfolio-title">Personal Website</div>
-          <div class="portfolio-desc">This very website — a full-featured personal platform with cloud drive, blog, music player and admin dashboard.</div>
-          <div class="portfolio-tags"><span class="p-tag">Web</span><span class="p-tag">Design</span><span class="p-tag">Tech</span></div>
-        </div>
-      </div>
+    <div class="portfolio-grid reveal" id="publicProjects">
+      <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">Loading projects…</div>
     </div>
   </div>
 </section>
@@ -1365,6 +1279,73 @@ function injectPreloads() {
     if (p.crossorigin) link.crossOrigin = 'anonymous';
     document.head.appendChild(link);
   });
+}
+
+
+// ══════════════════════════════════
+// LOAD DYNAMIC SECTIONS FROM SUPABASE
+// ══════════════════════════════════
+async function loadPublicPlaces(){
+  try{
+    const{data}=await sb.from('places').select('*').order('created_at',{ascending:true});
+    const el=document.getElementById('publicPlaces');
+    if(!data||!data.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No places yet</div>';return;}
+    const bgs=['linear-gradient(135deg,#1a2e0a,#2e5a10)','linear-gradient(135deg,#0a1a2e,#105a8a)','linear-gradient(135deg,#2e1a0a,#8a5a10)','linear-gradient(135deg,#1a0a2e,#5a1080)','linear-gradient(135deg,#0a2e2e,#108080)','linear-gradient(135deg,#2e0a1a,#801040)'];
+    el.innerHTML=data.map((p,i)=>`
+      <div class="place-card">
+        ${p.image_url
+          ?`<img class="place-img" src="${p.image_url}" loading="lazy" alt="${p.name}"/>`
+          :`<div style="height:140px;background:${bgs[i%bgs.length]};display:flex;align-items:center;justify-content:center;font-size:3rem">${p.emoji||'📍'}</div>`}
+        <div class="place-info">
+          <div class="place-name">${p.name}</div>
+          <div class="place-type">${p.type||''}</div>
+          <div class="place-desc">${p.description||''}</div>
+        </div>
+      </div>`).join('');
+  }catch(e){}
+}
+
+async function loadPublicTestimonials(){
+  try{
+    const{data}=await sb.from('testimonials').select('*').order('created_at',{ascending:false});
+    const el=document.getElementById('publicTestis');
+    if(!data||!data.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">No testimonials yet</div>';return;}
+    el.innerHTML=data.map(t=>{
+      const stars='★'.repeat(t.stars||5);
+      return`<div class="testimonial-card">
+        <div class="testi-quote">"</div>
+        <div class="testi-text">${t.message||''}</div>
+        <div class="testi-author">
+          <div class="testi-avatar">${t.avatar_letter||t.name?.[0]||'A'}</div>
+          <div>
+            <div class="testi-name">${t.name}</div>
+            <div class="testi-loc">📍 ${t.location||'Nepal'}</div>
+            <div class="testi-stars">${stars}</div>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){}
+}
+
+async function loadPublicProjects(){
+  try{
+    const{data}=await sb.from('projects').select('*').order('created_at',{ascending:true});
+    const el=document.getElementById('publicProjects');
+    if(!data||!data.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">No projects yet</div>';return;}
+    el.innerHTML=data.map(p=>{
+      const tags=(p.tags||'').split(',').filter(Boolean);
+      return`<div class="portfolio-card"${p.link?` onclick="window.open('${p.link}','_blank')"`:''}>
+        <div class="portfolio-cover ${p.cover_color||'pc-1'}"><span>${p.emoji||'🎨'}</span></div>
+        <div class="portfolio-info">
+          <div class="portfolio-title">${p.title}</div>
+          <div class="portfolio-desc">${p.description||''}</div>
+          <div class="portfolio-tags">${tags.map(t=>`<span class="p-tag">${t.trim()}</span>`).join('')}</div>
+          ${p.link?`<a href="${p.link}" target="_blank" style="display:inline-flex;align-items:center;gap:0.3rem;margin-top:0.6rem;font-size:0.72rem;color:var(--gold);text-decoration:none">View Project →</a>`:''}
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){}
 }
 
 // INIT
