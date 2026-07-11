@@ -767,9 +767,9 @@ window.addEventListener('DOMContentLoaded',async ()=>{
     // Update sidebar with latest username from Supabase
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('dashboard').style.display='block';
-    document.getElementById('sidebarUsername').textContent=c.u;
-    document.getElementById('sidebarAvatar').textContent=c.u[0].toUpperCase();
-    document.getElementById('secUsername').textContent=c.u;
+    const su=document.getElementById('sidebarUsername');if(su)su.textContent=c.u;
+    const sa=document.getElementById('sidebarAvatar');if(sa)sa.textContent=c.u[0].toUpperCase();
+    const ss=document.getElementById('secUsername');if(ss)ss.textContent=c.u;
     document.getElementById('secLastLogin').textContent=new Date().toLocaleTimeString();
     // Update stored login user to match Supabase
     localStorage.setItem('rtk_login_user',c.u);
@@ -783,7 +783,7 @@ async function initDashboard(){
   await Promise.all([loadFiles(),loadMessages(),loadBlogPosts(),loadSongs(),loadPlaces(),loadTestimonials(),loadProjects()]);
   loadOverviewStats();
   loadCustomization();
-  document.getElementById('lastSyncLabel').textContent='Synced: '+new Date().toLocaleTimeString();
+  const lsl=document.getElementById('lastSyncLabel');if(lsl)lsl.textContent='Synced: '+new Date().toLocaleTimeString();
 }
 
 // ══════════ TOAST ══════════
@@ -820,18 +820,19 @@ async function loadOverviewStats(){
       sb.from('blog_posts').select('*',{count:'exact',head:true}),
       sb.from('songs').select('*',{count:'exact',head:true})
     ]);
-    document.getElementById('ovFiles').textContent=fc||0;
-    document.getElementById('ovMsgs').textContent=mc||0;
-    document.getElementById('ovPosts').textContent=bc||0;
-    document.getElementById('ovSongs').textContent=sc||0;
+    const setEl=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val;};
+    setEl('ovFiles',fc||0);
+    setEl('ovMsgs',mc||0);
+    setEl('ovPosts',bc||0);
+    setEl('ovSongs',sc||0);
     const{data:unread}=await sb.from('messages').select('id').eq('replied',false);
-    document.getElementById('ovUnread').textContent=(unread||[]).length;
+    setEl('ovUnread',(unread||[]).length);
     const totalBytes=allFiles.reduce((a,f)=>a+(f.size||0),0);
     const usedMB=(totalBytes/1048576).toFixed(1);
     const pct=((totalBytes/1073741824)/25*100).toFixed(2);
-    document.getElementById('ovStorage').textContent=usedMB+' MB';
+    setEl('ovStorage',usedMB+' MB');
     document.getElementById('ovStorageBar').style.width=pct+'%';
-    document.getElementById('ovStoragePct').textContent=pct+'% of 25 GB';
+    setEl('ovStoragePct',pct+'% of 25 GB');
   }catch(e){}
 }
 
