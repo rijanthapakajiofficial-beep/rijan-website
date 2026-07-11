@@ -780,7 +780,7 @@ window.addEventListener('DOMContentLoaded',async ()=>{
 
 // ══════════ INIT ══════════
 async function initDashboard(){
-  await Promise.all([loadFiles(),loadMessages(),loadBlogPosts(),loadSongs(),loadPlaces(),loadTestimonials(),loadProjects()]);
+  await Promise.all([loadFiles(),loadMessages(),loadBlogPosts(),loadSongs()]);
   loadOverviewStats();
   loadCustomization();
   const lsl=document.getElementById('lastSyncLabel');if(lsl)lsl.textContent='Synced: '+new Date().toLocaleTimeString();
@@ -798,17 +798,18 @@ function showTab(name,btn){
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
   const pane=document.getElementById('tab-'+name);
-  if(pane) pane.classList.add('active');
+  if(pane){pane.classList.add('active');}
+  else{console.warn('Tab not found: tab-'+name);}
   if(btn) btn.classList.add('active');
-  const titles={overview:'📊 Overview',files:'📁 File Manager',messages:'✉️ Messages',blog:'✍️ Blog',music:'🎵 Music',customize:'🎨 Customize Site',security:'🔐 Security',analytics:'📈 Analytics'};
-  document.getElementById('topbarTitle').textContent=titles[name]||name;
+  const titles={overview:'📊 Overview',files:'📁 File Manager',messages:'✉️ Messages',blog:'✍️ Blog',music:'🎵 Music',places:'🗺️ Places Visited',testimonials:'💬 Fan Love',projects:'🎨 Projects',customize:'⚙️ Customize Site',security:'🔐 Security',analytics:'📈 Analytics'};
+  const tb=document.getElementById('topbarTitle');if(tb)tb.textContent=titles[name]||name;
   if(name==='analytics') renderAnalytics();
   if(name==='messages') loadMessages();
   if(name==='blog') loadBlogPosts();
   if(name==='music') loadSongs();
-  if(name==='places') loadPlaces();
-  if(name==='testimonials') loadTestimonials();
-  if(name==='projects') loadProjects();
+  if(name==='places') setTimeout(loadPlaces,100);
+  if(name==='testimonials') setTimeout(loadTestimonials,100);
+  if(name==='projects') setTimeout(loadProjects,100);
 }
 
 // ══════════ STATS ══════════
@@ -1668,7 +1669,8 @@ async function loadPlaces(){
 }
 function renderPlaces(){
   const list=document.getElementById('placeList');
-  document.getElementById('placeCount').textContent=allPlaces.length+' places';
+  if(!list)return;
+  const pc=document.getElementById('placeCount');if(pc)pc.textContent=allPlaces.length+' places';
   if(!allPlaces.length){list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No places yet</div>';return;}
   list.innerHTML='';
   allPlaces.forEach(p=>{
@@ -1749,7 +1751,8 @@ async function loadTestimonials(){
 }
 function renderTestis(){
   const list=document.getElementById('testiList');
-  document.getElementById('testiCount').textContent=allTestis.length+' testimonials';
+  if(!list)return;
+  const tc=document.getElementById('testiCount');if(tc)tc.textContent=allTestis.length+' testimonials';
   if(!allTestis.length){list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No testimonials yet</div>';return;}
   list.innerHTML='';
   allTestis.forEach(t=>{
@@ -1823,7 +1826,8 @@ async function loadProjects(){
 }
 function renderProjects(){
   const list=document.getElementById('projList');
-  document.getElementById('projCount').textContent=allProjects.length+' projects';
+  if(!list)return;
+  const prc=document.getElementById('projCount');if(prc)prc.textContent=allProjects.length+' projects';
   if(!allProjects.length){list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No projects yet</div>';return;}
   list.innerHTML='';
   allProjects.forEach(p=>{
