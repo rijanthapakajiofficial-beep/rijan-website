@@ -489,6 +489,147 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 .wa-form-btn{display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.85rem 2rem;background:linear-gradient(135deg,#25D366,#128C7E);color:white;border:none;border-radius:100px;font-family:'Outfit',sans-serif;font-size:0.82rem;font-weight:500;cursor:pointer;width:100%;margin-top:0.6rem;text-decoration:none;transition:all 0.3s;}
 .wa-form-btn:hover{box-shadow:0 8px 25px rgba(37,211,102,0.4);transform:translateY(-2px);}
 
+
+/* ══════════════════════════════════
+   NEW SECTIONS CSS
+══════════════════════════════════ */
+
+/* SHARED */
+.section-inner{max-width:1100px;margin:0 auto;}
+.s-label{font-size:0.62rem;letter-spacing:0.45em;text-transform:uppercase;color:var(--gold);margin-bottom:0.9rem;display:flex;align-items:center;gap:1rem;}
+.s-label::before,.s-label::after{content:'';width:40px;height:1px;background:var(--gold);opacity:0.4;}
+.s-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:300;line-height:1.08;margin-bottom:1.5rem;}
+
+/* 1. MUSIC SECTION */
+#music-section{background:var(--surface);padding:7rem 2rem;position:relative;overflow:hidden;}
+#music-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(201,169,110,0.06) 0%,transparent 70%);pointer-events:none;}
+.music-player-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;max-width:700px;margin:0 auto;}
+.music-np{display:flex;align-items:center;gap:1.2rem;padding:1.5rem;background:linear-gradient(135deg,var(--card2),var(--card));border-bottom:1px solid var(--border);}
+.music-disc{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;transition:all 0.3s;}
+.music-disc.spinning{animation:discSpin 4s linear infinite;}
+@keyframes discSpin{to{transform:rotate(360deg);}}
+.music-np-info{flex:1;min-width:0;}
+.music-np-title{font-size:1rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.music-np-artist{font-size:0.75rem;color:var(--muted);margin-top:0.2rem;}
+.music-progress-wrap{padding:0 1.5rem 0.5rem;}
+.music-progress{width:100%;height:4px;background:var(--surface);border-radius:100px;cursor:pointer;margin:0.8rem 0;}
+.music-progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:100px;width:0%;pointer-events:none;}
+.music-time{display:flex;justify-content:space-between;font-size:0.62rem;color:var(--muted);}
+.music-controls{display:flex;align-items:center;justify-content:center;gap:1rem;padding:0.8rem 1.5rem 1.2rem;}
+.mc-btn{width:38px;height:38px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.9rem;color:var(--text2);transition:all 0.25s;}
+.mc-btn:hover{border-color:var(--gold);color:var(--gold);}
+.mc-play{width:52px;height:52px;font-size:1.2rem;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#07090d;border:none;box-shadow:0 6px 20px rgba(201,169,110,0.35);}
+.mc-play:hover{box-shadow:0 10px 35px rgba(201,169,110,0.55);}
+.music-playlist{max-height:280px;overflow-y:auto;}
+.music-pl-item{display:flex;align-items:center;gap:0.8rem;padding:0.8rem 1.5rem;cursor:pointer;transition:all 0.2s;border-bottom:1px solid rgba(255,255,255,0.04);}
+.music-pl-item:hover{background:var(--card2);}
+.music-pl-item.active{background:var(--gold-dim);border-left:2px solid var(--gold);}
+.music-pl-num{width:20px;font-size:0.7rem;color:var(--muted);text-align:center;flex-shrink:0;}
+.music-pl-item.active .music-pl-num{color:var(--gold);}
+.music-pl-emoji{font-size:1.1rem;flex-shrink:0;}
+.music-pl-info{flex:1;min-width:0;}
+.music-pl-title{font-size:0.82rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.music-pl-artist{font-size:0.65rem;color:var(--muted);}
+.music-pl-dur{font-size:0.65rem;color:var(--muted);flex-shrink:0;}
+
+/* 2. GALLERY SECTION */
+#gallery{background:var(--bg);padding:7rem 2rem;}
+.gallery-filters{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:1.5rem;justify-content:center;}
+.g-chip{padding:0.4rem 1rem;border-radius:100px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:0.75rem;color:var(--muted);transition:all 0.2s;font-family:'Outfit',sans-serif;}
+.g-chip:hover,.g-chip.active{border-color:var(--gold);color:var(--gold);background:var(--gold-dim);}
+.gallery-grid{columns:3;gap:0.8rem;column-gap:0.8rem;}
+.gallery-item{break-inside:avoid;margin-bottom:0.8rem;border-radius:var(--r-lg);overflow:hidden;cursor:pointer;position:relative;display:block;}
+.gallery-item img{width:100%;display:block;transition:transform 0.4s var(--transition);}
+.gallery-item:hover img{transform:scale(1.04);}
+.gallery-item-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(7,9,13,0.7) 0%,transparent 50%);opacity:0;transition:opacity 0.3s;display:flex;align-items:flex-end;padding:0.8rem;}
+.gallery-item:hover .gallery-item-overlay{opacity:1;}
+.gallery-item-name{font-size:0.72rem;color:white;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* Lightbox */
+#galleryLightbox{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.97);backdrop-filter:blur(20px);align-items:center;justify-content:center;}
+#galleryLightbox.open{display:flex;}
+#galleryLightbox img{max-width:90vw;max-height:88vh;object-fit:contain;border-radius:var(--r-lg);}
+.gl-close{position:fixed;top:1rem;right:1rem;width:38px;height:38px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:1rem;}
+.gl-close:hover{border-color:var(--gold);color:var(--gold);}
+.gl-nav{position:fixed;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:1.3rem;}
+.gl-nav:hover{border-color:var(--gold);color:var(--gold);}
+.gl-nav.prev{left:1rem;}.gl-nav.next{right:1rem;}
+
+/* 3. ACHIEVEMENTS */
+#achievements{background:var(--surface);padding:7rem 2rem;}
+.achievements-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;}
+.achievement-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;display:flex;gap:1rem;align-items:flex-start;transition:all 0.3s;position:relative;overflow:hidden;}
+.achievement-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity 0.3s;}
+.achievement-card:hover{border-color:rgba(201,169,110,0.3);transform:translateY(-3px);}
+.achievement-card:hover::before{opacity:1;}
+.ach-icon{width:52px;height:52px;border-radius:12px;background:var(--gold-dim);border:1px solid rgba(201,169,110,0.2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.ach-info{flex:1;}
+.ach-title{font-size:0.92rem;color:var(--text);margin-bottom:0.3rem;font-weight:400;}
+.ach-desc{font-size:0.75rem;color:var(--muted);line-height:1.6;}
+.ach-year{font-size:0.62rem;letter-spacing:0.1em;color:var(--gold);margin-top:0.4rem;display:block;}
+
+/* 4. YOUTUBE SECTION */
+#youtube{background:var(--bg);padding:7rem 2rem;}
+.yt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem;}
+.yt-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 0.3s;cursor:pointer;}
+.yt-card:hover{border-color:rgba(255,0,0,0.3);transform:translateY(-4px);box-shadow:0 12px 40px rgba(255,0,0,0.15);}
+.yt-thumb{position:relative;padding-bottom:56.25%;overflow:hidden;background:#000;}
+.yt-thumb iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
+.yt-thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.yt-play-btn{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);transition:all 0.3s;}
+.yt-play-icon{width:56px;height:56px;background:rgba(255,0,0,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:white;transition:all 0.3s;}
+.yt-card:hover .yt-play-btn{background:rgba(0,0,0,0.15);}
+.yt-card:hover .yt-play-icon{transform:scale(1.1);background:#ff0000;}
+.yt-info{padding:1rem 1.2rem;}
+.yt-title{font-size:0.88rem;color:var(--text);margin-bottom:0.4rem;line-height:1.4;}
+.yt-meta{font-size:0.68rem;color:var(--muted);display:flex;gap:0.8rem;}
+
+/* 5. NEPAL MAP */
+#nepal-map{background:var(--surface);padding:7rem 2rem;}
+.places-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:2rem;}
+.place-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 0.3s;}
+.place-card:hover{border-color:rgba(201,169,110,0.3);transform:translateY(-3px);}
+.place-img{width:100%;height:140px;object-fit:cover;display:block;}
+.place-info{padding:0.9rem 1rem;}
+.place-name{font-size:0.88rem;color:var(--text);margin-bottom:0.2rem;}
+.place-type{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);}
+.place-desc{font-size:0.72rem;color:var(--muted);margin-top:0.3rem;line-height:1.5;}
+.map-embed{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--border);margin-bottom:2rem;}
+.map-embed iframe{width:100%;height:350px;border:none;display:block;filter:invert(90%) hue-rotate(180deg);}
+
+/* 6. TESTIMONIALS */
+#testimonials{background:var(--bg);padding:7rem 2rem;}
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem;}
+.testimonial-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.5rem;transition:all 0.3s;position:relative;}
+.testimonial-card:hover{border-color:rgba(201,169,110,0.25);transform:translateY(-3px);}
+.testi-quote{font-size:2.5rem;color:var(--gold);opacity:0.3;line-height:1;margin-bottom:0.5rem;font-family:'Cormorant Garamond',serif;}
+.testi-text{font-size:0.88rem;color:var(--text2);line-height:1.8;margin-bottom:1rem;font-style:italic;}
+.testi-author{display:flex;align-items:center;gap:0.7rem;}
+.testi-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#07090d;font-weight:600;flex-shrink:0;}
+.testi-name{font-size:0.82rem;color:var(--text);}
+.testi-loc{font-size:0.65rem;color:var(--muted);}
+.testi-stars{color:var(--gold);font-size:0.75rem;margin-top:0.15rem;}
+
+/* 7. PORTFOLIO */
+#portfolio{background:var(--surface);padding:7rem 2rem;}
+.portfolio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem;}
+.portfolio-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:all 0.35s;cursor:pointer;}
+.portfolio-card:hover{border-color:rgba(201,169,110,0.3);transform:translateY(-5px);box-shadow:0 16px 50px rgba(0,0,0,0.4);}
+.portfolio-cover{height:180px;display:flex;align-items:center;justify-content:center;font-size:3rem;position:relative;overflow:hidden;}
+.pc-1{background:linear-gradient(135deg,#1a1f2e,#0f3460);}
+.pc-2{background:linear-gradient(135deg,#0a2e1a,#106040);}
+.pc-3{background:linear-gradient(135deg,#2d1b00,#7a4900);}
+.pc-4{background:linear-gradient(135deg,#1a0a2e,#4a1060);}
+.portfolio-info{padding:1.2rem;}
+.portfolio-title{font-size:1rem;color:var(--text);margin-bottom:0.4rem;font-family:'Cormorant Garamond',serif;font-weight:300;}
+.portfolio-desc{font-size:0.78rem;color:var(--text2);line-height:1.6;margin-bottom:0.8rem;}
+.portfolio-tags{display:flex;gap:0.4rem;flex-wrap:wrap;}
+.p-tag{padding:0.15rem 0.5rem;border-radius:100px;font-size:0.6rem;background:var(--gold-dim);border:1px solid rgba(201,169,110,0.2);color:var(--gold);}
+
+@media(max-width:768px){
+  .gallery-grid{columns:2;}
+  .yt-grid,.achievements-grid,.testimonials-grid,.portfolio-grid,.places-grid{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -511,8 +652,11 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   <ul class="nav-links">
     <li><a href="#home" class="active">🏠 <span>Home</span></a></li>
     <li><a href="#bio">✦ <span>About</span></a></li>
+    <li><a href="#music-section">🎵 <span>Music</span></a></li>
+    <li><a href="#gallery">📸 <span>Gallery</span></a></li>
+    <li><a href="#youtube">🎬 <span>Videos</span></a></li>
     <li><a href="#blog">✍️ <span>Blog</span></a></li>
-    <li><a href="#social">📸 <span>Social</span></a></li>
+    <li><a href="#social">🌐 <span>Social</span></a></li>
     <li><a href="#contact">✉ <span>Connect</span></a></li>
   </ul>
   <div class="nav-right">
@@ -769,6 +913,327 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
     </div>
   </div>
 </section>
+
+
+<!-- ═══════════════════════════════════
+     1. MUSIC SECTION
+═══════════════════════════════════ -->
+<section id="music-section">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;margin-bottom:3rem;">
+      <div class="s-label" style="justify-content:center;">My Music</div>
+      <h2 class="s-title">Listen to My Songs 🎵</h2>
+      <p style="color:var(--text2);font-size:0.95rem;max-width:420px;margin:0 auto;">Original tracks and covers — music from the heart of Nepal.</p>
+    </div>
+    <div class="music-player-wrap reveal" style="max-width:680px;margin:0 auto;">
+      <!-- Now Playing -->
+      <div class="music-np">
+        <div class="music-disc" id="pubDisc">🎵</div>
+        <div class="music-np-info">
+          <div class="music-np-title" id="pubTitle">Select a song to play</div>
+          <div class="music-np-artist" id="pubArtist">Rijan Thapa Kaji</div>
+        </div>
+        <div style="display:flex;gap:0.4rem">
+          <div class="mc-btn" onclick="pubToggleShuffle()" id="pubShuffleBtn" title="Shuffle">🔀</div>
+        </div>
+      </div>
+      <!-- Progress -->
+      <div class="music-progress-wrap">
+        <div class="music-progress" onclick="pubSeek(event)">
+          <div class="music-progress-fill" id="pubFill"></div>
+        </div>
+        <div class="music-time"><span id="pubCurrent">0:00</span><span id="pubDuration">0:00</span></div>
+      </div>
+      <!-- Controls -->
+      <div class="music-controls">
+        <div class="mc-btn" onclick="pubPrev()">⏮</div>
+        <div class="mc-btn mc-play" id="pubPlayBtn" onclick="pubToggle()">▶</div>
+        <div class="mc-btn" onclick="pubNext()">⏭</div>
+      </div>
+      <!-- Playlist -->
+      <div class="music-playlist" id="pubPlaylist">
+        <div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.8rem">Loading songs…</div>
+      </div>
+    </div>
+    <audio id="pubAudio"></audio>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     2. GALLERY SECTION
+═══════════════════════════════════ -->
+<section id="gallery">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;margin-bottom:2rem;">
+      <div class="s-label" style="justify-content:center;">Gallery</div>
+      <h2 class="s-title">Moments & Memories 📸</h2>
+    </div>
+    <div class="gallery-filters reveal" style="justify-content:center;">
+      <span class="g-chip active" onclick="filterGallery('all',this)">All</span>
+      <span class="g-chip" onclick="filterGallery('image',this)">📷 Photos</span>
+      <span class="g-chip" onclick="filterGallery('video',this)">🎬 Videos</span>
+    </div>
+    <div class="gallery-grid reveal" id="publicGallery">
+      <div style="text-align:center;padding:3rem;color:var(--muted)">Loading gallery…</div>
+    </div>
+  </div>
+</section>
+<!-- Gallery Lightbox -->
+<div id="galleryLightbox">
+  <img id="glImg" src="" alt=""/>
+  <div class="gl-close" onclick="closeLightbox()">✕</div>
+  <div class="gl-nav prev" onclick="glNav(-1)">‹</div>
+  <div class="gl-nav next" onclick="glNav(1)">›</div>
+</div>
+
+<!-- ═══════════════════════════════════
+     3. ACHIEVEMENTS SECTION
+═══════════════════════════════════ -->
+<section id="achievements">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;margin-bottom:3rem;">
+      <div class="s-label" style="justify-content:center;">Achievements</div>
+      <h2 class="s-title">My Journey & Milestones 🏆</h2>
+    </div>
+    <div class="achievements-grid reveal">
+      <div class="achievement-card">
+        <div class="ach-icon">🎵</div>
+        <div class="ach-info">
+          <div class="ach-title">Music Creator</div>
+          <div class="ach-desc">Original songs released on YouTube and social platforms reaching thousands of listeners across Nepal.</div>
+          <span class="ach-year">2020 — Present</span>
+        </div>
+      </div>
+      <div class="achievement-card">
+        <div class="ach-icon">📸</div>
+        <div class="ach-info">
+          <div class="ach-title">Photography</div>
+          <div class="ach-desc">Capturing the beauty of Nepal — from Himalayan peaks to cultural moments, shared across social media.</div>
+          <span class="ach-year">2019 — Present</span>
+        </div>
+      </div>
+      <div class="achievement-card">
+        <div class="ach-icon">🏔️</div>
+        <div class="ach-info">
+          <div class="ach-title">Mountain Trekker</div>
+          <div class="ach-desc">Explored numerous trekking trails across Nepal including Annapurna and Langtang regions.</div>
+          <span class="ach-year">2018 — Present</span>
+        </div>
+      </div>
+      <div class="achievement-card">
+        <div class="ach-icon">🎬</div>
+        <div class="ach-info">
+          <div class="ach-title">Content Creator</div>
+          <div class="ach-desc">Growing YouTube channel and TikTok presence with music, travel and lifestyle content from Nepal.</div>
+          <span class="ach-year">2021 — Present</span>
+        </div>
+      </div>
+      <div class="achievement-card">
+        <div class="ach-icon">🇳🇵</div>
+        <div class="ach-info">
+          <div class="ach-title">Nepal Cultural Ambassador</div>
+          <div class="ach-desc">Promoting Nepali culture, music and heritage through digital content and creative projects.</div>
+          <span class="ach-year">2022 — Present</span>
+        </div>
+      </div>
+      <div class="achievement-card">
+        <div class="ach-icon">🌐</div>
+        <div class="ach-info">
+          <div class="ach-title">Digital Creator</div>
+          <div class="ach-desc">Built a growing community across Instagram, Facebook, YouTube and TikTok platforms.</div>
+          <span class="ach-year">2020 — Present</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     4. YOUTUBE SECTION
+═══════════════════════════════════ -->
+<section id="youtube">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;margin-bottom:3rem;">
+      <div class="s-label" style="justify-content:center;">YouTube</div>
+      <h2 class="s-title">Watch My Videos 🎬</h2>
+      <p style="color:var(--text2);font-size:0.95rem;margin-bottom:1.5rem;">Music, travel vlogs and Nepal lifestyle content.</p>
+      <a href="https://www.youtube.com/@rijanthapakaji" target="_blank" class="btn btn-primary" style="display:inline-flex">▶ Subscribe on YouTube</a>
+    </div>
+    <div class="yt-grid reveal">
+      <div class="yt-card">
+        <div class="yt-thumb">
+          <iframe src="https://www.youtube.com/embed?listType=user_uploads&list=rijanthapakaji" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="yt-info">
+          <div class="yt-title">Latest from Rijan Thapa Kaji</div>
+          <div class="yt-meta"><span>🎵 Music</span><span>🇳🇵 Nepal</span></div>
+        </div>
+      </div>
+      <div class="yt-card" onclick="window.open('https://www.youtube.com/@rijanthapakaji','_blank')">
+        <div class="yt-thumb" style="background:linear-gradient(135deg,#1a0a0a,#3d0000);display:flex;align-items:center;justify-content:center;padding-bottom:56.25%;position:relative;">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.8rem;">
+            <div style="font-size:3rem">🎵</div>
+            <div style="font-size:0.85rem;color:rgba(255,255,255,0.7)">Music Videos</div>
+          </div>
+          <div class="yt-play-btn"><div class="yt-play-icon">▶</div></div>
+        </div>
+        <div class="yt-info">
+          <div class="yt-title">Original Music — Rijan Thapa Kaji</div>
+          <div class="yt-meta"><span>🎶 Original Songs</span></div>
+        </div>
+      </div>
+      <div class="yt-card" onclick="window.open('https://www.youtube.com/@rijanthapakaji','_blank')">
+        <div class="yt-thumb" style="background:linear-gradient(135deg,#0a1a0a,#003d00);display:flex;align-items:center;justify-content:center;padding-bottom:56.25%;position:relative;">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.8rem;">
+            <div style="font-size:3rem">🏔️</div>
+            <div style="font-size:0.85rem;color:rgba(255,255,255,0.7)">Travel Vlogs</div>
+          </div>
+          <div class="yt-play-btn"><div class="yt-play-icon">▶</div></div>
+        </div>
+        <div class="yt-info">
+          <div class="yt-title">Nepal Travel & Adventures</div>
+          <div class="yt-meta"><span>🏔️ Trekking</span><span>🇳🇵 Nepal</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     5. NEPAL MAP / PLACES VISITED
+═══════════════════════════════════ -->
+<section id="nepal-map">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;margin-bottom:3rem;">
+      <div class="s-label" style="justify-content:center;">Places Visited</div>
+      <h2 class="s-title">Exploring Nepal 🗺️</h2>
+      <p style="color:var(--text2);font-size:0.95rem;max-width:480px;margin:0 auto;">Every mountain, every valley — the beauty of my homeland through my eyes.</p>
+    </div>
+    <div class="map-embed reveal">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.0!2d85.3240!3d27.7172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb198a307baabf%3A0xb978d6bcea9a9ef!2sKathmandu%2C%20Nepal!5e0!3m2!1sen!2snp!4v1" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <div class="places-grid reveal">
+      <div class="place-card">
+        <div style="height:140px;background:linear-gradient(135deg,#1a2e0a,#2e5a10);display:flex;align-items:center;justify-content:center;font-size:3rem;">🏔️</div>
+        <div class="place-info">
+          <div class="place-name">Kathmandu Valley</div>
+          <div class="place-type">Capital City</div>
+          <div class="place-desc">The cultural heart of Nepal — temples, history and vibrant city life.</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <div style="height:140px;background:linear-gradient(135deg,#0a1a2e,#105a8a);display:flex;align-items:center;justify-content:center;font-size:3rem;">🌊</div>
+        <div class="place-info">
+          <div class="place-name">Pokhara</div>
+          <div class="place-type">Lake City</div>
+          <div class="place-desc">Phewa Lake, Annapurna views and the most beautiful city in Nepal.</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <div style="height:140px;background:linear-gradient(135deg,#2e1a0a,#8a5a10);display:flex;align-items:center;justify-content:center;font-size:3rem;">🌿</div>
+        <div class="place-info">
+          <div class="place-name">Chitwan</div>
+          <div class="place-type">National Park</div>
+          <div class="place-desc">Wildlife safari, jungle adventure and natural beauty of the Terai.</div>
+        </div>
+      </div>
+      <div class="place-card">
+        <div style="height:140px;background:linear-gradient(135deg,#1a0a2e,#5a1080);display:flex;align-items:center;justify-content:center;font-size:3rem;">⛰️</div>
+        <div class="place-info">
+          <div class="place-name">Langtang</div>
+          <div class="place-type">Trekking Trail</div>
+          <div class="place-desc">High altitude trekking through stunning Himalayan landscapes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     6. TESTIMONIALS / FAN MESSAGES
+═══════════════════════════════════ -->
+<section id="testimonials">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;margin-bottom:3rem;">
+      <div class="s-label" style="justify-content:center;">Fan Love</div>
+      <h2 class="s-title">What People Say 💬</h2>
+    </div>
+    <div class="testimonials-grid reveal" id="testimonialGrid">
+      <!-- Static testimonials + dynamic from messages -->
+      <div class="testimonial-card">
+        <div class="testi-quote">"</div>
+        <div class="testi-text">Rijan's music captures the soul of Nepal. Every song feels like a journey through the mountains. Truly talented artist!</div>
+        <div class="testi-author">
+          <div class="testi-avatar">S</div>
+          <div><div class="testi-name">Sita Sharma</div><div class="testi-loc">📍 Kathmandu</div><div class="testi-stars">★★★★★</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testi-quote">"</div>
+        <div class="testi-text">Amazing photographer! His shots of the Himalayas are breathtaking. Following his journey has inspired me to explore Nepal more.</div>
+        <div class="testi-author">
+          <div class="testi-avatar">R</div>
+          <div><div class="testi-name">Ram Thapa</div><div class="testi-loc">📍 Pokhara</div><div class="testi-stars">★★★★★</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testi-quote">"</div>
+        <div class="testi-text">Love the content! Rijan brings Nepal to the world through his music and travel videos. Keep up the amazing work! 🇳🇵</div>
+        <div class="testi-author">
+          <div class="testi-avatar">P</div>
+          <div><div class="testi-name">Priya KC</div><div class="testi-loc">📍 Lalitpur</div><div class="testi-stars">★★★★★</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     7. PORTFOLIO / PROJECTS
+═══════════════════════════════════ -->
+<section id="portfolio">
+  <div class="section-inner">
+    <div class="reveal" style="text-align:center;margin-bottom:3rem;">
+      <div class="s-label" style="justify-content:center;">Portfolio</div>
+      <h2 class="s-title">My Creative Projects 🎨</h2>
+    </div>
+    <div class="portfolio-grid reveal">
+      <div class="portfolio-card">
+        <div class="portfolio-cover pc-1"><span>🎵</span></div>
+        <div class="portfolio-info">
+          <div class="portfolio-title">Original Music Albums</div>
+          <div class="portfolio-desc">Original Nepali songs blending traditional melodies with modern production. Available on YouTube and streaming platforms.</div>
+          <div class="portfolio-tags"><span class="p-tag">Music</span><span class="p-tag">Nepal</span><span class="p-tag">Original</span></div>
+        </div>
+      </div>
+      <div class="portfolio-card">
+        <div class="portfolio-cover pc-2"><span>📸</span></div>
+        <div class="portfolio-info">
+          <div class="portfolio-title">Nepal Photography Series</div>
+          <div class="portfolio-desc">A visual journey through Nepal — landscapes, culture, people and the majestic Himalayas captured through my lens.</div>
+          <div class="portfolio-tags"><span class="p-tag">Photography</span><span class="p-tag">Himalaya</span><span class="p-tag">Nepal</span></div>
+        </div>
+      </div>
+      <div class="portfolio-card">
+        <div class="portfolio-cover pc-3"><span>🎬</span></div>
+        <div class="portfolio-info">
+          <div class="portfolio-title">YouTube Travel Vlogs</div>
+          <div class="portfolio-desc">Travel documentaries exploring Nepal's hidden gems, trekking routes and cultural heritage for global audiences.</div>
+          <div class="portfolio-tags"><span class="p-tag">YouTube</span><span class="p-tag">Travel</span><span class="p-tag">Vlog</span></div>
+        </div>
+      </div>
+      <div class="portfolio-card">
+        <div class="portfolio-cover pc-4"><span>🌐</span></div>
+        <div class="portfolio-info">
+          <div class="portfolio-title">Personal Website</div>
+          <div class="portfolio-desc">This very website — a full-featured personal platform with cloud drive, blog, music player and admin dashboard.</div>
+          <div class="portfolio-tags"><span class="p-tag">Web</span><span class="p-tag">Design</span><span class="p-tag">Tech</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <footer>
   <div class="footer-logo" id="footerLogo">Rijan Thapa Kaji</div>
@@ -1093,6 +1558,129 @@ loadBlog();
 loadPlaylist();
 injectBlogSEO();
 injectPreloads();
+// ══════════════════════════════════
+// PUBLIC MUSIC PLAYER
+// ══════════════════════════════════
+let pubPlaylist=[], pubIdx=0, pubPlaying=false, pubShuffle=false;
+const pubAudio=document.getElementById('pubAudio');
+
+async function loadPublicMusic(){
+  try{
+    const{data}=await sb.from('songs').select('*').order('created_at',{ascending:true});
+    pubPlaylist=data||[];
+    renderPublicPlaylist();
+    if(pubPlaylist.length) loadPublicTrack(0,false);
+  }catch(e){}
+}
+
+function renderPublicPlaylist(){
+  const el=document.getElementById('pubPlaylist');
+  if(!pubPlaylist.length){el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted);font-size:0.8rem">No songs yet — check back soon!</div>';return;}
+  el.innerHTML=pubPlaylist.map((s,i)=>`
+    <div class="music-pl-item${i===pubIdx?' active':''}" onclick="loadPublicTrack(${i},true)" id="pl-item-${i}">
+      <span class="music-pl-num">${i===pubIdx&&pubPlaying?'▶':i+1}</span>
+      <span class="music-pl-emoji">${s.emoji||'🎵'}</span>
+      <div class="music-pl-info">
+        <div class="music-pl-title">${s.title}</div>
+        <div class="music-pl-artist">${s.artist||'Rijan Thapa Kaji'}</div>
+      </div>
+    </div>`).join('');
+}
+
+function loadPublicTrack(idx,autoplay=true){
+  pubIdx=idx;
+  const s=pubPlaylist[idx];if(!s)return;
+  document.getElementById('pubTitle').textContent=s.title;
+  document.getElementById('pubArtist').textContent=s.artist||'Rijan Thapa Kaji';
+  document.getElementById('pubDisc').textContent=s.emoji||'🎵';
+  pubAudio.src=s.url;
+  if(autoplay){pubAudio.play().catch(()=>{});setPubPlaying(true);}
+  renderPublicPlaylist();
+}
+
+function pubToggle(){
+  if(!pubPlaylist.length)return;
+  if(pubPlaying){pubAudio.pause();setPubPlaying(false);}
+  else{pubAudio.play().catch(()=>{});setPubPlaying(true);}
+}
+function setPubPlaying(state){
+  pubPlaying=state;
+  document.getElementById('pubPlayBtn').textContent=state?'⏸':'▶';
+  document.getElementById('pubDisc').classList.toggle('spinning',state);
+  renderPublicPlaylist();
+}
+function pubPrev(){loadPublicTrack((pubIdx-1+pubPlaylist.length)%pubPlaylist.length,true);}
+function pubNext(){
+  if(pubShuffle) loadPublicTrack(Math.floor(Math.random()*pubPlaylist.length),true);
+  else loadPublicTrack((pubIdx+1)%pubPlaylist.length,true);
+}
+function pubToggleShuffle(){
+  pubShuffle=!pubShuffle;
+  document.getElementById('pubShuffleBtn').style.color=pubShuffle?'var(--gold)':'';
+}
+function pubSeek(e){const b=e.currentTarget;pubAudio.currentTime=(e.offsetX/b.offsetWidth)*pubAudio.duration;}
+function fmtT(s){if(isNaN(s))return'0:00';return Math.floor(s/60)+':'+(Math.floor(s%60)).toString().padStart(2,'0');}
+pubAudio.addEventListener('timeupdate',()=>{
+  const pct=pubAudio.duration?(pubAudio.currentTime/pubAudio.duration)*100:0;
+  document.getElementById('pubFill').style.width=pct+'%';
+  document.getElementById('pubCurrent').textContent=fmtT(pubAudio.currentTime);
+  document.getElementById('pubDuration').textContent=fmtT(pubAudio.duration);
+});
+pubAudio.addEventListener('ended',pubNext);
+
+// ══════════════════════════════════
+// PUBLIC GALLERY
+// ══════════════════════════════════
+let galleryFiles=[], galleryFilter='all', glIdx=0;
+
+async function loadPublicGallery(){
+  try{
+    const{data}=await sb.from('files').select('*').eq('trashed',false).in('resource_type',['image','video']).order('uploaded_at',{ascending:false}).limit(50);
+    galleryFiles=data||[];
+    renderGallery();
+  }catch(e){}
+}
+
+function filterGallery(type,el){
+  galleryFilter=type;
+  document.querySelectorAll('.g-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderGallery();
+}
+
+function renderGallery(){
+  const grid=document.getElementById('publicGallery');
+  let files=galleryFiles;
+  if(galleryFilter==='image') files=files.filter(f=>f.resource_type==='image'||f.type?.startsWith('image/'));
+  if(galleryFilter==='video') files=files.filter(f=>f.resource_type==='video'||f.type?.startsWith('video/'));
+  if(!files.length){grid.innerHTML='<div style="text-align:center;padding:3rem;color:var(--muted)">No media yet</div>';return;}
+  grid.innerHTML=files.map((f,i)=>{
+    const isVideo=f.resource_type==='video'||f.type?.startsWith('video/');
+    return `<div class="gallery-item" onclick="openLightbox(${i})">
+      ${isVideo
+        ?`<video src="${f.url}#t=0.5" muted preload="metadata" style="width:100%;display:block;border-radius:var(--r-lg)"></video>`
+        :`<img src="${f.url}" loading="lazy" alt="${f.name}" style="border-radius:var(--r-lg)"/>`}
+      <div class="gallery-item-overlay"><span class="gallery-item-name">${isVideo?'🎬 ':''} ${f.name}</span></div>
+    </div>`;
+  }).join('');
+}
+
+function openLightbox(idx){
+  glIdx=idx;
+  const f=galleryFiles[idx];
+  document.getElementById('glImg').src=f.url;
+  document.getElementById('galleryLightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){document.getElementById('galleryLightbox').classList.remove('open');document.body.style.overflow='';}
+function glNav(d){glIdx=(glIdx+d+galleryFiles.length)%galleryFiles.length;document.getElementById('glImg').src=galleryFiles[glIdx].url;}
+
+// ══════════════════════════════════
+// INIT ALL NEW SECTIONS
+// ══════════════════════════════════
+loadPublicMusic();
+loadPublicGallery();
+
 </script>
 
 <a id="waBtn" href="https://wa.me/9779763951486?text=Hello%20Rijan!%20I%20found%20your%20website%20%F0%9F%99%8F" target="_blank" rel="noopener">💬<span class="wa-tooltip">Chat on WhatsApp</span></a>
