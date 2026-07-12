@@ -1798,24 +1798,30 @@ async function loadVisitorAnalytics(){
 // ══════════════════════════════════
 let allPlaces=[], editPlaceId=null;
 async function loadPlaces(){
+  const list=document.getElementById('placeList');
   try{
     const{data,error}=await sb.from('places').select('*').order('created_at',{ascending:false});
-    if(error) throw error;
+    if(error){
+      if(list) list.innerHTML='<div style="text-align:center;padding:2rem;"><div style="color:var(--danger);font-size:0.85rem;margin-bottom:0.5rem">⚠️ Table not found!</div><div style="color:var(--muted);font-size:0.75rem">Run <strong>supabase-new-tables.sql</strong> in Supabase SQL Editor first.</div></div>';
+      return;
+    }
     allPlaces=data||[];
-    // Insert defaults if empty
     if(!allPlaces.length){
-      const defaults=[
-        {name:'Kathmandu Valley',type:'Capital City',description:'The cultural heart of Nepal — temples, history and vibrant city life.',emoji:'🏔️',location:'Kathmandu, Nepal'},
-        {name:'Pokhara',type:'Lake City',description:'Phewa Lake, Annapurna views and the most beautiful city in Nepal.',emoji:'🌊',location:'Pokhara, Nepal'},
-        {name:'Chitwan',type:'National Park',description:'Wildlife safari, jungle adventure and natural beauty of the Terai.',emoji:'🌿',location:'Chitwan, Nepal'},
-        {name:'Langtang',type:'Trekking Trail',description:'High altitude trekking through stunning Himalayan landscapes.',emoji:'⛰️',location:'Langtang, Nepal'}
-      ];
-      await sb.from('places').insert(defaults);
-      const{data:d2}=await sb.from('places').select('*').order('created_at',{ascending:false});
-      allPlaces=d2||[];
+      try{
+        await sb.from('places').insert([
+          {name:'Kathmandu Valley',type:'Capital City',description:'The cultural heart of Nepal — temples, history and vibrant city life.',emoji:'🏔️',location:'Kathmandu, Nepal'},
+          {name:'Pokhara',type:'Lake City',description:'Phewa Lake, Annapurna views and the most beautiful city in Nepal.',emoji:'🌊',location:'Pokhara, Nepal'},
+          {name:'Chitwan',type:'National Park',description:'Wildlife safari, jungle adventure and natural beauty of the Terai.',emoji:'🌿',location:'Chitwan, Nepal'},
+          {name:'Langtang',type:'Trekking Trail',description:'High altitude trekking through stunning Himalayan landscapes.',emoji:'⛰️',location:'Langtang, Nepal'}
+        ]);
+        const{data:d2}=await sb.from('places').select('*').order('created_at',{ascending:false});
+        allPlaces=d2||[];
+      }catch(e2){}
     }
     renderPlaces();
-  }catch(e){showToast('❌ Places: '+e.message,'error');}
+  }catch(e){
+    if(list) list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--danger);font-size:0.82rem">❌ '+e.message+'</div>';
+  }
 }
 function renderPlaces(){
   const list=document.getElementById('placeList');
@@ -1844,20 +1850,34 @@ function renderPlaces(){
 async function savePlace(){
   const name=document.getElementById('placeName').value.trim();
   if(!name){showToast('⚠️ Name required','error');return;}
+  const btn=document.getElementById('placeSubmitBtn');
+  btn.disabled=true;btn.textContent='Saving…';
   const payload={
     name,
     emoji:document.getElementById('placeEmoji').value||'📍',
-    type:document.getElementById('placeType').value,
-    location:document.getElementById('placeLocation').value,
-    description:document.getElementById('placeDesc').value,
+    type:document.getElementById('placeType').value||'',
+    location:document.getElementById('placeLocation').value||'',
+    description:document.getElementById('placeDesc').value||'',
     image_url:document.getElementById('placeImg').value||null
   };
   try{
-    if(editPlaceId) await sb.from('places').update(payload).eq('id',editPlaceId);
-    else await sb.from('places').insert(payload);
-    showToast(editPlaceId?'✅ Updated!':'✅ Place added!','success');
-    cancelPlaceEdit();loadPlaces();
-  }catch(e){showToast('❌ '+e.message,'error');}
+    let res;
+    if(editPlaceId){
+      res=await sb.from('places').update(payload).eq('id',editPlaceId);
+    } else {
+      res=await sb.from('places').insert(payload);
+    }
+    if(res.error) throw res.error;
+    showToast(editPlaceId?'✅ Place updated!':'✅ Place added!','success');
+    cancelPlaceEdit();
+    await loadPlaces();
+  }catch(e){
+    console.error('savePlace error:',e);
+    showToast('❌ '+e.message,'error');
+  }finally{
+    btn.disabled=false;
+    btn.textContent=editPlaceId?'💾 Update':'➕ Add Place';
+  }
 }
 function editPlace(id){
   const p=allPlaces.find(p=>p.id===id);if(!p)return;
@@ -1880,7 +1900,15 @@ function cancelPlaceEdit(){
   document.getElementById('placeCancelBtn').style.display='none';
   ['placeName','placeEmoji','placeType','placeLocation','placeDesc','placeImg'].forEach(id=>document.getElementById(id).value='');
 }
-async function deletePlace(id){if(!confirm('Delete?'))return;await sb.from('places').delete().eq('id',id);showToast('🗑️ Deleted','success');loadPlaces();}
+async function deletePlace(id){
+  if(!confirm('Delete this place?'))return;
+  try{
+    const{error}=await sb.from('places').delete().eq('id',id);
+    if(error) throw error;
+    showToast('🗑️ Place deleted','success');
+    await loadPlaces();
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
 async function uploadPlaceImg(e){
   const file=e.target.files[0];if(!file)return;
   showToast('⬆️ Uploading…','');
@@ -1893,22 +1921,29 @@ async function uploadPlaceImg(e){
 // ══════════════════════════════════
 let allTestis=[], editTestiId=null;
 async function loadTestimonials(){
+  const list=document.getElementById('testiList');
   try{
     const{data,error}=await sb.from('testimonials').select('*').order('created_at',{ascending:false});
-    if(error) throw error;
+    if(error){
+      if(list) list.innerHTML='<div style="text-align:center;padding:2rem;"><div style="color:var(--danger);font-size:0.85rem;margin-bottom:0.5rem">⚠️ Table not found!</div><div style="color:var(--muted);font-size:0.75rem">Run <strong>supabase-new-tables.sql</strong> in Supabase SQL Editor first.</div></div>';
+      return;
+    }
     allTestis=data||[];
     if(!allTestis.length){
-      const defaults=[
-        {name:'Sita Sharma',location:'Kathmandu',message:"Rijan's music captures the soul of Nepal. Every song feels like a journey through the mountains!",stars:5,avatar_letter:'S'},
-        {name:'Ram Thapa',location:'Pokhara',message:'Amazing photographer! His shots of the Himalayas are breathtaking. Truly inspiring!',stars:5,avatar_letter:'R'},
-        {name:'Priya KC',location:'Lalitpur',message:'Love the content! Rijan brings Nepal to the world through his music and travel videos. 🇳🇵',stars:5,avatar_letter:'P'}
-      ];
-      await sb.from('testimonials').insert(defaults);
-      const{data:d2}=await sb.from('testimonials').select('*').order('created_at',{ascending:false});
-      allTestis=d2||[];
+      try{
+        await sb.from('testimonials').insert([
+          {name:'Sita Sharma',location:'Kathmandu',message:"Rijan's music captures the soul of Nepal. Every song feels like a journey through the mountains!",stars:5,avatar_letter:'S'},
+          {name:'Ram Thapa',location:'Pokhara',message:'Amazing photographer! His shots of the Himalayas are breathtaking. Truly inspiring!',stars:5,avatar_letter:'R'},
+          {name:'Priya KC',location:'Lalitpur',message:'Love the content! Rijan brings Nepal to the world through his music and travel videos. 🇳🇵',stars:5,avatar_letter:'P'}
+        ]);
+        const{data:d2}=await sb.from('testimonials').select('*').order('created_at',{ascending:false});
+        allTestis=d2||[];
+      }catch(e2){}
     }
     renderTestis();
-  }catch(e){showToast('❌ Testimonials: '+e.message,'error');}
+  }catch(e){
+    if(list) list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--danger);font-size:0.82rem">❌ '+e.message+'</div>';
+  }
 }
 function renderTestis(){
   const list=document.getElementById('testiList');
@@ -1938,19 +1973,33 @@ async function saveTesti(){
   const name=document.getElementById('testiName').value.trim();
   const message=document.getElementById('testiMsg').value.trim();
   if(!name||!message){showToast('⚠️ Name and message required','error');return;}
+  const btn=document.getElementById('testiSubmitBtn');
+  btn.disabled=true;btn.textContent='Saving…';
   const payload={
     name,
-    location:document.getElementById('testiLoc').value,
+    location:document.getElementById('testiLoc').value||'Nepal',
     message,
     stars:parseInt(document.getElementById('testiStars').value)||5,
-    avatar_letter:(document.getElementById('testiAvatar').value||name[0]).toUpperCase()
+    avatar_letter:(document.getElementById('testiAvatar').value||name[0]||'A').toUpperCase()
   };
   try{
-    if(editTestiId) await sb.from('testimonials').update(payload).eq('id',editTestiId);
-    else await sb.from('testimonials').insert(payload);
-    showToast(editTestiId?'✅ Updated!':'✅ Added!','success');
-    cancelTestiEdit();loadTestimonials();
-  }catch(e){showToast('❌ '+e.message,'error');}
+    let res;
+    if(editTestiId){
+      res=await sb.from('testimonials').update(payload).eq('id',editTestiId);
+    } else {
+      res=await sb.from('testimonials').insert(payload);
+    }
+    if(res.error) throw res.error;
+    showToast(editTestiId?'✅ Updated!':'✅ Fan message added!','success');
+    cancelTestiEdit();
+    await loadTestimonials();
+  }catch(e){
+    console.error('saveTesti error:',e);
+    showToast('❌ '+e.message,'error');
+  }finally{
+    btn.disabled=false;
+    btn.textContent=editTestiId?'💾 Update':'➕ Add';
+  }
 }
 function editTesti(id){
   const t=allTestis.find(t=>t.id===id);if(!t)return;
@@ -1972,30 +2021,47 @@ function cancelTestiEdit(){
   document.getElementById('testiCancelBtn').style.display='none';
   ['testiName','testiLoc','testiMsg','testiAvatar'].forEach(id=>document.getElementById(id).value='');
 }
-async function deleteTesti(id){if(!confirm('Delete?'))return;await sb.from('testimonials').delete().eq('id',id);showToast('🗑️ Deleted','success');loadTestimonials();}
+async function deleteTesti(id){
+  if(!confirm('Delete this testimonial?'))return;
+  try{
+    const{error}=await sb.from('testimonials').delete().eq('id',id);
+    if(error) throw error;
+    showToast('🗑️ Testimonial deleted','success');
+    await loadTestimonials();
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
 
 // ══════════════════════════════════
 // PROJECTS / PORTFOLIO
 // ══════════════════════════════════
 let allProjects=[], editProjId=null;
 async function loadProjects(){
+  const list=document.getElementById('projList');
   try{
     const{data,error}=await sb.from('projects').select('*').order('created_at',{ascending:false});
-    if(error) throw error;
+    if(error){
+      if(list) list.innerHTML='<div style="text-align:center;padding:2rem;"><div style="color:var(--danger);font-size:0.85rem;margin-bottom:0.5rem">⚠️ Table not found!</div><div style="color:var(--muted);font-size:0.75rem">Run <strong>supabase-new-tables.sql</strong> in Supabase SQL Editor first.</div></div>';
+      showToast('❌ Run supabase-new-tables.sql first!','error');
+      return;
+    }
     allProjects=data||[];
     if(!allProjects.length){
-      const defaults=[
-        {title:'Original Music Albums',description:'Original Nepali songs blending traditional melodies with modern production.',tags:'Music,Nepal,Original',emoji:'🎵',cover_color:'pc-1'},
-        {title:'Nepal Photography Series',description:'A visual journey through Nepal — landscapes, culture and the majestic Himalayas.',tags:'Photography,Himalaya,Nepal',emoji:'📸',cover_color:'pc-2'},
-        {title:'YouTube Travel Vlogs',description:"Travel documentaries exploring Nepal's hidden gems and cultural heritage.",tags:'YouTube,Travel,Vlog',emoji:'🎬',cover_color:'pc-3'},
-        {title:'Personal Website',description:'A full-featured personal platform with cloud drive, blog and admin dashboard.',tags:'Web,Design,Tech',emoji:'🌐',cover_color:'pc-4'}
-      ];
-      await sb.from('projects').insert(defaults);
-      const{data:d2}=await sb.from('projects').select('*').order('created_at',{ascending:false});
-      allProjects=d2||[];
+      // Insert default projects
+      try{
+        await sb.from('projects').insert([
+          {title:'Original Music Albums',description:'Original Nepali songs blending traditional melodies with modern production.',tags:'Music,Nepal,Original',emoji:'🎵',cover_color:'pc-1'},
+          {title:'Nepal Photography Series',description:'A visual journey through Nepal — landscapes, culture and the majestic Himalayas.',tags:'Photography,Himalaya,Nepal',emoji:'📸',cover_color:'pc-2'},
+          {title:'YouTube Travel Vlogs',description:"Travel documentaries exploring Nepal's hidden gems and cultural heritage.",tags:'YouTube,Travel,Vlog',emoji:'🎬',cover_color:'pc-3'},
+          {title:'Personal Website',description:'A full-featured personal platform with cloud drive, blog and admin dashboard.',tags:'Web,Design,Tech',emoji:'🌐',cover_color:'pc-4'}
+        ]);
+        const{data:d2}=await sb.from('projects').select('*').order('created_at',{ascending:false});
+        allProjects=d2||[];
+      }catch(e2){}
     }
     renderProjects();
-  }catch(e){showToast('❌ Projects: '+e.message,'error');}
+  }catch(e){
+    if(list) list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--danger);font-size:0.82rem">❌ '+e.message+'</div>';
+  }
 }
 function renderProjects(){
   const list=document.getElementById('projList');
@@ -2026,20 +2092,34 @@ function renderProjects(){
 async function saveProject(){
   const title=document.getElementById('projTitle').value.trim();
   if(!title){showToast('⚠️ Title required','error');return;}
+  const btn=document.getElementById('projSubmitBtn');
+  btn.disabled=true;btn.textContent='Saving…';
   const payload={
     title,
     emoji:document.getElementById('projEmoji').value||'🎨',
-    description:document.getElementById('projDesc').value,
-    tags:document.getElementById('projTags').value,
-    cover_color:document.getElementById('projColor').value,
+    description:document.getElementById('projDesc').value||'',
+    tags:document.getElementById('projTags').value||'',
+    cover_color:document.getElementById('projColor').value||'pc-1',
     link:document.getElementById('projLink').value||null
   };
   try{
-    if(editProjId) await sb.from('projects').update(payload).eq('id',editProjId);
-    else await sb.from('projects').insert(payload);
-    showToast(editProjId?'✅ Updated!':'✅ Project added!','success');
-    cancelProjEdit();loadProjects();
-  }catch(e){showToast('❌ '+e.message,'error');}
+    let res;
+    if(editProjId){
+      res=await sb.from('projects').update(payload).eq('id',editProjId);
+    } else {
+      res=await sb.from('projects').insert(payload);
+    }
+    if(res.error) throw res.error;
+    showToast(editProjId?'✅ Project updated!':'✅ Project added!','success');
+    cancelProjEdit();
+    await loadProjects();
+  }catch(e){
+    console.error('saveProject error:',e);
+    showToast('❌ '+e.message,'error');
+  }finally{
+    btn.disabled=false;
+    btn.textContent=editProjId?'💾 Update':'➕ Add Project';
+  }
 }
 function editProject(id){
   const p=allProjects.find(p=>p.id===id);if(!p)return;
@@ -2062,7 +2142,15 @@ function cancelProjEdit(){
   document.getElementById('projCancelBtn').style.display='none';
   ['projTitle','projEmoji','projDesc','projTags','projLink'].forEach(id=>document.getElementById(id).value='');
 }
-async function deleteProject(id){if(!confirm('Delete?'))return;await sb.from('projects').delete().eq('id',id);showToast('🗑️ Deleted','success');loadProjects();}
+async function deleteProject(id){
+  if(!confirm('Delete this project?'))return;
+  try{
+    const{error}=await sb.from('projects').delete().eq('id',id);
+    if(error) throw error;
+    showToast('🗑️ Project deleted','success');
+    await loadProjects();
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
 // ══════════ KEYBOARD SHORTCUTS ══════════
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA'){
