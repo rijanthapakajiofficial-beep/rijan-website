@@ -560,6 +560,24 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   .yt-grid,.achievements-grid,.testimonials-grid,.portfolio-grid,.places-grid{grid-template-columns:1fr;}
 }
 
+
+/* ── NEPAL PANORAMA BACKGROUND ── */
+#home{position:relative;overflow:hidden;}
+#nepal-panorama{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+#nepal-panorama svg{width:100%;height:100%;object-fit:cover;}
+#home .hero-inner{position:relative;z-index:3;}
+#home #particles-js{z-index:1;opacity:0.4;}
+.hero-orb-1,.hero-orb-2,.hero-glow,.hero-grid{display:none;}
+
+
+/* NEPAL CANVAS BG */
+#home{position:relative;overflow:hidden;}
+#nepal-panorama{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+#nepalCanvas{width:100%;height:100%;display:block;}
+#home .hero-inner{position:relative;z-index:3;}
+#home #particles-js{z-index:1;opacity:0.25;}
+.hero-orb-1,.hero-orb-2,.hero-glow,.hero-grid{display:none!important;}
+
 </style>
 </head>
 <body>
@@ -598,6 +616,228 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 
 <!-- HERO -->
 <section id="home">
+<!-- NEPAL PANORAMA BACKGROUND -->
+<div id="nepal-panorama" aria-hidden="true"><canvas id="nepalCanvas"></canvas></div>
+<script>
+(function(){
+var canvas=document.getElementById('nepalCanvas');
+if(!canvas)return;
+var ctx=canvas.getContext('2d');
+function resize(){
+  var dpr=window.devicePixelRatio||1;
+  canvas.width=canvas.offsetWidth*dpr;
+  canvas.height=canvas.offsetHeight*dpr;
+  ctx.scale(dpr,dpr);
+  draw();
+}
+function draw(){
+  var W=canvas.offsetWidth,H=canvas.offsetHeight;
+  ctx.clearRect(0,0,W,H);
+  // SKY golden hour
+  var sky=ctx.createLinearGradient(0,0,0,H*0.52);
+  sky.addColorStop(0,'#0f1828');
+  sky.addColorStop(0.3,'#1e2840');
+  sky.addColorStop(0.55,'#3a2510');
+  sky.addColorStop(0.75,'#7a4018');
+  sky.addColorStop(0.9,'#b86820');
+  sky.addColorStop(1,'#d88830');
+  ctx.fillStyle=sky;ctx.fillRect(0,0,W,H*0.55);
+  // sun radial glow
+  var sg=ctx.createRadialGradient(W*0.65,H*0.28,0,W*0.65,H*0.28,W*0.4);
+  sg.addColorStop(0,'rgba(255,210,90,0.6)');
+  sg.addColorStop(0.25,'rgba(255,130,30,0.35)');
+  sg.addColorStop(0.6,'rgba(200,70,10,0.12)');
+  sg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=sg;ctx.fillRect(0,0,W,H*0.6);
+  // FAR HIMALAYA (hazy blue-violet)
+  ctx.save();
+  ctx.filter='blur(4px)';
+  ctx.fillStyle='rgba(60,55,90,0.75)';
+  ctx.beginPath();ctx.moveTo(0,H*0.4);
+  var fp=[[0.05,0.35],[0.1,0.32],[0.15,0.29],[0.2,0.31],[0.25,0.27],[0.3,0.29],[0.35,0.26],[0.4,0.28],[0.45,0.25],[0.5,0.27],[0.55,0.24],[0.6,0.26],[0.65,0.23],[0.7,0.25],[0.75,0.28],[0.8,0.26],[0.85,0.29],[0.9,0.31],[0.95,0.33],[1,0.36]];
+  fp.forEach(function(p){ctx.lineTo(W*p[0],H*p[1]);});
+  ctx.lineTo(W,H*0.44);ctx.lineTo(0,H*0.44);ctx.closePath();ctx.fill();
+  ctx.restore();
+  // MAIN HIMALAYA — warm rocky brown
+  ctx.save();
+  ctx.filter='blur(0.5px)';
+  var hg=ctx.createLinearGradient(0,H*0.12,0,H*0.44);
+  hg.addColorStop(0,'#4a3018');
+  hg.addColorStop(0.5,'#6a4020');
+  hg.addColorStop(1,'#5a3820');
+  ctx.fillStyle=hg;
+  var mp=[[0,0.44],[0.03,0.40],[0.06,0.37],[0.09,0.34],[0.11,0.31],[0.14,0.28],[0.17,0.25],[0.20,0.22],[0.23,0.20],[0.25,0.17],[0.27,0.15],[0.29,0.175],[0.31,0.155],[0.33,0.14],[0.35,0.155],[0.37,0.17],[0.39,0.155],[0.41,0.175],[0.43,0.185],[0.46,0.17],[0.49,0.18],[0.52,0.175],[0.55,0.185],[0.58,0.17],[0.61,0.185],[0.64,0.175],[0.67,0.19],[0.70,0.20],[0.73,0.225],[0.76,0.21],[0.80,0.235],[0.84,0.26],[0.88,0.28],[0.92,0.31],[0.96,0.34],[1,0.37],[1,0.45]];
+  ctx.beginPath();ctx.moveTo(0,H*0.44);
+  mp.forEach(function(p){ctx.lineTo(W*p[0],H*p[1]);});
+  ctx.lineTo(0,H*0.45);ctx.closePath();ctx.fill();
+  ctx.restore();
+  // SNOW CAPS warm gold-white
+  ctx.save();
+  var sw=ctx.createLinearGradient(0,H*0.08,W*0.4,H*0.25);
+  sw.addColorStop(0,'rgba(255,248,235,0.97)');
+  sw.addColorStop(0.4,'rgba(255,215,150,0.88)');
+  sw.addColorStop(1,'rgba(200,155,95,0.55)');
+  ctx.fillStyle=sw;
+  // Main snow band (Everest group)
+  ctx.beginPath();
+  ctx.moveTo(W*0.22,H*0.225);ctx.lineTo(W*0.25,H*0.175);ctx.lineTo(W*0.27,H*0.155);ctx.lineTo(W*0.295,H*0.135);ctx.lineTo(W*0.315,H*0.155);ctx.lineTo(W*0.33,H*0.14);ctx.lineTo(W*0.345,H*0.158);ctx.lineTo(W*0.365,H*0.142);ctx.lineTo(W*0.385,H*0.16);ctx.lineTo(W*0.40,H*0.155);ctx.lineTo(W*0.425,H*0.17);ctx.lineTo(W*0.45,H*0.175);ctx.lineTo(W*0.48,H*0.175);ctx.lineTo(W*0.51,H*0.18];ctx.lineTo(W*0.54,H*0.19);ctx.lineTo(W*0.47,H*0.24);ctx.lineTo(W*0.22,H*0.26);ctx.closePath();ctx.fill();
+  // Right peaks snow
+  ctx.fillStyle='rgba(255,235,200,0.75)';
+  ctx.beginPath();ctx.moveTo(W*0.58,H*0.19);ctx.lineTo(W*0.60,H*0.175);ctx.lineTo(W*0.63,H*0.18);ctx.lineTo(W*0.66,H*0.175);ctx.lineTo(W*0.68,H*0.19);ctx.lineTo(W*0.72,H*0.21);ctx.lineTo(W*0.76,H*0.215);ctx.lineTo(W*0.80,H*0.24);ctx.lineTo(W*0.60,H*0.235);ctx.closePath();ctx.fill();
+  // Summit plume off Everest
+  ctx.strokeStyle='rgba(255,245,225,0.5)';ctx.lineWidth=2.5;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(W*0.295,H*0.135);ctx.quadraticCurveTo(W*0.34,H*0.10,W*0.40,H*0.095);ctx.stroke();
+  ctx.restore();
+  // ATMOSPHERE haze
+  var haze=ctx.createLinearGradient(0,H*0.36,0,H*0.54);
+  haze.addColorStop(0,'rgba(170,155,140,0)');
+  haze.addColorStop(0.45,'rgba(175,162,148,0.25)');
+  haze.addColorStop(1,'rgba(155,172,165,0)');
+  ctx.fillStyle=haze;ctx.fillRect(0,H*0.36,W,H*0.2);
+  // HILL REGION far (blue-green hazy)
+  var hf=ctx.createLinearGradient(0,H*0.44,0,H*0.64);
+  hf.addColorStop(0,'rgba(38,62,48,0.9)');
+  hf.addColorStop(1,'rgba(22,42,30,0.95)');
+  ctx.fillStyle=hf;
+  ctx.beginPath();ctx.moveTo(0,H*0.64);
+  ctx.quadraticCurveTo(W*0.12,H*0.52,W*0.22,H*0.56);
+  ctx.quadraticCurveTo(W*0.32,H*0.49,W*0.42,H*0.53);
+  ctx.quadraticCurveTo(W*0.55,H*0.47,W*0.65,H*0.51);
+  ctx.quadraticCurveTo(W*0.80,H*0.46,W,H*0.49);
+  ctx.lineTo(W,H*0.66);ctx.lineTo(0,H*0.66);ctx.closePath();ctx.fill();
+  // MAIN HILLS (lush green left side)
+  var hm=ctx.createLinearGradient(0,H*0.46,0,H*0.82);
+  hm.addColorStop(0,'#2a5418');
+  hm.addColorStop(0.35,'#38681e');
+  hm.addColorStop(1,'#22440e');
+  ctx.fillStyle=hm;
+  ctx.beginPath();ctx.moveTo(0,H);ctx.lineTo(0,H*0.57);
+  ctx.quadraticCurveTo(W*0.07,H*0.47,W*0.14,H*0.53);
+  ctx.quadraticCurveTo(W*0.20,H*0.46,W*0.28,H*0.56);
+  ctx.lineTo(W*0.35,H*0.70);ctx.lineTo(W*0.30,H);ctx.closePath();ctx.fill();
+  // CLIFF for waterfall
+  var cf=ctx.createLinearGradient(W*0.10,H*0.52,W*0.22,H*0.78);
+  cf.addColorStop(0,'#28201a');cf.addColorStop(1,'#3a2c20');
+  ctx.fillStyle=cf;
+  ctx.beginPath();ctx.moveTo(W*0.10,H*0.56);ctx.lineTo(W*0.17,H*0.53);ctx.lineTo(W*0.22,H*0.60);ctx.lineTo(W*0.20,H*0.74);ctx.lineTo(W*0.09,H*0.76);ctx.lineTo(W*0.07,H*0.66);ctx.closePath();ctx.fill();
+  // WATERFALL
+  var wg=ctx.createLinearGradient(W*0.14,H*0.535,W*0.14,H*0.77);
+  wg.addColorStop(0,'rgba(255,255,255,0.97)');
+  wg.addColorStop(0.2,'rgba(220,238,255,0.90)');
+  wg.addColorStop(0.6,'rgba(185,215,245,0.78)');
+  wg.addColorStop(1,'rgba(160,200,235,0.45)');
+  ctx.fillStyle=wg;
+  ctx.beginPath();
+  ctx.moveTo(W*0.138,H*0.537);
+  ctx.bezierCurveTo(W*0.145,H*0.58,W*0.152,H*0.62,W*0.148,H*0.69);
+  ctx.bezierCurveTo(W*0.146,H*0.73,W*0.142,H*0.75,W*0.140,H*0.77);
+  ctx.lineTo(W*0.132,H*0.77);
+  ctx.bezierCurveTo(W*0.130,H*0.74,W*0.126,H*0.71,W*0.128,H*0.67);
+  ctx.bezierCurveTo(W*0.130,H*0.60,W*0.124,H*0.565,W*0.130,H*0.537);
+  ctx.closePath();ctx.fill();
+  // WF highlights
+  ctx.strokeStyle='rgba(255,255,255,0.6)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(W*0.136,H*0.54);ctx.lineTo(W*0.134,H*0.72);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(W*0.142,H*0.54);ctx.lineTo(W*0.144,H*0.70);ctx.stroke();
+  // WF spray base
+  var sp=ctx.createRadialGradient(W*0.136,H*0.775,0,W*0.136,H*0.775,W*0.038);
+  sp.addColorStop(0,'rgba(255,255,255,0.65)');
+  sp.addColorStop(0.4,'rgba(200,225,255,0.35)');
+  sp.addColorStop(1,'rgba(180,215,240,0)');
+  ctx.fillStyle=sp;ctx.beginPath();ctx.ellipse(W*0.136,H*0.778,W*0.038,H*0.022,0,0,Math.PI*2);ctx.fill();
+  // TERRACED FIELDS
+  var tc=['#72b01e','#62a016','#82bc24','#6aaa1a'];
+  for(var i=0;i<7;i++){
+    ctx.fillStyle=tc[i%4];
+    ctx.beginPath();
+    var y1=H*(0.63+i*0.038),y2=H*(0.652+i*0.038);
+    ctx.moveTo(W*(0.19+i*0.015),y1);
+    ctx.lineTo(W*(0.40+i*0.01),y1-H*0.012);
+    ctx.lineTo(W*(0.42+i*0.01),y2-H*0.012);
+    ctx.lineTo(W*(0.21+i*0.015),y2);
+    ctx.closePath();ctx.fill();
+  }
+  // KARNALI RIVER wide braided
+  ctx.save();
+  var rg=ctx.createLinearGradient(W*0.38,H*0.53,W*1,H*0.68);
+  rg.addColorStop(0,'rgba(110,165,210,0.82)');
+  rg.addColorStop(0.4,'rgba(148,198,238,0.90)');
+  rg.addColorStop(0.7,'rgba(175,212,242,0.85)');
+  rg.addColorStop(1,'rgba(120,175,218,0.72)');
+  ctx.fillStyle=rg;
+  ctx.beginPath();
+  ctx.moveTo(W*0.40,H*0.535);
+  ctx.bezierCurveTo(W*0.50,H*0.545,W*0.60,H*0.565,W*0.70,H*0.585);
+  ctx.bezierCurveTo(W*0.80,H*0.600,W*0.90,H*0.625,W,H*0.645);
+  ctx.lineTo(W,H*0.720);
+  ctx.bezierCurveTo(W*0.88,H*0.700,W*0.77,H*0.672,W*0.67,H*0.655);
+  ctx.bezierCurveTo(W*0.57,H*0.635,W*0.47,H*0.615,W*0.38,H*0.605);
+  ctx.closePath();ctx.fill();
+  // Sandbar
+  ctx.fillStyle='rgba(205,188,158,0.72)';
+  ctx.beginPath();
+  ctx.moveTo(W*0.52,H*0.558);
+  ctx.bezierCurveTo(W*0.62,H*0.565,W*0.70,H*0.578,W*0.76,H*0.590);
+  ctx.bezierCurveTo(W*0.73,H*0.602,W*0.64,H*0.592,W*0.54,H*0.576);
+  ctx.closePath();ctx.fill();
+  // Reflection
+  ctx.fillStyle='rgba(255,195,70,0.18)';
+  ctx.beginPath();
+  ctx.moveTo(W*0.52,H*0.562);ctx.bezierCurveTo(W*0.65,H*0.57,W*0.78,H*0.582,W*0.88,H*0.598);
+  ctx.lineTo(W*0.88,H*0.610);ctx.bezierCurveTo(W*0.78,H*0.598,W*0.65,H*0.585,W*0.52,H*0.578);
+  ctx.closePath();ctx.fill();
+  // Small tributary (Bheri)
+  ctx.strokeStyle='rgba(130,185,228,0.60)';ctx.lineWidth=H*0.012;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(W*0.55,H*0.50);ctx.bezierCurveTo(W*0.58,H*0.52,W*0.60,H*0.535,W*0.62,H*0.545);ctx.stroke();
+  ctx.restore();
+  // KOHALPUR TOWN area
+  var tg=ctx.createRadialGradient(W*0.74,H*0.73,0,W*0.74,H*0.73,W*0.13);
+  tg.addColorStop(0,'rgba(255,175,55,0.38)');
+  tg.addColorStop(0.5,'rgba(255,145,28,0.16)');
+  tg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=tg;ctx.fillRect(0,0,W,H);
+  // Town lights
+  var lc=['rgba(255,200,75,0.85)','rgba(255,158,38,0.75)','rgba(255,222,98,0.9)','rgba(195,218,255,0.65)'];
+  for(var j=0;j<70;j++){
+    var lx=W*(0.60+Math.random()*0.24),ly=H*(0.67+Math.random()*0.17),lr=Math.random()*2+0.4;
+    ctx.fillStyle=lc[Math.floor(Math.random()*lc.length)];
+    ctx.beginPath();ctx.arc(lx,ly,lr,0,Math.PI*2);ctx.fill();
+  }
+  // Highway light trails
+  ctx.strokeStyle='rgba(255,198,55,0.65)';ctx.lineWidth=2.2;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(W*0.90,H*0.695);ctx.bezierCurveTo(W*0.845,H*0.755,W*0.812,H*0.838,W*0.825,H);ctx.stroke();
+  ctx.strokeStyle='rgba(215,218,255,0.50)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(W*0.893,H*0.700);ctx.bezierCurveTo(W*0.838,H*0.760,W*0.805,H*0.842,W*0.818,H);ctx.stroke();
+  // FOREGROUND TREES left
+  var fgc=['#183a0c','#204812','#1c4010','#264e14'];
+  [[0.02,0.54,0.024,0.085],[0.055,0.52,0.020,0.078],[0.09,0.50,0.022,0.082],[0.03,0.50,0.017,0.068],[0.075,0.48,0.025,0.090]].forEach(function(t){
+    ctx.fillStyle=fgc[Math.floor(Math.random()*fgc.length)];
+    ctx.beginPath();ctx.ellipse(W*t[0],H*t[1],W*t[2],H*t[3],0,0,Math.PI*2);ctx.fill();
+  });
+  // MIST layers
+  var m1=ctx.createLinearGradient(0,H*0.44,0,H*0.56);
+  m1.addColorStop(0,'rgba(175,165,152,0)');m1.addColorStop(0.45,'rgba(180,170,155,0.24)');m1.addColorStop(1,'rgba(162,180,170,0)');
+  ctx.fillStyle=m1;ctx.fillRect(0,H*0.44,W,H*0.14);
+  var m2=ctx.createLinearGradient(0,H*0.60,0,H*0.70);
+  m2.addColorStop(0,'rgba(195,208,188,0)');m2.addColorStop(0.5,'rgba(195,208,188,0.16)');m2.addColorStop(1,'rgba(188,202,182,0)');
+  ctx.fillStyle=m2;ctx.fillRect(W*0.30,H*0.60,W*0.72,H*0.12);
+  // DARK OVERLAY for text
+  var vig=ctx.createRadialGradient(W*0.5,H*0.5,H*0.18,W*0.5,H*0.5,H*0.82);
+  vig.addColorStop(0,'rgba(0,0,0,0)');vig.addColorStop(0.55,'rgba(0,0,0,0.08)');vig.addColorStop(1,'rgba(0,0,0,0.52)');
+  ctx.fillStyle=vig;ctx.fillRect(0,0,W,H);
+  var td=ctx.createLinearGradient(0,0,0,H*0.16);
+  td.addColorStop(0,'rgba(0,0,0,0.52)');td.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=td;ctx.fillRect(0,0,W,H*0.16);
+  var bd=ctx.createLinearGradient(0,H*0.74,0,H);
+  bd.addColorStop(0,'rgba(0,0,0,0)');bd.addColorStop(1,'rgba(0,0,0,0.68)');
+  ctx.fillStyle=bd;ctx.fillRect(0,H*0.74,W,H*0.26);
+}
+window.addEventListener('resize',resize);
+resize();
+})();
+</script>
+
+
   <div id="particles-js"></div>
   <div class="hero-orb hero-orb-1"></div>
   <div class="hero-orb hero-orb-2"></div>
