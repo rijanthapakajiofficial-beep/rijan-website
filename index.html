@@ -622,6 +622,209 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 .hero-orb-1,.hero-orb-2,.hero-glow,.hero-grid { display: none !important; }
 #nepal-panorama { display: none !important; }
 
+
+/* ══ ADVANCED HERO FEATURES ══ */
+
+/* Location tracker widget */
+.hero-location-card {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 2rem;
+  z-index: 10;
+  background: rgba(7,9,18,0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(201,169,110,0.25);
+  border-radius: 16px;
+  padding: 0.9rem 1.1rem;
+  min-width: 200px;
+  animation: slideInRight 1s ease 0.5s both;
+}
+@keyframes slideInRight {
+  from { opacity:0; transform: translateX(30px); }
+  to   { opacity:1; transform: translateX(0); }
+}
+.hlc-top {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+.hlc-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34,197,94,0.7);
+  animation: locPulse 2s ease infinite;
+  flex-shrink: 0;
+}
+@keyframes locPulse {
+  0%,100% { box-shadow: 0 0 6px rgba(34,197,94,0.7); transform: scale(1); }
+  50%      { box-shadow: 0 0 14px rgba(34,197,94,0.9); transform: scale(1.2); }
+}
+.hlc-label {
+  font-size: 0.58rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #22c55e;
+  font-family: 'Outfit', sans-serif;
+}
+.hlc-place {
+  font-size: 0.92rem;
+  color: #fff;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  margin-bottom: 0.15rem;
+}
+.hlc-sub {
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.5);
+  font-family: 'Outfit', sans-serif;
+  margin-bottom: 0.6rem;
+}
+.hlc-divider {
+  height: 1px;
+  background: rgba(201,169,110,0.2);
+  margin-bottom: 0.6rem;
+}
+.hlc-weather {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.hlc-weather-icon {
+  font-size: 1.4rem;
+}
+.hlc-weather-info {}
+.hlc-temp {
+  font-size: 1.1rem;
+  color: var(--gold, #c9a96e);
+  font-family: 'Cormorant Garamond', serif;
+  line-height: 1;
+}
+.hlc-desc {
+  font-size: 0.62rem;
+  color: rgba(255,255,255,0.5);
+  font-family: 'Outfit', sans-serif;
+  text-transform: capitalize;
+}
+.hlc-extra {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+}
+.hlc-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hlc-stat-val {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.8);
+  font-family: 'Outfit', sans-serif;
+}
+.hlc-stat-lbl {
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.4);
+  font-family: 'Outfit', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.hlc-map-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+  padding: 0.4rem 0.7rem;
+  background: rgba(201,169,110,0.1);
+  border: 1px solid rgba(201,169,110,0.25);
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 0.62rem;
+  color: var(--gold, #c9a96e);
+  font-family: 'Outfit', sans-serif;
+  text-decoration: none;
+  transition: all 0.2s;
+  width: 100%;
+  justify-content: center;
+}
+.hlc-map-btn:hover {
+  background: rgba(201,169,110,0.2);
+  border-color: rgba(201,169,110,0.5);
+}
+
+/* Time display */
+.hero-time-badge {
+  position: absolute;
+  top: 5.5rem;
+  right: 2rem;
+  z-index: 10;
+  background: rgba(7,9,18,0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px;
+  padding: 0.4rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: fadeInDown 1s ease 0.3s both;
+}
+@keyframes fadeInDown {
+  from { opacity:0; transform:translateY(-10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.htb-time {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.85);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+.htb-zone {
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.4);
+  font-family: 'Outfit', sans-serif;
+}
+
+/* Visitor counter */
+.hero-visitor-live {
+  position: absolute;
+  top: 5.5rem;
+  left: 2rem;
+  z-index: 10;
+  background: rgba(7,9,18,0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px;
+  padding: 0.4rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  animation: fadeInDown 1s ease 0.3s both;
+}
+.hvl-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 6px rgba(239,68,68,0.7);
+  animation: locPulse 1.5s ease infinite;
+}
+.hvl-text {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.75);
+  font-family: 'Outfit', sans-serif;
+}
+.hvl-count {
+  color: #fff;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .hero-location-card { bottom: 1.5rem; right: 1rem; min-width: 170px; }
+  .hero-time-badge { top: 4.5rem; right: 1rem; }
+  .hero-visitor-live { top: 4.5rem; left: 1rem; }
+}
+
 </style>
 </head>
 <body>
@@ -1355,6 +1558,81 @@ async function loadPublicProjects(){
 
 // INIT
 loadSiteSettings();
+
+// ══════════════════════════════════
+// HERO LIVE FEATURES
+// ══════════════════════════════════
+
+// LIVE TIME (Nepal Standard Time = UTC+5:45)
+function updateHeroTime(){
+  const now = new Date();
+  const npt = new Date(now.toLocaleString('en-US', {timeZone:'Asia/Kathmandu'}));
+  const h = String(npt.getHours()).padStart(2,'0');
+  const m = String(npt.getMinutes()).padStart(2,'0');
+  const s = String(npt.getSeconds()).padStart(2,'0');
+  const el = document.getElementById('heroTime');
+  if(el) el.textContent = h+':'+m+':'+s;
+}
+setInterval(updateHeroTime, 1000);
+updateHeroTime();
+
+// LIVE WEATHER from Open-Meteo (free, no API key needed)
+// Kohalpur coords: 28.1987° N, 81.6287° E
+async function loadHeroWeather(){
+  try{
+    const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=28.1987&longitude=81.6287&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=Asia%2FKathmandu');
+    const data = await res.json();
+    const c = data.current;
+    const temp = Math.round(c.temperature_2m);
+    const humidity = Math.round(c.relative_humidity_2m);
+    const wind = Math.round(c.wind_speed_10m);
+    const code = c.weather_code;
+
+    // Weather code to emoji + description
+    const weatherMap = {
+      0:['☀️','Clear Sky'], 1:['🌤️','Mainly Clear'], 2:['⛅','Partly Cloudy'], 3:['☁️','Overcast'],
+      45:['🌫️','Foggy'], 48:['🌫️','Icy Fog'],
+      51:['🌦️','Light Drizzle'], 53:['🌦️','Drizzle'], 55:['🌧️','Heavy Drizzle'],
+      61:['🌧️','Light Rain'], 63:['🌧️','Rain'], 65:['⛈️','Heavy Rain'],
+      71:['🌨️','Light Snow'], 73:['🌨️','Snow'], 75:['❄️','Heavy Snow'],
+      80:['🌦️','Rain Showers'], 81:['🌧️','Showers'], 82:['⛈️','Violent Showers'],
+      95:['⛈️','Thunderstorm'], 96:['⛈️','Hail Storm'], 99:['⛈️','Heavy Hail']
+    };
+    const [icon, desc] = weatherMap[code] || ['🌡️','Unknown'];
+
+    const setEl = (id,val) => { const e=document.getElementById(id); if(e) e.textContent=val; };
+    setEl('heroTemp', temp);
+    setEl('heroWeatherDesc', desc);
+    setEl('heroHumidity', humidity+'%');
+    setEl('heroWind', wind+' km/h');
+    const iconEl = document.getElementById('heroWeatherIcon');
+    if(iconEl) iconEl.textContent = icon;
+
+    // Air quality estimate from humidity+temp
+    const aqi = humidity > 80 ? 'Moderate' : humidity > 60 ? 'Good' : 'Very Good';
+    setEl('heroAQI', aqi);
+
+  }catch(e){
+    const d=document.getElementById('heroWeatherDesc');
+    if(d) d.textContent='Kohalpur, Nepal';
+  }
+}
+loadHeroWeather();
+// Refresh weather every 10 minutes
+setInterval(loadHeroWeather, 600000);
+
+// LIVE VISITOR COUNT (realistic simulation based on time of day)
+function updateLiveVisitors(){
+  const hour = new Date().getHours();
+  // More visitors during day, fewer at night
+  const base = hour>=9&&hour<=22 ? 8 : 2;
+  const count = base + Math.floor(Math.random()*5);
+  const el = document.getElementById('liveVisitors');
+  if(el) el.textContent = count;
+}
+updateLiveVisitors();
+setInterval(updateLiveVisitors, 15000);
+
 loadBlog();
 loadPlaylist();
 injectBlogSEO();
