@@ -296,8 +296,8 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 .fin-tabs { display:flex; gap:0.3rem; flex-wrap:wrap; margin-bottom:1.2rem; background:var(--surface); padding:0.3rem; border-radius:10px; }
 .fin-tab { padding:0.45rem 0.9rem; border-radius:8px; font-size:0.72rem; color:var(--muted); cursor:pointer; border:none; background:none; font-family:'Outfit',sans-serif; transition:all 0.2s; white-space:nowrap; }
 .fin-tab.active { background:var(--card); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,0.3); }
-.fin-tab-pane { display:none; }
-.fin-tab-pane.active { display:block; }
+.fin-tab-pane { display:none !important; }
+.fin-tab-pane.active { display:block !important; }
 
 /* Portfolio table */
 .portfolio-table { width:100%; border-collapse:collapse; font-size:0.78rem; }
@@ -1233,7 +1233,12 @@ function showTab(name,btn){
   if(name==='places') setTimeout(loadPlaces,100);
   if(name==='testimonials') setTimeout(loadTestimonials,100);
   if(name==='projects') setTimeout(loadProjects,100);
-  if(name==='finance') setTimeout(()=>{ showFinTab('overview',document.querySelector('.fin-tab')); },100);
+  if(name==='finance'){
+    setTimeout(()=>{
+      const firstTab=document.querySelector('.fin-tab');
+      if(firstTab) showFinTab('overview',firstTab);
+    },150);
+  }
 }
 
 // ══════════ STATS ══════════
@@ -2548,22 +2553,28 @@ function fmtNum(n){ return parseFloat(n).toLocaleString('en-IN', {minimumFractio
 
 // ── FIN SUB-TABS ──
 function showFinTab(name, btn){
-  document.querySelectorAll('.fin-tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.fin-tab-pane').forEach(p=>{
+    p.classList.remove('active');
+    p.style.display='none';
+  });
   document.querySelectorAll('.fin-tab').forEach(b=>b.classList.remove('active'));
   const pane = document.getElementById('ftp-'+name);
-  if(pane) pane.classList.add('active');
+  if(pane){ pane.classList.add('active'); pane.style.display='block'; }
   if(btn) btn.classList.add('active');
-  if(name==='overview') initFinOverview();
-  if(name==='portfolio') initPortfolio();
-  if(name==='income') initIncome();
-  if(name==='expense') initExpense();
-  if(name==='sip') initSIP();
-  if(name==='ipo') renderIPOs();
-  if(name==='watchlist') renderWatchlist();
-  if(name==='goals') renderGoals();
-  if(name==='calendar') renderCalendar();
-  if(name==='notifications') renderNotifications();
-  if(name==='assets'){ renderAssets(); }
+  // Init content after display is set (required for charts)
+  setTimeout(()=>{
+    if(name==='overview') initFinOverview();
+    if(name==='portfolio') initPortfolio();
+    if(name==='income') initIncome();
+    if(name==='expense') initExpense();
+    if(name==='sip') initSIP();
+    if(name==='ipo') renderIPOs();
+    if(name==='watchlist') renderWatchlist();
+    if(name==='goals') renderGoals();
+    if(name==='calendar') renderCalendar();
+    if(name==='notifications') renderNotifications();
+    if(name==='assets') renderAssets();
+  }, 50);
 }
 
 // ── PORTFOLIO CALC ──
