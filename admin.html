@@ -702,6 +702,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
             <button class="fin-tab" onclick="showFinTab('goals',this)">🎯 Goals</button>
             <button class="fin-tab" onclick="showFinTab('calendar',this)">📅 Calendar</button>
             <button class="fin-tab" onclick="showFinTab('notifications',this)">🔔 Alerts</button>
+            <button class="fin-tab" onclick="showFinTab('assets',this)">🏠 Assets</button>
           </div>
 
           <!-- ── OVERVIEW ── -->
@@ -1223,7 +1224,7 @@ function showTab(name,btn){
   if(pane){pane.classList.add('active');}
   else{console.warn('Tab not found: tab-'+name);}
   if(btn) btn.classList.add('active');
-  const titles={finance:'💰 Finance Dashboard',overview:'📊 Overview',files:'📁 File Manager',messages:'✉️ Messages',blog:'✍️ Blog',music:'🎵 Music',places:'🗺️ Places Visited',testimonials:'💬 Fan Love',projects:'🎨 Projects',customize:'⚙️ Customize Site',security:'🔐 Security',analytics:'📈 Analytics'};
+  const titles={finance:'💰 Finance Dashboard (Assets & Net Worth updated in real-time)',overview:'📊 Overview',files:'📁 File Manager',messages:'✉️ Messages',blog:'✍️ Blog',music:'🎵 Music',places:'🗺️ Places Visited',testimonials:'💬 Fan Love',projects:'🎨 Projects',customize:'⚙️ Customize Site',security:'🔐 Security',analytics:'📈 Analytics'};
   const tb=document.getElementById('topbarTitle');if(tb)tb.textContent=titles[name]||name;
   if(name==='analytics') renderAnalytics();
   if(name==='messages') loadMessages();
@@ -2470,6 +2471,9 @@ async function deleteProject(id){
 // ══════════════════════════════════════════════════════
 
 // ── DATA ──
+let finAssets = JSON.parse(localStorage.getItem('fin_assets') || '[]');
+let finLiabilities = JSON.parse(localStorage.getItem('fin_liabs') || '[]');
+
 const PORTFOLIO = [
   { sym:'MSIP',  name:'Mero Microfinance Laghubitta',  units:100,  avg:11.56,   mktPrice:11.56,  color:'#3b82f6' },
   { sym:'NSY',   name:'Nabil Samriddhi Fund',           units:100,  avg:9.33,    mktPrice:9.33,   color:'#22c55e' },
@@ -2500,6 +2504,43 @@ function saveFin(){
   localStorage.setItem('fin_ipos', JSON.stringify(finIPOs));
   localStorage.setItem('fin_watchlist', JSON.stringify(finWatchlist));
   localStorage.setItem('fin_goals', JSON.stringify(finGoals));
+  localStorage.setItem('fin_assets', JSON.stringify(finAssets));
+  localStorage.setItem('fin_liabs', JSON.stringify(finLiabilities));
+}
+
+// ── REAL CASH BALANCE ──
+function getTotalIncome(){
+  // Fixed monthly income
+  const now = new Date();
+  const monthsElapsed = (now.getFullYear()-2024)*12 + now.getMonth() + 1;
+  const govtTotal = 2160 * monthsElapsed;
+  // Army allowance every 6 months
+  const armyPayments = Math.floor(monthsElapsed/6);
+  const armyTotal = armyPayments * 9000;
+  // One-time income records
+  const oneTimeTotal = finIncome.reduce((a,i)=>a+i.amount,0);
+  return govtTotal + armyTotal + oneTimeTotal;
+}
+
+function getTotalExpenses(){
+  return finExpenses.reduce((a,e)=>a+e.amount,0);
+}
+
+function getTotalAssets(){
+  return finAssets.filter(a=>a.cat!=='Liability').reduce((a,item)=>a+parseFloat(item.value||0),0);
+}
+
+function getTotalLiabilities(){
+  // Debts I owe
+  return finLiabilities.filter(l=>l.type==='I owe (debt)').reduce((a,l)=>a+parseFloat(l.amt||0),0);
+}
+
+function getCashBalance(){
+  return getTotalIncome() - getTotalExpenses() - getTotalLiabilities();
+}
+
+function getRealNetWorth(){
+  return getPortfolioTotal() + Math.max(getCashBalance(),0) + getTotalAssets();
 }
 
 function fmtNPR(n){ return 'NPR ' + parseFloat(n).toLocaleString('en-IN', {minimumFractionDigits:0, maximumFractionDigits:2}); }
@@ -2522,6 +2563,7 @@ function showFinTab(name, btn){
   if(name==='goals') renderGoals();
   if(name==='calendar') renderCalendar();
   if(name==='notifications') renderNotifications();
+  if(name==='assets'){ renderAssets(); }
 }
 
 // ── PORTFOLIO CALC ──
@@ -2533,17 +2575,20 @@ function getPortfolioPnL(){ return getPortfolioTotal()-getPortfolioCost(); }
 function initFinOverview(){
   const total = getPortfolioTotal();
   const pnl = getPortfolioPnL();
-  const cash = finCash || (MONTHLY_INCOME - getTotalExpensesThisMonth());
-  const netWorth = total + Math.max(cash,0);
+  const cash = getCashBalance();
+  const assets = getTotalAssets();
+  const liabs = getTotalLiabilities();
+  const netWorth = getRealNetWorth();
 
   const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
   setEl('fNetWorth', fmtNPR(netWorth));
-  setEl('fNetSub', `Portfolio + Cash`);
+  setEl('fNetSub', `Portfolio + Cash + Assets - Debts`);
   setEl('fMonthly', fmtNPR(MONTHLY_INCOME));
   setEl('fPortfolio', fmtNPR(total));
   setEl('fPortfolioSub', PORTFOLIO.length+' stocks');
   setEl('fSIP', fmtNPR(SIP_MONTHLY));
   setEl('fCash', fmtNPR(Math.max(cash,0)));
+  setEl('fCashSub', `Income: ${fmtNPR(getTotalIncome())} - Exp: ${fmtNPR(getTotalExpenses())}`);
   const pnlEl = document.getElementById('fPnL');
   if(pnlEl){ pnlEl.textContent = fmtNPR(Math.abs(pnl)); pnlEl.style.color = pnl>=0?'#22c55e':'#ef4444'; }
   setEl('fPnLSub', (pnl>=0?'▲ Gain ':'▼ Loss ')+((pnl/getPortfolioCost()*100).toFixed(1))+'%');
@@ -2996,6 +3041,111 @@ function renderNotifications(){
 
 // ── INIT when finance tab opened ──
 const origShowTab = typeof showTab !== 'undefined' ? showTab : null;
+
+
+// ══════════════════════════════════
+// ASSETS & LIABILITIES
+// ══════════════════════════════════
+function saveAsset(){
+  const name = document.getElementById('assetName').value.trim();
+  const value = parseFloat(document.getElementById('assetValue').value);
+  if(!name||!value){showToast('⚠️ Name and value required','error');return;}
+  finAssets.push({
+    id:Date.now(), name, value, 
+    cat:document.getElementById('assetCat').value,
+    date:document.getElementById('assetDate').value||new Date().toISOString().split('T')[0],
+    emoji:document.getElementById('assetEmoji').value||'📦',
+    notes:document.getElementById('assetNotes').value
+  });
+  saveFin(); renderAssets();
+  ['assetName','assetValue','assetDate','assetEmoji','assetNotes'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  showToast('✅ Asset added!','success');
+}
+
+function saveLiability(){
+  const name = document.getElementById('liabName').value.trim();
+  const amt = parseFloat(document.getElementById('liabAmt').value);
+  if(!name||!amt){showToast('⚠️ Fill required fields','error');return;}
+  finLiabilities.push({
+    id:Date.now(), name, amt,
+    type:document.getElementById('liabType').value,
+    person:document.getElementById('liabPerson').value,
+    due:document.getElementById('liabDue').value,
+    notes:document.getElementById('liabNotes').value,
+    paid:false
+  });
+  saveFin(); renderAssets();
+  ['liabName','liabAmt','liabPerson','liabDue','liabNotes'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  showToast('✅ Added!','success');
+}
+
+function renderAssets(){
+  // Summary cards
+  const summary = document.getElementById('assetsSummary');
+  if(summary){
+    const totalAssets = getTotalAssets();
+    const totalLiabs = getTotalLiabilities();
+    const iOwe = finLiabilities.filter(l=>l.type==='I owe (debt)'&&!l.paid).reduce((a,l)=>a+l.amt,0);
+    const owedToMe = finLiabilities.filter(l=>l.type==='Someone owes me'&&!l.paid).reduce((a,l)=>a+l.amt,0);
+    summary.innerHTML = `
+      <div class="fin-card gold"><div class="fin-label">Total Assets</div><div class="fin-value sm">${fmtNPR(totalAssets)}</div><div class="fin-sub">${finAssets.length} items</div><span class="fin-icon">🏠</span></div>
+      <div class="fin-card red"><div class="fin-label">I Owe</div><div class="fin-value sm">${fmtNPR(iOwe)}</div><div class="fin-sub">My debts</div><span class="fin-icon">💳</span></div>
+      <div class="fin-card green"><div class="fin-label">Owed to Me</div><div class="fin-value sm">${fmtNPR(owedToMe)}</div><div class="fin-sub">To receive</div><span class="fin-icon">🤝</span></div>
+      <div class="fin-card blue"><div class="fin-label">Net Assets</div><div class="fin-value sm">${fmtNPR(totalAssets+owedToMe-iOwe)}</div><div class="fin-sub">Assets - Debts</div><span class="fin-icon">📊</span></div>
+    `;
+  }
+
+  // Assets list
+  const list = document.getElementById('assetsList');
+  if(list){
+    if(!finAssets.length){list.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:0.8rem">No assets yet. Add gadgets, property, valuables!</div>'; }
+    else{
+      // Group by category
+      const cats={};
+      finAssets.forEach(a=>{if(!cats[a.cat])cats[a.cat]=[];cats[a.cat].push(a);});
+      list.innerHTML = Object.entries(cats).map(([cat,items])=>`
+        <div style="margin-bottom:0.8rem">
+          <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem">${cat}</div>
+          ${items.map(a=>`
+            <div class="blog-admin-card" style="margin-bottom:0.35rem">
+              <span style="font-size:1.3rem">${a.emoji||'📦'}</span>
+              <div style="flex:1">
+                <div style="font-size:0.85rem;color:var(--text)">${a.name}</div>
+                <div style="font-size:0.65rem;color:var(--muted)">${a.date}${a.notes?' · '+a.notes:''}</div>
+              </div>
+              <div style="font-size:0.88rem;color:var(--gold);font-weight:500">${fmtNPR(a.value)}</div>
+              <button onclick="deleteAsset(${a.id})" style="padding:0.25rem 0.5rem;border-radius:100px;border:1px solid rgba(239,68,68,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.68rem;font-family:'Outfit',sans-serif">🗑️</button>
+            </div>`).join('')}
+        </div>`).join('');
+    }
+  }
+
+  // Liabilities list
+  const liabList = document.getElementById('liabsList');
+  if(liabList){
+    if(!finLiabilities.length){liabList.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:0.8rem">No liabilities yet.</div>';}
+    else{
+      liabList.innerHTML = finLiabilities.map(l=>`
+        <div class="blog-admin-card" style="${l.paid?'opacity:0.5':''}">
+          <span style="font-size:1.2rem">${l.type==='I owe (debt)'?'💳':'🤝'}</span>
+          <div style="flex:1">
+            <div style="font-size:0.85rem;color:var(--text)">${l.name}</div>
+            <div style="font-size:0.65rem;color:var(--muted)">${l.person?l.person+' · ':''}${l.due?'Due: '+l.due:''}</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:0.88rem;color:${l.type==='I owe (debt)'?'#ef4444':'#22c55e'};font-weight:500">${l.type==='I owe (debt)'?'-':'+'} ${fmtNPR(l.amt)}</div>
+            <div style="font-size:0.6rem;color:var(--muted)">${l.type}</div>
+          </div>
+          ${!l.paid?`<button onclick="markPaid(${l.id})" style="padding:0.25rem 0.6rem;border-radius:100px;border:1px solid rgba(34,197,94,0.3);background:rgba(34,197,94,0.08);color:#22c55e;cursor:pointer;font-size:0.65rem;font-family:'Outfit',sans-serif">✅ Paid</button>`:'<span style="font-size:0.65rem;color:#22c55e">✅ Cleared</span>'}
+          <button onclick="deleteLiab(${l.id})" style="padding:0.25rem 0.5rem;border-radius:100px;border:1px solid rgba(239,68,68,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.68rem;font-family:'Outfit',sans-serif">🗑️</button>
+        </div>`).join('');
+    }
+  }
+}
+
+function deleteAsset(id){ finAssets=finAssets.filter(a=>a.id!==id); saveFin(); renderAssets(); showToast('🗑️ Asset removed','success'); }
+function deleteLiab(id){ finLiabilities=finLiabilities.filter(l=>l.id!==id); saveFin(); renderAssets(); showToast('🗑️ Removed','success'); }
+function markPaid(id){ const l=finLiabilities.find(l=>l.id===id); if(l){l.paid=true; saveFin(); renderAssets(); showToast('✅ Marked as paid!','success');} }
 
 // ══════════ KEYBOARD SHORTCUTS ══════════
 document.addEventListener('keydown',e=>{
