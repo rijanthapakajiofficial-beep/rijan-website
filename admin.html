@@ -453,11 +453,22 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 
         <!-- OVERVIEW -->
         <div class="tab-pane active" id="tab-overview">
-          <div class="stats-grid">
+          <div class="stats-grid" style="grid-template-columns:repeat(5,1fr)">
+            <div class="stat-box"><span class="stat-num" id="ovVisitorsToday">—</span><span class="stat-lbl">Visitors Today</span></div>
             <div class="stat-box"><span class="stat-num" id="ovFiles">—</span><span class="stat-lbl">Files</span></div>
             <div class="stat-box"><span class="stat-num" id="ovMsgs">—</span><span class="stat-lbl">Messages</span></div>
             <div class="stat-box"><span class="stat-num" id="ovPosts">—</span><span class="stat-lbl">Blog Posts</span></div>
             <div class="stat-box"><span class="stat-num" id="ovSongs">—</span><span class="stat-lbl">Songs</span></div>
+          </div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+              <span>👁️ Live Visitor Snapshot</span>
+              <button class="btn-ghost" style="font-size:0.7rem;padding:0.3rem 0.8rem" onclick="showTab('analytics',null)">Full Analytics →</button>
+            </div>
+            <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:0.6rem">
+              <div><div style="font-size:1.6rem;font-family:'Cormorant Garamond',serif;color:var(--gold)" id="ovUniqueVisitors">—</div><div style="font-size:0.68rem;color:var(--muted)">Unique visitors (all-time)</div></div>
+              <div><div style="font-size:1.6rem;font-family:'Cormorant Garamond',serif;color:var(--gold)" id="ovTotalViews">—</div><div style="font-size:0.68rem;color:var(--muted)">Total page views</div></div>
+            </div>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
             <div class="card accent">
@@ -1018,6 +1029,15 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
               </div>
             </div>
           </div>
+          <div class="security-card">
+            <h4>📱 Active Sessions <span style="font-weight:400;color:var(--muted);font-size:0.7rem">— devices logged into this admin panel</span></h4>
+            <div id="sessionsList" style="margin-top:0.6rem"></div>
+            <button class="btn-primary" style="margin-top:0.8rem;background:var(--danger);color:#fff" onclick="logoutAllDevices()">🔒 Log Out All Devices</button>
+          </div>
+          <div class="security-card">
+            <h4>🕓 Recent Activity</h4>
+            <div id="activityLogList" style="margin-top:0.4rem;max-height:340px;overflow-y:auto"></div>
+          </div>
         </div>
 
         <!-- ANALYTICS -->
@@ -1143,6 +1163,62 @@ const CLD_CLOUD = 'dvd5bjlpa';
 const CLD_PRESET = 'rijan-uploads';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// ══════════ SESSION / DEVICE TRACKING ══════════
+const SESSION_MAX_AGE_MS = 7*24*60*60*1000; // 7 days — after this, must log in again
+let sessionHeartbeatId = null;
+
+function parseDeviceInfo(ua){
+  let os='Unknown';
+  if(/windows/i.test(ua))os='Windows';
+  else if(/android/i.test(ua))os='Android';
+  else if(/iphone|ipad|ipod/i.test(ua))os='iOS';
+  else if(/mac os/i.test(ua))os='macOS';
+  else if(/linux/i.test(ua))os='Linux';
+  let browser='Other';
+  if(/edg/i.test(ua))browser='Edge';
+  else if(/chrome/i.test(ua)&&!/edg/i.test(ua))browser='Chrome';
+  else if(/safari/i.test(ua)&&!/chrome/i.test(ua))browser='Safari';
+  else if(/firefox/i.test(ua))browser='Firefox';
+  let type='Desktop';
+  if(/tablet|ipad/i.test(ua))type='Tablet';
+  else if(/mobile|android|iphone/i.test(ua))type='Mobile';
+  return {os,browser,type,deviceName:type+' · '+browser+' · '+os};
+}
+async function getClientIP(){
+  try{const r=await fetch('https://api.ipify.org?format=json');const j=await r.json();return j.ip;}catch(e){return null;}
+}
+async function logAdminActivity(action,detail){
+  try{
+    const token=localStorage.getItem('rtk_session_token');
+    await sb.from('admin_activity_log').insert({session_token:token,action,detail:detail||null});
+  }catch(e){/* table may not exist yet — fail silently */}
+}
+function startSessionHeartbeat(){
+  if(sessionHeartbeatId) return;
+  sessionHeartbeatId=setInterval(async ()=>{
+    const token=localStorage.getItem('rtk_session_token');
+    if(!token) return;
+    try{
+      const{data:sess}=await sb.from('admin_sessions').select('revoked,login_at').eq('session_token',token).single();
+      if(!sess || sess.revoked || (Date.now()-new Date(sess.login_at).getTime())>SESSION_MAX_AGE_MS){
+        showToast('🔒 Session ended — please log in again','error');
+        forceLocalLogout();
+      }else{
+        sb.from('admin_sessions').update({last_active:new Date().toISOString()}).eq('session_token',token).then(()=>{});
+      }
+    }catch(e){}
+  },60000);
+}
+function stopSessionHeartbeat(){if(sessionHeartbeatId){clearInterval(sessionHeartbeatId);sessionHeartbeatId=null;}}
+function forceLocalLogout(){
+  stopSessionHeartbeat();
+  localStorage.removeItem('rtk_logged_in');
+  localStorage.removeItem('rtk_session_token');
+  localStorage.removeItem('rtk_login_user');
+  const ls=document.getElementById('loginScreen');if(ls)ls.style.display='flex';
+  const db=document.getElementById('dashboard');if(db)db.style.display='none';
+}
+
 // ══════════ AUTH ══════════
 // ALWAYS fetch from Supabase — never trust localStorage for auth
 async function getCredsFromDB(){
@@ -1182,6 +1258,15 @@ async function doLogin(){
     document.getElementById('secLastLogin').textContent=new Date().toLocaleTimeString();
     localStorage.setItem('rtk_logged_in','1');
     localStorage.setItem('rtk_login_user',u);
+    (async()=>{
+      const info=parseDeviceInfo(navigator.userAgent);
+      const token=(crypto.randomUUID?crypto.randomUUID():'s'+Date.now()+Math.random().toString(36).slice(2));
+      localStorage.setItem('rtk_session_token',token);
+      const ip=await getClientIP();
+      try{await sb.from('admin_sessions').insert({session_token:token,device_name:info.deviceName,browser:info.browser,os:info.os,user_agent:navigator.userAgent,ip_address:ip});}catch(e){}
+      logAdminActivity('login','Logged in as '+u+' on '+info.deviceName);
+      startSessionHeartbeat();
+    })();
     initDashboard();
   }else{
     btn.textContent='🔓 Enter Dashboard';btn.disabled=false;
@@ -1192,8 +1277,15 @@ async function doLogin(){
   }
 }
 function doLogout(){
+  const _tok=localStorage.getItem('rtk_session_token');
+  if(_tok){
+    logAdminActivity('logout','Logged out');
+    sb.from('admin_sessions').update({revoked:true,revoked_at:new Date().toISOString()}).eq('session_token',_tok).then(()=>{});
+  }
+  stopSessionHeartbeat();
   // Clear ALL session data
   localStorage.removeItem('rtk_logged_in');
+  localStorage.removeItem('rtk_session_token');
   localStorage.removeItem('rtk_login_user');
   localStorage.removeItem('rtk_admin_user');
   localStorage.removeItem('rtk_admin_pass');
@@ -1207,20 +1299,37 @@ function doLogout(){
   allFiles=[];selectedItems=new Set();allMsgs=[];
 }
 window.addEventListener('DOMContentLoaded',async ()=>{
-  // Auto-login: re-verify credentials from Supabase every time
+  // Auto-login: re-verify credentials AND session validity every time
   if(localStorage.getItem('rtk_logged_in')==='1'){
-    const c=await getCredsFromDB();
-    const u=localStorage.getItem('rtk_login_user')||c.u;
-    // Update sidebar with latest username from Supabase
-    document.getElementById('loginScreen').style.display='none';
-    document.getElementById('dashboard').style.display='block';
-    const su=document.getElementById('sidebarUsername');if(su)su.textContent=c.u;
-    const sa=document.getElementById('sidebarAvatar');if(sa)sa.textContent=c.u[0].toUpperCase();
-    const ss=document.getElementById('secUsername');if(ss)ss.textContent=c.u;
-    document.getElementById('secLastLogin').textContent=new Date().toLocaleTimeString();
-    // Update stored login user to match Supabase
-    localStorage.setItem('rtk_login_user',c.u);
-    initDashboard();
+    const token=localStorage.getItem('rtk_session_token');
+    let sessionOk=false;
+    if(token){
+      try{
+        const{data:sess}=await sb.from('admin_sessions').select('revoked,login_at').eq('session_token',token).single();
+        if(sess && !sess.revoked && (Date.now()-new Date(sess.login_at).getTime())<SESSION_MAX_AGE_MS){
+          sessionOk=true;
+          sb.from('admin_sessions').update({last_active:new Date().toISOString()}).eq('session_token',token).then(()=>{});
+        }
+      }catch(e){ sessionOk=true; /* sessions table not set up yet — don't lock the owner out */ }
+    }else{
+      sessionOk=true; /* legacy session predating this update — allow once, new token issued on next login */
+    }
+    if(!sessionOk){
+      forceLocalLogout();
+    }else{
+      const c=await getCredsFromDB();
+      // Update sidebar with latest username from Supabase
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('dashboard').style.display='block';
+      const su=document.getElementById('sidebarUsername');if(su)su.textContent=c.u;
+      const sa=document.getElementById('sidebarAvatar');if(sa)sa.textContent=c.u[0].toUpperCase();
+      const ss=document.getElementById('secUsername');if(ss)ss.textContent=c.u;
+      document.getElementById('secLastLogin').textContent=new Date().toLocaleTimeString();
+      // Update stored login user to match Supabase
+      localStorage.setItem('rtk_login_user',c.u);
+      initDashboard();
+      startSessionHeartbeat();
+    }
   }
   document.getElementById('lp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 });
@@ -1269,6 +1378,7 @@ function showTab(name,btn){
   const titles={finance:'💰 Finance Dashboard (Assets & Net Worth updated in real-time)',overview:'📊 Overview',files:'📁 File Manager',messages:'✉️ Messages',blog:'✍️ Blog',music:'🎵 Music',places:'🗺️ Places Visited',testimonials:'💬 Fan Love',projects:'🎨 Projects',customize:'⚙️ Customize Site',security:'🔐 Security',analytics:'📈 Analytics'};
   const tb=document.getElementById('topbarTitle');if(tb)tb.textContent=titles[name]||name;
   if(name==='analytics') renderAnalytics();
+  if(name==='security'){loadSecuritySessions();loadActivityLog();}
   if(name==='messages') loadMessages();
   if(name==='blog') loadBlogPosts();
   if(name==='music') loadSongs();
@@ -1280,6 +1390,65 @@ function showTab(name,btn){
       const firstTab=document.querySelector('.fin-tab');
       if(firstTab) showFinTab('overview',firstTab);
     },150);
+  }
+}
+
+// ══════════ SECURITY TAB: SESSIONS + ACTIVITY ══════════
+async function loadSecuritySessions(){
+  const list=document.getElementById('sessionsList');
+  if(!list)return;
+  try{
+    const{data,error}=await sb.from('admin_sessions').select('*').order('login_at',{ascending:false}).limit(20);
+    if(error)throw error;
+    const myToken=localStorage.getItem('rtk_session_token');
+    if(!data||!data.length){list.innerHTML='<div style="color:var(--muted);font-size:0.8rem;padding:0.5rem">No sessions recorded yet — log out and back in to start tracking.</div>';return;}
+    list.innerHTML=data.map(s=>{
+      const isMe=s.session_token===myToken;
+      const status=s.revoked?'<span class="badge badge-danger">Revoked</span>':(isMe?'<span class="badge badge-success">This device</span>':'<span class="badge badge-warning">Active</span>');
+      return `<div style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;padding:0.7rem;background:var(--surface);border-radius:var(--r);margin-bottom:0.5rem;flex-wrap:wrap">
+        <div>
+          <div style="font-size:0.82rem;color:var(--text)">${s.device_name||'Unknown device'} ${status}</div>
+          <div style="font-size:0.68rem;color:var(--muted);margin-top:0.25rem">Login: ${new Date(s.login_at).toLocaleString()} · Last active: ${new Date(s.last_active).toLocaleString()}${s.ip_address?' · IP: '+s.ip_address:''}</div>
+        </div>
+        ${!s.revoked?`<button class="btn-ghost" style="font-size:0.7rem;padding:0.35rem 0.8rem;color:var(--danger)" onclick="revokeSession('${s.session_token}')">🚫 Revoke</button>`:''}
+      </div>`;
+    }).join('');
+  }catch(e){
+    list.innerHTML='<div style="color:var(--danger);font-size:0.78rem;padding:0.6rem;background:var(--surface);border-radius:var(--r)">⚠️ Sessions table not found. Run <strong>supabase-security-setup.sql</strong> in Supabase SQL Editor.</div>';
+  }
+}
+async function revokeSession(token){
+  if(!confirm('Log out this device?'))return;
+  try{
+    await sb.from('admin_sessions').update({revoked:true,revoked_at:new Date().toISOString()}).eq('session_token',token);
+    logAdminActivity('session_revoke','Revoked a device session');
+    showToast('🚫 Device logged out','success');
+    loadSecuritySessions();
+    if(token===localStorage.getItem('rtk_session_token')) forceLocalLogout();
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
+async function logoutAllDevices(){
+  if(!confirm('This logs out ALL devices — including this one. Continue?'))return;
+  try{
+    await sb.from('admin_sessions').update({revoked:true,revoked_at:new Date().toISOString()}).eq('revoked',false);
+    await logAdminActivity('logout_all','Logged out all devices');
+    showToast('🔒 All devices logged out','success');
+    setTimeout(()=>forceLocalLogout(),500);
+  }catch(e){showToast('❌ '+e.message,'error');}
+}
+async function loadActivityLog(){
+  const list=document.getElementById('activityLogList');
+  if(!list)return;
+  try{
+    const{data,error}=await sb.from('admin_activity_log').select('*').order('created_at',{ascending:false}).limit(25);
+    if(error)throw error;
+    if(!data||!data.length){list.innerHTML='<div style="color:var(--muted);font-size:0.8rem;padding:0.5rem">No activity recorded yet.</div>';return;}
+    list.innerHTML=data.map(a=>`<div style="display:flex;justify-content:space-between;gap:0.6rem;padding:0.55rem 0.2rem;border-bottom:1px solid var(--border);font-size:0.76rem">
+      <span style="color:var(--text2)">${a.detail||a.action}</span>
+      <span style="color:var(--muted);white-space:nowrap;margin-left:0.5rem">${new Date(a.created_at).toLocaleString()}</span>
+    </div>`).join('');
+  }catch(e){
+    list.innerHTML='<div style="color:var(--danger);font-size:0.78rem;padding:0.6rem;background:var(--surface);border-radius:var(--r)">⚠️ Activity log table not found. Run <strong>supabase-security-setup.sql</strong> in Supabase SQL Editor.</div>';
   }
 }
 
@@ -1299,6 +1468,17 @@ async function loadOverviewStats(){
     setEl('ovSongs',sc||0);
     const{data:unread}=await sb.from('messages').select('id').eq('replied',false);
     setEl('ovUnread',(unread||[]).length);
+    try{
+      const since24h=new Date();since24h.setDate(since24h.getDate()-1);
+      const[{count:todayViews},{count:totalViews},{data:allSessions}]=await Promise.all([
+        sb.from('page_views').select('*',{count:'exact',head:true}).gte('created_at',since24h.toISOString()),
+        sb.from('page_views').select('*',{count:'exact',head:true}),
+        sb.from('page_views').select('session_id').limit(5000)
+      ]);
+      setEl('ovVisitorsToday',todayViews||0);
+      setEl('ovTotalViews',(totalViews||0).toLocaleString());
+      setEl('ovUniqueVisitors',new Set((allSessions||[]).map(s=>s.session_id)).size.toLocaleString());
+    }catch(e){setEl('ovVisitorsToday','—');setEl('ovTotalViews','—');setEl('ovUniqueVisitors','—');}
     const totalBytes=allFiles.reduce((a,f)=>a+(f.size||0),0);
     const usedMB=(totalBytes/1048576).toFixed(1);
     const pct=((totalBytes/1073741824)/25*100).toFixed(2);
@@ -1881,8 +2061,8 @@ async function sendReply(id,email,name){
     showToast('✅ Reply sent to '+name+'!','success');loadMessages();
   }catch(e){showToast('⚠️ Saved but email failed','error');loadMessages();}
 }
-async function deleteMsg(id){if(!confirm('Delete?'))return;await sb.from('messages').delete().eq('id',id);showToast('🗑️ Deleted','success');loadMessages();}
-async function deleteAllRead(){if(!confirm('Delete all replied messages?'))return;const ids=allMsgs.filter(m=>m.replied).map(m=>m.id);if(!ids.length){showToast('No read messages','error');return;}await sb.from('messages').delete().in('id',ids);showToast('🗑️ Deleted','success');loadMessages();}
+async function deleteMsg(id){if(!confirm('Delete?'))return;await sb.from('messages').delete().eq('id',id);logAdminActivity('message_delete','Deleted a message');showToast('🗑️ Deleted','success');loadMessages();}
+async function deleteAllRead(){if(!confirm('Delete all replied messages?'))return;const ids=allMsgs.filter(m=>m.replied).map(m=>m.id);if(!ids.length){showToast('No read messages','error');return;}await sb.from('messages').delete().in('id',ids);logAdminActivity('message_delete','Deleted '+ids.length+' replied messages');showToast('🗑️ Deleted','success');loadMessages();}
 
 // ══════════ BLOG ══════════
 let editBlogId=null;
@@ -1921,6 +2101,7 @@ async function publishBlog(){
     const payload={title,content,category,emoji,media_url,media_type:media_url?'image':null};
     if(editBlogId)await sb.from('blog_posts').update(payload).eq('id',editBlogId);
     else await sb.from('blog_posts').insert(payload);
+    logAdminActivity(editBlogId?'blog_update':'blog_create',(editBlogId?'Updated':'Published')+' blog post: '+(title||'Untitled'));
     showToast(editBlogId?'✅ Updated!':'🚀 Published!','success');
     clearBlogForm();loadBlogPosts();
   }catch(e){showToast('❌ '+e.message,'error');}
@@ -1942,7 +2123,7 @@ function editBlog(id){
 }
 function cancelBlogEdit(){editBlogId=null;document.getElementById('blogFormTitle').textContent='✍️ New Post';document.getElementById('blogSubmitBtn').textContent='🚀 Publish';document.getElementById('blogCancelBtn').style.display='none';clearBlogForm();}
 function clearBlogForm(){['blogTitle','blogContent','blogEmoji','blogMedia'].forEach(id=>document.getElementById(id).value='');}
-async function deleteBlog(id){if(!confirm('Delete post?'))return;await sb.from('blog_posts').delete().eq('id',id);showToast('🗑️ Deleted','success');loadBlogPosts();}
+async function deleteBlog(id){if(!confirm('Delete post?'))return;await sb.from('blog_posts').delete().eq('id',id);logAdminActivity('blog_delete','Deleted a blog post');showToast('🗑️ Deleted','success');loadBlogPosts();}
 
 // ══════════ MUSIC ══════════
 async function loadSongs(){
@@ -1969,11 +2150,12 @@ async function addSong(){
   const url=document.getElementById('songUrl').value.trim();
   if(!title||!url){showToast('⚠️ Title and URL required','error');return;}
   await sb.from('songs').insert({title,artist,emoji,url});
+  logAdminActivity('song_add','Added song: '+title);
   showToast('✅ Song added!','success');
   ['songTitle','songUrl','songEmoji'].forEach(id=>document.getElementById(id).value='');
   loadSongs();
 }
-async function deleteSong(id){if(!confirm('Delete song?'))return;await sb.from('songs').delete().eq('id',id);showToast('🗑️ Removed','success');loadSongs();}
+async function deleteSong(id){if(!confirm('Delete song?'))return;await sb.from('songs').delete().eq('id',id);logAdminActivity('song_delete','Deleted a song');showToast('🗑️ Removed','success');loadSongs();}
 function playSong(url,title){const a=new Audio(url);a.play().catch(()=>{});showToast('▶ Playing: '+title,'success');}
 async function uploadAudio(e){
   const file=e.target.files[0];if(!file)return;
@@ -1999,6 +2181,7 @@ async function saveCustomization(){
     const{data:ex}=await sb.from('site_settings').select('id').single();
     if(ex)await sb.from('site_settings').update(payload).eq('id',ex.id);
     else await sb.from('site_settings').insert(payload);
+    logAdminActivity('site_customize','Updated site customization');
     showToast('✅ Website updated! Refresh index.html to see changes.','success');
   }catch(e){showToast('❌ '+e.message,'error');}
 }
@@ -2026,6 +2209,7 @@ async function changeUsername(){
       const{error:upsErr}=await sb.from('site_settings').upsert({id:1,admin_username:newUser});
       if(upsErr) throw upsErr;
     }
+    logAdminActivity('username_change','Changed username to '+newUser);
     // Update localStorage
     localStorage.setItem('rtk_admin_user',newUser);
     localStorage.setItem('rtk_login_user',newUser);
@@ -2067,6 +2251,7 @@ async function changePassword(){
     // Update localStorage
     localStorage.setItem('rtk_admin_pass',newPw);
     ['currentPw','newPw','confirmPw'].forEach(id=>document.getElementById(id).value='');
+    logAdminActivity('password_change','Changed admin password');
     showToast('✅ Password changed! All devices updated.','success');
   }catch(e){
     // Last resort: save to localStorage only
@@ -2126,31 +2311,40 @@ function vpNav(d){
 // ══════════ VISITOR ANALYTICS ══════════
 async function loadVisitorAnalytics(){
   try{
-    const[{count:mc},{count:fc},{data:rm}]=await Promise.all([
-      sb.from('messages').select('*',{count:'exact',head:true}),
-      sb.from('files').select('*',{count:'exact',head:true}).eq('trashed',false),
-      sb.from('messages').select('created_at').order('created_at',{ascending:false}).limit(50)
-    ]);
-    const base=Math.max((mc||0)*18+(fc||0)*3+142,200);
+    const since24h=new Date();since24h.setDate(since24h.getDate()-1);
     const todayStr=new Date().toISOString().split('T')[0];
-    const todayMsgs=(rm||[]).filter(m=>(m.created_at||'').startsWith(todayStr)).length;
-    const todayV=Math.max(todayMsgs*12+Math.floor(Math.random()*8)+3,5);
-    document.getElementById('rt_v').textContent=base.toLocaleString();
-    document.getElementById('rt_t').textContent=todayV;
-    document.getElementById('rt_p').textContent=Math.floor(base*2.4).toLocaleString();
+    const[{count:totalViews},{count:todayViews},{count:mc},{data:allViews}]=await Promise.all([
+      sb.from('page_views').select('*',{count:'exact',head:true}),
+      sb.from('page_views').select('*',{count:'exact',head:true}).gte('created_at',since24h.toISOString()),
+      sb.from('messages').select('*',{count:'exact',head:true}),
+      sb.from('page_views').select('page,device_type,session_id,created_at').order('created_at',{ascending:false}).limit(2000)
+    ]);
+    const views=allViews||[];
+    const uniqueVisitors=new Set(views.map(v=>v.session_id)).size;
+    document.getElementById('rt_v').textContent=uniqueVisitors.toLocaleString();
+    document.getElementById('rt_t').textContent=todayViews||0;
+    document.getElementById('rt_p').textContent=(totalViews||0).toLocaleString();
     document.getElementById('rt_m').textContent=mc||0;
     document.getElementById('anUpdated').textContent='Updated: '+new Date().toLocaleTimeString();
-    const pages=[
-      {n:'🏠 Home',v:Math.floor(base*0.45)},
-      {n:'📸 Social',v:Math.floor(base*0.28)},
-      {n:'✍️ Blog',v:Math.floor(base*0.22)},
-      {n:'👤 About',v:Math.floor(base*0.18)},
-      {n:'✉️ Contact',v:Math.floor(base*0.12)}
-    ];
-    const mx=Math.max(...pages.map(p=>p.v));
-    document.getElementById('pvChart').innerHTML=pages.map(p=>`<div class="pv-row"><span class="pv-lbl">${p.n}</span><div class="pv-track"><div class="pv-fill" style="width:${(p.v/mx*100).toFixed(0)}%"></div></div><span class="pv-val">${p.v.toLocaleString()}</span></div>`).join('');
-    document.getElementById('dvGrid').innerHTML=`<div class="dv-box"><div class="dv-icon">📱</div><div class="dv-lbl">Mobile</div><div class="dv-pct">62%</div></div><div class="dv-box"><div class="dv-icon">💻</div><div class="dv-lbl">Desktop</div><div class="dv-pct">31%</div></div><div class="dv-box"><div class="dv-icon">📟</div><div class="dv-lbl">Tablet</div><div class="dv-pct">7%</div></div>`;
-  }catch(e){}
+    // Top pages — real, counted from page_views.page
+    const pageCounts={};
+    views.forEach(v=>{const p=v.page||'/';pageCounts[p]=(pageCounts[p]||0)+1;});
+    const pages=Object.entries(pageCounts).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([n,v])=>({n,v}));
+    if(!pages.length){
+      document.getElementById('pvChart').innerHTML='<div style="color:var(--muted);font-size:0.78rem;padding:0.5rem">No visits recorded yet.</div>';
+    }else{
+      const mx=Math.max(...pages.map(p=>p.v));
+      document.getElementById('pvChart').innerHTML=pages.map(p=>`<div class="pv-row"><span class="pv-lbl">${p.n}</span><div class="pv-track"><div class="pv-fill" style="width:${(p.v/mx*100).toFixed(0)}%"></div></div><span class="pv-val">${p.v.toLocaleString()}</span></div>`).join('');
+    }
+    // Device breakdown — real, counted from page_views.device_type
+    const devCounts={mobile:0,desktop:0,tablet:0};
+    views.forEach(v=>{const d=(v.device_type||'desktop').toLowerCase();if(devCounts[d]!==undefined)devCounts[d]++;});
+    const devTotal=views.length||1;
+    const pct=n=>Math.round(n/devTotal*100);
+    document.getElementById('dvGrid').innerHTML=`<div class="dv-box"><div class="dv-icon">📱</div><div class="dv-lbl">Mobile</div><div class="dv-pct">${pct(devCounts.mobile)}%</div></div><div class="dv-box"><div class="dv-icon">💻</div><div class="dv-lbl">Desktop</div><div class="dv-pct">${pct(devCounts.desktop)}%</div></div><div class="dv-box"><div class="dv-icon">📟</div><div class="dv-lbl">Tablet</div><div class="dv-pct">${pct(devCounts.tablet)}%</div></div>`;
+  }catch(e){
+    document.getElementById('pvChart').innerHTML='<div style="color:var(--danger);font-size:0.78rem;padding:0.5rem">⚠️ page_views table not found. Run supabase-security-setup.sql, then visit the live site once to generate data.</div>';
+  }
 }
 
 
@@ -2229,6 +2423,7 @@ async function savePlace(){
       res=await sb.from('places').insert(payload);
     }
     if(res.error) throw res.error;
+    logAdminActivity(editPlaceId?'place_update':'place_create',(editPlaceId?'Updated':'Added')+' place: '+name);
     showToast(editPlaceId?'✅ Place updated!':'✅ Place added!','success');
     cancelPlaceEdit();
     await loadPlaces();
@@ -2266,6 +2461,7 @@ async function deletePlace(id){
   try{
     const{error}=await sb.from('places').delete().eq('id',id);
     if(error) throw error;
+    logAdminActivity('place_delete','Deleted a place');
     showToast('🗑️ Place deleted','success');
     await loadPlaces();
   }catch(e){showToast('❌ '+e.message,'error');}
@@ -2351,6 +2547,7 @@ async function saveTesti(){
       res=await sb.from('testimonials').insert(payload);
     }
     if(res.error) throw res.error;
+    logAdminActivity(editTestiId?'testimonial_update':'testimonial_create',(editTestiId?'Updated':'Added')+' testimonial from: '+name);
     showToast(editTestiId?'✅ Updated!':'✅ Fan message added!','success');
     cancelTestiEdit();
     await loadTestimonials();
@@ -2387,6 +2584,7 @@ async function deleteTesti(id){
   try{
     const{error}=await sb.from('testimonials').delete().eq('id',id);
     if(error) throw error;
+    logAdminActivity('testimonial_delete','Deleted a testimonial');
     showToast('🗑️ Testimonial deleted','success');
     await loadTestimonials();
   }catch(e){showToast('❌ '+e.message,'error');}
@@ -2471,6 +2669,7 @@ async function saveProject(){
       res=await sb.from('projects').insert(payload);
     }
     if(res.error) throw res.error;
+    logAdminActivity(editProjId?'project_update':'project_create',(editProjId?'Updated':'Added')+' project: '+title);
     showToast(editProjId?'✅ Project updated!':'✅ Project added!','success');
     cancelProjEdit();
     await loadProjects();
@@ -2508,6 +2707,7 @@ async function deleteProject(id){
   try{
     const{error}=await sb.from('projects').delete().eq('id',id);
     if(error) throw error;
+    logAdminActivity('project_delete','Deleted a project');
     showToast('🗑️ Project deleted','success');
     await loadProjects();
   }catch(e){showToast('❌ '+e.message,'error');}
