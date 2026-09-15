@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Rijan Admin — Dashboard</title>
 <meta name="robots" content="noindex, nofollow"/>
 <!-- ═══ FAVICON / LOGO ═══ -->
@@ -13,6 +13,10 @@
 <link rel="manifest" href="/site.webmanifest"/>
 <meta name="msapplication-TileImage" content="/icon-192.png"/>
 <meta name="msapplication-TileColor" content="#07090d"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="RTK Admin"/>
 
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -232,12 +236,20 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 .badge-warning{background:rgba(255,183,77,0.12);color:#ffb74d;border:1px solid rgba(255,183,77,0.2);}
 .badge-danger{background:rgba(232,112,112,0.12);color:var(--danger);border:1px solid rgba(232,112,112,0.2);}
 
+.sidebar-toggle{display:none;width:36px;height:36px;border-radius:50%;background:var(--card2);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:1rem;flex-shrink:0;}
+.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);opacity:0;visibility:hidden;transition:opacity 0.3s;z-index:99;}
+.sidebar-overlay.open{opacity:1;visibility:visible;}
 @media(max-width:768px){
-  .sidebar{transform:translateX(-100%);transition:transform 0.3s;}
+  .sidebar-toggle{display:flex;}
+  .sidebar{transform:translateX(-100%);transition:transform 0.3s;z-index:150;}
+  .sidebar.open{transform:translateX(0);}
   .main{margin-left:0;}
   .stats-grid{grid-template-columns:1fr 1fr;}
   .fg-row{grid-template-columns:1fr;}
   .files-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));}
+  .rt-wrap{grid-template-columns:1fr 1fr;}
+  .dv-grid{grid-template-columns:1fr 1fr;}
+  .topbar-title{font-size:1.1rem;}
 }
 
 /* VIDEO PLAYER */
@@ -423,10 +435,12 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
         </div>
       </div>
     </div>
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
     <!-- MAIN -->
     <div class="main">
       <div class="topbar">
+        <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Menu" aria-expanded="false">☰</button>
         <div class="topbar-title" id="topbarTitle">📊 Overview</div>
         <div class="topbar-right">
           <span style="font-size:0.72rem;color:var(--muted)" id="lastSyncLabel">—</span>
@@ -1227,7 +1241,25 @@ function showToast(msg,type=''){
 }
 
 // ══════════ TABS ══════════
+function toggleSidebar(){
+  const sb=document.querySelector('.sidebar');
+  const ov=document.getElementById('sidebarOverlay');
+  const btn=document.getElementById('sidebarToggle');
+  const open=sb.classList.toggle('open');
+  ov.classList.toggle('open',open);
+  btn.textContent=open?'✕':'☰';
+  btn.setAttribute('aria-expanded',open);
+}
+function closeSidebar(){
+  document.querySelector('.sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  const btn=document.getElementById('sidebarToggle');
+  if(btn){btn.textContent='☰';btn.setAttribute('aria-expanded','false');}
+}
+window.addEventListener('resize',()=>{if(window.innerWidth>768) closeSidebar();});
+
 function showTab(name,btn){
+  if(window.innerWidth<=768) closeSidebar();
   document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
   const pane=document.getElementById('tab-'+name);

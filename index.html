@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 
 <!-- ═══ PRIMARY SEO ═══ -->
 <title>Rijan Thapa Kaji — Music, Mountains & Nepal | RTK</title>
@@ -27,8 +27,11 @@
 <link rel="manifest" href="/site.webmanifest"/>
 <meta name="msapplication-TileImage" content="/icon-192.png"/>
 <meta name="msapplication-TileColor" content="#07090d"/>
-
-<meta name="msapplication-TileColor" content="#07090d"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="RTK"/>
+<meta name="format-detection" content="telephone=no"/>
 
 <!-- ═══ CANONICAL ═══ -->
 <link rel="canonical" href="https://rijan-website.onrender.com/"/>
@@ -208,6 +211,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 @keyframes blinkDot{0%,100%{opacity:1;}50%{opacity:0.3;}}
 .icon-btn{width:34px;height:34px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.85rem;color:var(--text2);transition:all 0.25s;}
 .icon-btn:hover{border-color:var(--gold);color:var(--gold);}
+.nav-toggle{display:none;width:38px;height:38px;border-radius:50%;background:var(--card);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:1rem;flex-shrink:0;}
+.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);opacity:0;visibility:hidden;transition:opacity 0.3s;z-index:199;}
+.nav-overlay.open{opacity:1;visibility:visible;}
+@media(max-width:768px){
+  .nav-toggle{display:flex;}
+  .nav-links{position:fixed;top:0;right:-85vw;width:min(78vw,300px);height:100vh;flex-direction:column;align-items:stretch;gap:0.3rem;background:rgba(7,9,13,0.98);backdrop-filter:blur(24px);border-left:1px solid var(--border);padding:6.5rem 1.2rem 2rem;overflow-y:auto;transition:right 0.35s cubic-bezier(.22,1,.36,1);z-index:201;}
+  .nav-links.open{right:0;}
+  .nav-links li{width:100%;}
+  .nav-links a{padding:0.9rem 1rem;font-size:0.85rem;width:100%;}
+  .nav-links a span{display:inline;}
+  .visitor-badge span:not(.visitor-dot){display:none;}
+  .visitor-badge{padding:0.4rem;}
+}
 
 /* HERO */
 #home{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:8rem 2rem 5rem;}
@@ -411,8 +427,7 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 .dynamic-hero-name .line2{transition:all 0.5s;}
 
 @media(max-width:768px){
-  nav{padding:1.1rem 1.5rem;}
-  .nav-links a span{display:none;}
+  nav{padding:1rem 1.2rem;}
   .bio-grid{grid-template-columns:1fr;gap:2.5rem;}
   .bio-portrait{position:static;}
   .form-row{grid-template-columns:1fr;}
@@ -872,8 +887,10 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   <div class="nav-right">
     <div class="visitor-badge"><span class="visitor-dot"></span><span id="visitorCount">...</span></div>
     <button class="icon-btn" onclick="toggleTheme()" id="themeBtn">☀️</button>
+    <button class="nav-toggle" id="navToggle" onclick="toggleMobileNav()" aria-label="Menu" aria-expanded="false">☰</button>
   </div>
 </nav>
+<div class="nav-overlay" id="navOverlay" onclick="closeMobileNav()"></div>
 
 <!-- HERO -->
 <section id="home">
@@ -1244,6 +1261,27 @@ setTimeout(()=>{
   if(typeof AOS!=='undefined') AOS.init({duration:800,once:true,offset:80});
   if(typeof particlesJS!=='undefined') particlesJS('particles-js',{particles:{number:{value:55,density:{enable:true,value_area:900}},color:{value:'#c9a96e'},shape:{type:'circle'},opacity:{value:0.25,random:true},size:{value:2.5,random:true},line_linked:{enable:true,distance:140,color:'#c9a96e',opacity:0.08,width:1},move:{enable:true,speed:0.8,direction:'none',random:true,out_mode:'out'}},interactivity:{detect_on:'canvas',events:{onhover:{enable:true,mode:'grab'},onclick:{enable:true,mode:'push'}},modes:{grab:{distance:180,line_linked:{opacity:0.25}},push:{particles_nb:3}}}});
 },2600);
+
+// MOBILE NAV
+const navToggleBtn=document.getElementById('navToggle');
+const navOverlayEl=document.getElementById('navOverlay');
+const navLinksEl=document.querySelector('.nav-links');
+function toggleMobileNav(){
+  const open=navLinksEl.classList.toggle('open');
+  navOverlayEl.classList.toggle('open',open);
+  navToggleBtn.textContent=open?'✕':'☰';
+  navToggleBtn.setAttribute('aria-expanded',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function closeMobileNav(){
+  navLinksEl.classList.remove('open');
+  navOverlayEl.classList.remove('open');
+  navToggleBtn.textContent='☰';
+  navToggleBtn.setAttribute('aria-expanded','false');
+  document.body.style.overflow='';
+}
+document.querySelectorAll('.nav-links a').forEach(a=>a.addEventListener('click',closeMobileNav));
+window.addEventListener('resize',()=>{if(window.innerWidth>768) closeMobileNav();});
 
 // NAV
 const navLinks=document.querySelectorAll('.nav-links a');
