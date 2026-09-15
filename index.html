@@ -19,6 +19,15 @@
 <meta name="distribution" content="Global"/>
 <meta name="rating" content="General"/>
 <meta name="theme-color" content="#c9a96e"/>
+<!-- ═══ FAVICON / LOGO ═══ -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+<link rel="manifest" href="/site.webmanifest"/>
+<meta name="msapplication-TileImage" content="/icon-192.png"/>
+<meta name="msapplication-TileColor" content="#07090d"/>
+
 <meta name="msapplication-TileColor" content="#07090d"/>
 
 <!-- ═══ CANONICAL ═══ -->
@@ -61,7 +70,10 @@
   "name": "Rijan Thapa Kaji",
   "alternateName": ["RTK", "Rijan", "रिजन थापा काजी"],
   "url": "https://rijan-website.onrender.com/",
-  "image": "https://res.cloudinary.com/dvd5bjlpa/image/upload/c_fill,g_face,ar_3:4,w_600,q_auto,f_auto/v1778823369/rijan-private/IMG_4500_mojoe5.jpg",
+  "image": [
+    "https://res.cloudinary.com/dvd5bjlpa/image/upload/c_fill,g_face,ar_3:4,w_600,q_auto,f_auto/v1778823369/rijan-private/IMG_4500_mojoe5.jpg",
+    "https://rijan-website.onrender.com/logo.png"
+  ],
   "description": "Rijan Thapa Kaji is a Nepali music artist, photographer, and content creator from the Himalayas of Nepal.",
   "jobTitle": ["Musician", "Photographer", "Content Creator", "Blogger"],
   "nationality": "Nepali",
@@ -185,7 +197,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 3rem;background:rgba(7,9,13,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);opacity:0;animation:navIn 0.7s 2.3s ease forwards;}
 @keyframes navIn{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:none;}}
-.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;letter-spacing:0.18em;color:var(--gold);text-decoration:none;}
+.nav-logo{display:flex;align-items:center;gap:0.55rem;font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;letter-spacing:0.18em;color:var(--gold);text-decoration:none;}
 .nav-links{display:flex;gap:0.3rem;list-style:none;}
 .nav-links a{display:flex;align-items:center;gap:0.45rem;padding:0.45rem 1rem;border-radius:100px;text-decoration:none;font-size:0.78rem;letter-spacing:0.06em;color:var(--muted);border:1px solid transparent;transition:all 0.25s;}
 .nav-links a:hover,.nav-links a.active{color:var(--text);background:var(--card);border-color:var(--border);}
@@ -369,6 +381,8 @@ section{padding:7rem 2rem;}
 
 /* FOOTER */
 footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;}
+.nav-logo-img{width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 0 0 1px rgba(201,169,110,0.35);}
+.footer-logo-img{width:84px;height:84px;border-radius:50%;object-fit:cover;margin:0 auto 0.9rem;display:block;box-shadow:0 0 0 1px rgba(201,169,110,0.3);}
 .footer-logo{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;letter-spacing:0.15em;color:var(--gold);margin-bottom:0.5rem;}
 .footer-copy{font-size:0.72rem;letter-spacing:0.15em;color:var(--muted);margin-bottom:1.5rem;}
 .footer-links{display:flex;justify-content:center;gap:1.5rem;list-style:none;}
@@ -843,7 +857,7 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="#home" id="navLogo">RTK</a>
+  <a class="nav-logo" href="#home"><img class="nav-logo-img" src="/logo.webp" alt="Rijan Thapa Kaji logo" width="34" height="34"/><span id="navLogo">RTK</span></a>
   <ul class="nav-links">
     <li><a href="#home" class="active">🏠 <span>Home</span></a></li>
     <li><a href="#bio">✦ <span>About</span></a></li>
@@ -1173,6 +1187,7 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 
 
 <footer>
+  <img class="footer-logo-img" src="/logo.webp" alt="Rijan Thapa Kaji logo" width="84" height="84" loading="lazy"/>
   <div class="footer-logo" id="footerLogo">Rijan Thapa Kaji</div>
   <p class="footer-copy" id="footerCopy">© 2025 · Made with ❤️ from Nepal 🇳🇵</p>
   <ul class="footer-links">
@@ -1443,7 +1458,9 @@ async function injectBlogSEO() {
         "name": "Rijan Thapa Kaji",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://rijan-website.onrender.com/preview.jpg"
+          "url": "https://rijan-website.onrender.com/logo.png",
+          "width": 512,
+          "height": 512
         }
       },
       "mainEntityOfPage": {

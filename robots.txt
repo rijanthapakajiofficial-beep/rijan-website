@@ -15,6 +15,7 @@ Disallow: /admin/
 # Block irrelevant crawling
 Disallow: /node_modules/
 Disallow: /*.json$
+Allow: /site.webmanifest
 Disallow: /dist/
 
 # Sitemap location
@@ -37,11 +38,17 @@ Crawl-delay: 2
 User-agent: Twitterbot
 Allow: /
 Allow: /preview.jpg
+Allow: /logo.png
+Allow: /logo.webp
 
 User-agent: facebookexternalhit
 Allow: /
 Allow: /preview.jpg
+Allow: /logo.png
+Allow: /logo.webp
 
 User-agent: LinkedInBot
 Allow: /
 Allow: /preview.jpg
+Allow: /logo.png
+Allow: /logo.webp

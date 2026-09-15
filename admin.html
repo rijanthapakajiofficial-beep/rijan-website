@@ -4,6 +4,16 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Rijan Admin — Dashboard</title>
+<meta name="robots" content="noindex, nofollow"/>
+<!-- ═══ FAVICON / LOGO ═══ -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
+<link rel="manifest" href="/site.webmanifest"/>
+<meta name="msapplication-TileImage" content="/icon-192.png"/>
+<meta name="msapplication-TileColor" content="#07090d"/>
+
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -24,7 +34,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 .login-box{width:min(420px,90vw);background:var(--card);border:1px solid rgba(201,169,110,0.2);border-radius:var(--r-lg);padding:2.5rem;position:relative;overflow:hidden;}
 .login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
 .login-logo{text-align:center;margin-bottom:1.5rem;}
-.login-logo-icon{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin:0 auto 0.8rem;}
+.login-logo-icon{width:64px;height:64px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 0.8rem;box-shadow:0 0 0 1px rgba(201,169,110,0.4);}
 .login-logo h2{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:var(--gold);}
 .login-logo p{font-size:0.78rem;color:var(--muted);margin-top:0.3rem;}
 .lf{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1rem;}
@@ -43,7 +53,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 /* SIDEBAR */
 .sidebar{width:var(--sidebar-w);flex-shrink:0;background:rgba(7,9,13,0.98);border-right:1px solid var(--border);position:fixed;top:0;left:0;bottom:0;overflow-y:auto;display:flex;flex-direction:column;padding:1.2rem 0.8rem;gap:0.2rem;z-index:100;}
 .sidebar-logo{display:flex;align-items:center;gap:0.7rem;padding:0.6rem 0.8rem;margin-bottom:0.8rem;}
-.sidebar-logo-icon{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.sidebar-logo-icon{width:34px;height:34px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 0 0 1px rgba(201,169,110,0.35);}
 .sidebar-logo-text{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--gold);font-weight:300;letter-spacing:0.1em;}
 .sidebar-logo-sub{font-size:0.6rem;color:var(--muted);}
 .sb-label{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:0.6rem 0.8rem 0.25rem;margin-top:0.4rem;}
@@ -365,7 +375,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo">
-      <div class="login-logo-icon">☁️</div>
+      <img class="login-logo-icon" src="/logo.webp" alt="RTK" width="64" height="64"/>
       <h2>Admin Dashboard</h2>
       <p>Rijan Thapa Kaji · Private Access</p>
     </div>
@@ -383,7 +393,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
     <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="sidebar-logo">
-        <div class="sidebar-logo-icon">☁️</div>
+        <img class="sidebar-logo-icon" src="/logo.webp" alt="RTK" width="34" height="34"/>
         <div><div class="sidebar-logo-text">RTK Admin</div><div class="sidebar-logo-sub">Dashboard v2</div></div>
       </div>
       <div class="sb-label">Main</div>
