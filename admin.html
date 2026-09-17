@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png"/>
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"/>
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"/>
-<link rel="manifest" href="/site.webmanifest"/>
+<link rel="manifest" href="/admin.webmanifest"/>
 <meta name="msapplication-TileImage" content="/icon-192.png"/>
 <meta name="msapplication-TileColor" content="#07090d"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -30,7 +30,15 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font-weight:300;min-height:100vh;overflow-x:hidden;overscroll-behavior-y:contain;}
+/* App-mode: prevent iOS auto-zoom on input focus (needs >=16px), keep visual size via mobile-only override */
+@media(max-width:768px){
+  input,select,textarea{font-size:16px!important;}
+}
+/* Standalone (installed as app): sidebar needs safe-area padding too (topbar already has it via base rule) */
+@media all and (display-mode: standalone){
+  .sidebar{padding-top:calc(1.2rem + env(safe-area-inset-top));}
+}
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:rgba(201,169,110,0.3);border-radius:100px;}
 
 /* LOGIN */
@@ -66,7 +74,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 .sb-btn.active{background:var(--gold-dim);color:var(--gold);border:1px solid rgba(201,169,110,0.2);}
 .sb-btn .sb-ic{width:18px;text-align:center;font-size:0.88rem;flex-shrink:0;}
 .sb-badge{margin-left:auto;font-size:0.6rem;background:var(--danger);color:white;padding:0.1rem 0.4rem;border-radius:100px;}
-.sidebar-footer{margin-top:auto;padding:0.8rem;}
+.sidebar-footer{margin-top:auto;padding:0.8rem 0.8rem calc(0.8rem + env(safe-area-inset-bottom));}
 .sidebar-user{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:0.8rem;display:flex;align-items:center;gap:0.6rem;}
 .sidebar-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:0.9rem;color:#07090d;font-weight:700;flex-shrink:0;}
 .sidebar-username{font-size:0.8rem;color:var(--text);}
@@ -74,7 +82,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 
 /* MAIN */
 .main{margin-left:var(--sidebar-w);flex:1;min-width:0;}
-.topbar{position:sticky;top:0;background:rgba(7,9,13,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0.8rem 1.8rem;display:flex;align-items:center;justify-content:space-between;z-index:50;}
+.topbar{position:sticky;top:0;background:rgba(7,9,13,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:calc(0.8rem + env(safe-area-inset-top)) 1.8rem 0.8rem;display:flex;align-items:center;justify-content:space-between;z-index:50;}
 .topbar-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;}
 .topbar-right{display:flex;align-items:center;gap:0.5rem;}
 .icon-btn{width:34px;height:34px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.85rem;color:var(--text2);transition:all 0.25s;text-decoration:none;}
