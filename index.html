@@ -209,7 +209,7 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
 /* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 3rem;background:rgba(7,9,13,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);opacity:0;animation:navIn 0.7s 2.3s ease forwards;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 3rem;padding-top:calc(1.1rem + env(safe-area-inset-top,0px));background:rgba(7,9,13,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);opacity:0;animation:navIn 0.7s 2.3s ease forwards;}
 @keyframes navIn{from{opacity:0;transform:translateY(-16px);}to{opacity:1;transform:none;}}
 .nav-logo{display:flex;align-items:center;gap:0.55rem;font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;letter-spacing:0.18em;color:var(--gold);text-decoration:none;}
 .nav-links{display:flex;gap:0.3rem;list-style:none;}
@@ -393,7 +393,7 @@ section{padding:7rem 2rem;}
 #cf_error{background:rgba(232,112,112,0.1);border:1px solid rgba(232,112,112,0.3);color:var(--danger);}
 
 /* MUSIC PLAYER */
-#musicPlayer{position:fixed;bottom:2rem;right:2rem;z-index:500;width:310px;background:linear-gradient(145deg,rgba(17,22,32,0.98),rgba(22,28,39,0.98));border:1px solid rgba(201,169,110,0.25);border-radius:16px;padding:1.2rem;box-shadow:0 20px 60px rgba(0,0,0,0.5);backdrop-filter:blur(32px);transition:transform 0.4s var(--transition);}
+#musicPlayer{position:fixed;bottom:calc(2rem + env(safe-area-inset-bottom,0px));right:2rem;z-index:500;width:310px;background:linear-gradient(145deg,rgba(17,22,32,0.98),rgba(22,28,39,0.98));border:1px solid rgba(201,169,110,0.25);border-radius:16px;padding:1.2rem;box-shadow:0 20px 60px rgba(0,0,0,0.5);backdrop-filter:blur(32px);transition:transform 0.4s var(--transition);}
 #musicPlayer.hidden{transform:translateY(calc(100% + 4rem));}
 .mp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
 .mp-label{font-size:0.62rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);}
@@ -411,7 +411,7 @@ section{padding:7rem 2rem;}
 .mp-btn{width:34px;height:34px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.85rem;color:var(--text2);transition:all 0.25s;}
 .mp-btn:hover{border-color:var(--gold);color:var(--gold);}
 .mp-play{width:44px;height:44px;font-size:1.1rem;background:linear-gradient(135deg,var(--gold),var(--gold-light));color:#07090d;border:none;box-shadow:0 6px 20px rgba(201,169,110,0.35);}
-#mpOpenBtn{position:fixed;bottom:2rem;right:2rem;z-index:499;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;cursor:pointer;font-size:1.3rem;box-shadow:0 8px 30px rgba(201,169,110,0.4);transition:all 0.3s;display:none;align-items:center;justify-content:center;}
+#mpOpenBtn{position:fixed;bottom:calc(2rem + env(safe-area-inset-bottom,0px));right:2rem;z-index:499;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;cursor:pointer;font-size:1.3rem;box-shadow:0 8px 30px rgba(201,169,110,0.4);transition:all 0.3s;display:none;align-items:center;justify-content:center;}
 #mpOpenBtn.show{display:flex;}
 
 /* FOOTER */
@@ -429,7 +429,7 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
 .toast.success{border-color:rgba(76,175,80,0.4);color:var(--success);}
 .toast.error{border-color:rgba(232,112,112,0.4);color:var(--danger);}
-#scrollTop{position:fixed;bottom:6rem;right:2rem;z-index:400;width:42px;height:42px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:none;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:var(--text2);transition:all 0.3s;}
+#scrollTop{position:fixed;bottom:calc(6rem + env(safe-area-inset-bottom,0px));right:2rem;z-index:400;width:42px;height:42px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:none;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:var(--text2);transition:all 0.3s;}
 #scrollTop:hover{border-color:var(--gold);color:var(--gold);}
 #scrollTop.visible{display:flex;}
 #scroll-progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-light));z-index:99999;width:0%;transition:width 0.1s;}
@@ -438,7 +438,7 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 #cursor-ring.hovering{width:55px;height:55px;border-color:rgba(201,169,110,0.9);}
 
 /* ADMIN BUTTON — hidden corner */
-#adminBtn{position:fixed;bottom:1rem;left:1rem;z-index:9999;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.7rem;color:rgba(255,255,255,0.1);transition:all 0.3s;text-decoration:none;}
+#adminBtn{position:fixed;bottom:calc(1rem + env(safe-area-inset-bottom,0px));left:1rem;z-index:9999;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.7rem;color:rgba(255,255,255,0.1);transition:all 0.3s;text-decoration:none;}
 #adminBtn:hover{background:rgba(201,169,110,0.1);border-color:rgba(201,169,110,0.2);color:rgba(201,169,110,0.5);}
 
 /* DYNAMIC CONTENT from admin */
@@ -451,7 +451,26 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   .bio-portrait{position:static;}
   .form-row{grid-template-columns:1fr;}
   .social-grid-3d,.contact-methods-row{grid-template-columns:1fr;}
+  /* Prevent iOS Safari from auto-zooming the page when a form field is tapped
+     (it zooms any input/select/textarea whose font-size is under 16px) */
+  .form-group input,.form-group select,.form-group textarea{font-size:16px;}
+  /* Family tree: the two-column (labels + tree) layout is too wide for phones
+     and was overflowing/getting clipped — stack everything vertically instead */
+  .ftree-layout{flex-direction:column;gap:1.2rem;}
+  .ftree-gens{flex-direction:row;justify-content:center;flex-wrap:wrap;gap:1.2rem;min-width:0;width:100%;padding:0;}
+  .gen-label::after{display:none;}
+  .fcouple-row{flex-direction:column;gap:0.6rem;}
+  .fperson{min-width:0;max-width:260px;width:100%;}
+  .fconnector-h{width:180px;}
 }
+
+@media(max-width:380px){
+  #musicPlayer{width:calc(100vw - 2rem);right:1rem;}
+  #waBtn,#mpOpenBtn,#scrollTop{right:1rem;}
+  #waBtn{left:1rem;}
+}
+
+
 
 
 
@@ -530,7 +549,7 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 
 
 /* WHATSAPP */
-#waBtn{position:fixed;bottom:6.5rem;left:1.5rem;z-index:500;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 6px 20px rgba(37,211,102,0.45);transition:all 0.3s;text-decoration:none;}
+#waBtn{position:fixed;bottom:calc(6.5rem + env(safe-area-inset-bottom,0px));left:1.5rem;z-index:500;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.5rem;box-shadow:0 6px 20px rgba(37,211,102,0.45);transition:all 0.3s;text-decoration:none;}
 #waBtn:hover{transform:scale(1.12);box-shadow:0 10px 30px rgba(37,211,102,0.6);}
 .wa-tooltip{position:absolute;left:60px;background:rgba(17,22,32,0.96);color:#25D366;padding:0.4rem 0.9rem;border-radius:100px;font-size:0.72rem;white-space:nowrap;border:1px solid rgba(37,211,102,0.3);opacity:0;pointer-events:none;transition:opacity 0.2s;font-family:'Outfit',sans-serif;}
 #waBtn:hover .wa-tooltip{opacity:1;}
