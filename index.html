@@ -193,6 +193,12 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 /* LOADER */
 #loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.9s,visibility 0.9s;}
 #loader.done{opacity:0;visibility:hidden;pointer-events:none;}
+.ld-logo-wrap{position:relative;width:88px;height:88px;margin-bottom:1.6rem;display:flex;align-items:center;justify-content:center;opacity:0;animation:ldLogoIn 0.7s 0.1s cubic-bezier(.22,1,.36,1) forwards;}
+.ld-logo-ring{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;border-top-color:var(--gold);border-right-color:var(--gold);animation:ldSpin 1.1s linear infinite;}
+.ld-logo-img{width:66px;height:66px;border-radius:50%;object-fit:cover;box-shadow:0 0 22px rgba(201,169,110,0.35);animation:ldPulse 1.8s ease-in-out infinite;}
+@keyframes ldLogoIn{to{opacity:1;}}
+@keyframes ldSpin{to{transform:rotate(360deg);}}
+@keyframes ldPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.06);}}
 .ld-name{font-family:'Cormorant Garamond',serif;font-size:clamp(1.8rem,5vw,3.6rem);font-weight:300;letter-spacing:0.3em;color:var(--text);margin-bottom:2.5rem;display:flex;}
 .ld-name span{display:inline-block;opacity:0;transform:translateY(36px);animation:lUp 0.55s cubic-bezier(.22,1,.36,1) forwards;}
 @keyframes lUp{to{opacity:1;transform:translateY(0);}}
@@ -878,9 +884,13 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 
 <!-- LOADER -->
 <div id="loader">
+  <div class="ld-logo-wrap">
+    <div class="ld-logo-ring"></div>
+    <img class="ld-logo-img" src="/logo.webp" alt="Rijan Thapa Kaji logo"/>
+  </div>
   <div class="ld-name" id="loaderName"></div>
   <div class="ld-line"></div>
-  <p class="ld-sub">Loading Experience</p>
+  <p class="ld-sub">Rijan Thapa Kaji</p>
 </div>
 
 <!-- NAV -->
