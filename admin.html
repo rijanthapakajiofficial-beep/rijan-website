@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<script>
+// Runs before first paint so there's no flash of the heavy (blurred) version.
+// navigator.deviceMemory is GB of RAM, rounded down (Chrome/Android only;
+// undefined on iOS/Safari — in that case we don't guess, just skip low-end mode).
+(function(){
+  try{
+    if(typeof navigator.deviceMemory==='number' && navigator.deviceMemory<=1){
+      document.documentElement.classList.add('low-end');
+    }
+  }catch(e){}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Rijan Admin — Dashboard</title>
 <meta name="robots" content="noindex, nofollow"/>
@@ -42,6 +54,21 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:rgba(201,169,110,0.3);border-radius:100px;}
 /* Visible keyboard-focus ring (mouse/touch clicks don't trigger :focus-visible) */
 button:focus-visible,a:focus-visible,.sb-btn:focus-visible,.bn-btn:focus-visible,.icon-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+/* LOW-END MODE: backdrop-filter (blur) is one of the heaviest things a browser
+   compositor can do — on a 500MB–1GB RAM phone it's a common cause of visible
+   hangs/jank. Detected via JS (navigator.deviceMemory) which adds .low-end to
+   <html>; here we swap blur for a plain solid background and stop endless
+   animations, on exactly the surfaces that used blur. */
+html.low-end .topbar,html.low-end .sidebar,html.low-end .bulk-bar,html.low-end #clipBar,
+html.low-end .bottom-nav,html.low-end .modal-overlay,html.low-end #vpModal,
+html.low-end .login-box,html.low-end #loginScreen{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;}
+html.low-end .topbar{background:rgba(7,9,13,0.98);}
+html.low-end .sidebar{background:rgba(7,9,13,0.99);}
+html.low-end .bottom-nav{background:rgba(9,11,16,0.99);}
+html.low-end .bulk-bar,html.low-end #clipBar{background:rgba(17,22,32,0.99);}
+html.low-end .modal-overlay{background:rgba(0,0,0,0.92);}
+html.low-end .live-dot{animation:none;}
+html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;background:var(--card)!important;}
 
 /* LOGIN */
 #loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;background-image:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(201,169,110,0.08) 0%,transparent 60%);}
@@ -422,7 +449,6 @@ button:focus-visible,a:focus-visible,.sb-btn:focus-visible,.bn-btn:focus-visible
 }
 
 </style>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -1462,11 +1488,29 @@ function showTab(name,btn){
   if(name==='testimonials') setTimeout(loadTestimonials,100);
   if(name==='projects') setTimeout(loadProjects,100);
   if(name==='finance'){
-    setTimeout(()=>{
-      const firstTab=document.querySelector('.fin-tab');
-      if(firstTab) showFinTab('overview',firstTab);
-    },150);
+    loadChartJS().then(()=>{
+      setTimeout(()=>{
+        const firstTab=document.querySelector('.fin-tab');
+        if(firstTab) showFinTab('overview',firstTab);
+      },150);
+    });
   }
+}
+
+// Chart.js (≈200KB) is only needed on the Finance tab — loading it on every
+// page visit wastes memory/CPU on low-RAM phones that never open Finance.
+let _chartJsPromise=null;
+function loadChartJS(){
+  if(window.Chart) return Promise.resolve();
+  if(_chartJsPromise) return _chartJsPromise;
+  _chartJsPromise=new Promise((resolve,reject)=>{
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+    s.onload=resolve;
+    s.onerror=reject;
+    document.head.appendChild(s);
+  });
+  return _chartJsPromise;
 }
 
 // ══════════ SECURITY TAB: SESSIONS + ACTIVITY ══════════
@@ -1662,7 +1706,7 @@ function renderFiles(){
       const pf=previews[i];
       if(!pf)return'<div style="background:var(--surface)"></div>';
       const c=getCat(pf);
-      if(c==='image')return`<img src="${pf.url}" loading="lazy"/>`;
+      if(c==='image')return`<img src="${pf.url}" loading="lazy" decoding="async"/>`;
       if(c==='video')return`<video src="${pf.url}#t=0.5" muted preload="metadata"></video>`;
       return`<div style="background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1.1rem">${getEmoji(pf)}</div>`;
     }).join('');
@@ -1699,7 +1743,7 @@ function renderFiles(){
     card.setAttribute('data-key',`file::${file.id}`);
 
     let thumb='';
-    if(cat==='image')thumb=`<img src="${file.url}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`;
+    if(cat==='image')thumb=`<img src="${file.url}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover"/>`;
     else if(cat==='video')thumb=`<video src="${file.url}#t=0.5" muted preload="metadata" style="width:100%;height:100%;object-fit:cover"></video>`;
     else thumb=`<span class="fti">${getEmoji(file)}</span>`;
 
@@ -2472,7 +2516,7 @@ function renderPlaces(){
         <div style="font-size:0.68rem;color:var(--muted);margin-top:0.15rem">${p.type||''} · ${p.location||''}</div>
         <div style="font-size:0.72rem;color:var(--text2);margin-top:0.2rem">${(p.description||'').slice(0,80)}…</div>
       </div>
-      ${p.image_url?`<img src="${p.image_url}" style="width:50px;height:50px;object-fit:cover;border-radius:var(--r);flex-shrink:0"/>`:''}
+      ${p.image_url?`<img src="${p.image_url}" loading="lazy" decoding="async" style="width:50px;height:50px;object-fit:cover;border-radius:var(--r);flex-shrink:0"/>`:''}
       <div style="display:flex;gap:0.4rem;flex-shrink:0">
         <button onclick="editPlace(${p.id})" style="padding:0.35rem 0.7rem;border-radius:100px;border:1px solid rgba(201,169,110,0.3);background:rgba(201,169,110,0.06);color:var(--gold);cursor:pointer;font-size:0.7rem;font-family:'Outfit',sans-serif">✏️ Edit</button>
         <button onclick="deletePlace(${p.id})" style="padding:0.35rem 0.7rem;border-radius:100px;border:1px solid rgba(232,112,112,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.7rem;font-family:'Outfit',sans-serif">🗑️</button>
