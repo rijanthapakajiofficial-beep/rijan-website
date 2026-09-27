@@ -223,7 +223,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .icon-btn{width:34px;height:34px;border-radius:50%;background:var(--card);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.85rem;color:var(--text2);transition:all 0.25s;}
 .icon-btn:hover{border-color:var(--gold);color:var(--gold);}
 .nav-toggle{display:none;width:38px;height:38px;border-radius:50%;background:var(--card);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;color:var(--text);font-size:1rem;flex-shrink:0;}
-.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);opacity:0;visibility:hidden;transition:opacity 0.3s;z-index:199;}
+.nav-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);opacity:0;visibility:hidden;transition:opacity 0.3s;z-index:10000;}
 /* PERFORMANCE: cut continuous paint-heavy animations for low-end / reduced-motion devices */
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0.001ms!important;animation-iteration-count:1!important;transition-duration:0.001ms!important;scroll-behavior:auto!important;}
@@ -235,7 +235,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .nav-overlay.open{opacity:1;visibility:visible;}
 @media(max-width:768px){
   .nav-toggle{display:flex;}
-  .nav-links{position:fixed;top:0;right:-85vw;width:min(78vw,300px);height:100vh;flex-direction:column;align-items:stretch;gap:0.3rem;background:rgba(7,9,13,0.98);backdrop-filter:blur(24px);border-left:1px solid var(--border);padding:6.5rem 1.2rem 2rem;overflow-y:auto;transition:right 0.35s cubic-bezier(.22,1,.36,1);z-index:201;}
+  .nav-links{position:fixed;top:0;right:-85vw;width:min(78vw,300px);height:100vh;flex-direction:column;align-items:stretch;gap:0.3rem;background:rgba(7,9,13,0.98);backdrop-filter:blur(24px);border-left:1px solid var(--border);padding:6.5rem 1.2rem 2rem;overflow-y:auto;transition:right 0.35s cubic-bezier(.22,1,.36,1);z-index:10001;}
   .nav-links.open{right:0;}
   .nav-links li{width:100%;}
   .nav-links a{padding:0.9rem 1rem;font-size:0.85rem;width:100%;}
@@ -469,6 +469,12 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   #waBtn,#mpOpenBtn,#scrollTop{right:1rem;}
   #waBtn{left:1rem;}
 }
+
+@media(max-width:768px){
+  .blog-card:active,.place-card:active,.portfolio-card:active,.testimonial-card:active{transform:scale(0.97);}
+  a,button{-webkit-tap-highlight-color:transparent;}
+}
+
 
 
 
