@@ -1243,7 +1243,8 @@ const CLD_PRESET = 'rijan-uploads';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ══════════ SESSION / DEVICE TRACKING ══════════
-const SESSION_MAX_AGE_MS = 7*24*60*60*1000; // 7 days — after this, must log in again
+// No automatic time-based expiry — a session stays valid until you revoke it
+// yourself from the Security tab (or "Logout all devices").
 let sessionHeartbeatId = null;
 
 function parseDeviceInfo(ua){
@@ -1279,7 +1280,7 @@ function startSessionHeartbeat(){
     if(!token) return;
     try{
       const{data:sess}=await sb.from('admin_sessions').select('revoked,login_at').eq('session_token',token).single();
-      if(!sess || sess.revoked || (Date.now()-new Date(sess.login_at).getTime())>SESSION_MAX_AGE_MS){
+      if(sess && sess.revoked){
         showToast('🔒 Session ended — please log in again','error');
         forceLocalLogout();
       }else{
@@ -1399,7 +1400,7 @@ window.addEventListener('DOMContentLoaded',async ()=>{
       if(token){
         try{
           const{data:sess}=await sb.from('admin_sessions').select('revoked,login_at').eq('session_token',token).single();
-          if(sess && !sess.revoked && (Date.now()-new Date(sess.login_at).getTime())<SESSION_MAX_AGE_MS){
+          if(!sess || !sess.revoked){
             sessionOk=true;
             sb.from('admin_sessions').update({last_active:new Date().toISOString()}).eq('session_token',token).then(()=>{});
           }

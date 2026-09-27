@@ -462,6 +462,18 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   .fcouple-row{flex-direction:column;gap:0.6rem;}
   .fperson{min-width:0;max-width:260px;width:100%;}
   .fconnector-h{width:180px;}
+  /* Section labels ("Get In Touch", "Connect With Me"...) combine wide
+     letter-spacing with two 40px decorative lines — on a real phone width
+     that no longer fits and was clipping/overflowing. Tighten it up. */
+  .s-label{letter-spacing:0.2em;gap:0.6rem;font-size:0.6rem;}
+  .s-label::before,.s-label::after{width:18px;}
+  .hero-badge{letter-spacing:0.2em;padding:0.35rem 1rem;}
+  /* Toast notifications had no max-width + forced no-wrap — a longer message
+     (e.g. an error) could run past the screen edge and get clipped */
+  .toast{white-space:normal;max-width:86vw;text-align:center;}
+  /* Loading-screen name: the clamp() floor (1.8rem) plus 0.3em letter-spacing
+     is wider than a real phone screen and was getting cut off on the right */
+  .ld-name{font-size:clamp(1rem,6vw,1.8rem);letter-spacing:0.15em;}
 }
 
 @media(max-width:380px){
