@@ -40,6 +40,8 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
   .sidebar{padding-top:calc(1.2rem + env(safe-area-inset-top));}
 }
 ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:rgba(201,169,110,0.3);border-radius:100px;}
+/* Visible keyboard-focus ring (mouse/touch clicks don't trigger :focus-visible) */
+button:focus-visible,a:focus-visible,.sb-btn:focus-visible,.bn-btn:focus-visible,.icon-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 
 /* LOGIN */
 #loginScreen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;background-image:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(201,169,110,0.08) 0%,transparent 60%);}
@@ -455,17 +457,17 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
       <button class="sb-btn" data-tab="messages" onclick="showTab('messages',this)"><span class="sb-ic">✉️</span> Messages <span class="sb-badge" id="msgBadge" style="display:none">0</span></button>
       <div class="sb-label">Content</div>
       <button class="sb-btn" data-tab="blog" onclick="showTab('blog',this)"><span class="sb-ic">✍️</span> Blog</button>
-      <button class="sb-btn" onclick="showTab('music',this)"><span class="sb-ic">🎵</span> Music</button>
-      <button class="sb-btn" onclick="showTab('places',this)"><span class="sb-ic">🗺️</span> Places Visited</button>
-      <button class="sb-btn" onclick="showTab('testimonials',this)"><span class="sb-ic">💬</span> Fan Love</button>
-      <button class="sb-btn" onclick="showTab('projects',this)"><span class="sb-ic">🎨</span> Projects</button>
-      <button class="sb-btn" onclick="showTab('customize',this)"><span class="sb-ic">⚙️</span> Customize Site</button>
+      <button class="sb-btn" data-tab="music" onclick="showTab('music',this)"><span class="sb-ic">🎵</span> Music</button>
+      <button class="sb-btn" data-tab="places" onclick="showTab('places',this)"><span class="sb-ic">🗺️</span> Places Visited</button>
+      <button class="sb-btn" data-tab="testimonials" onclick="showTab('testimonials',this)"><span class="sb-ic">💬</span> Fan Love</button>
+      <button class="sb-btn" data-tab="projects" onclick="showTab('projects',this)"><span class="sb-ic">🎨</span> Projects</button>
+      <button class="sb-btn" data-tab="customize" onclick="showTab('customize',this)"><span class="sb-ic">⚙️</span> Customize Site</button>
       <div class="sb-label">Finance</div>
-      <button class="sb-btn" onclick="showTab('finance',this)"><span class="sb-ic">💰</span> Finance</button>
+      <button class="sb-btn" data-tab="finance" onclick="showTab('finance',this)"><span class="sb-ic">💰</span> Finance</button>
 
       <div class="sb-label">Settings</div>
-      <button class="sb-btn" onclick="showTab('security',this)"><span class="sb-ic">🔐</span> Security</button>
-      <button class="sb-btn" onclick="showTab('analytics',this)"><span class="sb-ic">📈</span> Analytics</button>
+      <button class="sb-btn" data-tab="security" onclick="showTab('security',this)"><span class="sb-ic">🔐</span> Security</button>
+      <button class="sb-btn" data-tab="analytics" onclick="showTab('analytics',this)"><span class="sb-ic">📈</span> Analytics</button>
       <div class="sb-label">Actions</div>
       <button class="sb-btn" onclick="window.open('index.html','_blank')"><span class="sb-ic">🌐</span> View Website</button>
       <button class="sb-btn" onclick="doLogout()" style="color:var(--danger)"><span class="sb-ic">🚪</span> Logout</button>
@@ -479,12 +481,12 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
     <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
     <!-- MOBILE BOTTOM TAB BAR -->
-    <nav class="bottom-nav" id="bottomNav">
-      <button class="bn-btn active" data-tab="overview" onclick="showTab('overview',this)"><span class="bn-ic">📊</span><span class="bn-lbl">Overview</span></button>
-      <button class="bn-btn" data-tab="files" onclick="showTab('files',this)"><span class="bn-ic">📁</span><span class="bn-lbl">Files</span></button>
-      <button class="bn-btn" data-tab="messages" onclick="showTab('messages',this)"><span class="bn-ic">✉️</span><span class="bn-lbl">Messages</span><span class="bn-badge" id="bnMsgBadge" style="display:none">0</span></button>
-      <button class="bn-btn" data-tab="blog" onclick="showTab('blog',this)"><span class="bn-ic">✍️</span><span class="bn-lbl">Blog</span></button>
-      <button class="bn-btn" onclick="toggleSidebar()"><span class="bn-ic">☰</span><span class="bn-lbl">More</span></button>
+    <nav class="bottom-nav" id="bottomNav" aria-label="Primary">
+      <button class="bn-btn active" data-tab="overview" onclick="showTab('overview',this)" aria-label="Overview"><span class="bn-ic">📊</span><span class="bn-lbl">Overview</span></button>
+      <button class="bn-btn" data-tab="files" onclick="showTab('files',this)" aria-label="File Manager"><span class="bn-ic">📁</span><span class="bn-lbl">Files</span></button>
+      <button class="bn-btn" data-tab="messages" onclick="showTab('messages',this)" aria-label="Messages"><span class="bn-ic">✉️</span><span class="bn-lbl">Messages</span><span class="bn-badge" id="bnMsgBadge" style="display:none">0</span></button>
+      <button class="bn-btn" data-tab="blog" onclick="showTab('blog',this)" aria-label="Blog"><span class="bn-ic">✍️</span><span class="bn-lbl">Blog</span></button>
+      <button class="bn-btn" onclick="toggleSidebar()" aria-label="More options"><span class="bn-ic">☰</span><span class="bn-lbl">More</span></button>
     </nav>
 
 
@@ -495,8 +497,8 @@ body{background:var(--bg);color:var(--text);font-family:'Outfit',sans-serif;font
         <div class="topbar-title" id="topbarTitle">📊 Overview</div>
         <div class="topbar-right">
           <span style="font-size:0.72rem;color:var(--muted)" id="lastSyncLabel">—</span>
-          <a href="index.html" target="_blank" class="icon-btn">🌐</a>
-          <button class="icon-btn" onclick="doLogout()">🚪</button>
+          <a href="index.html" target="_blank" class="icon-btn" aria-label="View live website">🌐</a>
+          <button class="icon-btn" onclick="doLogout()" aria-label="Log out">🚪</button>
         </div>
       </div>
 
@@ -1350,40 +1352,57 @@ function doLogout(){
   allFiles=[];selectedItems=new Set();allMsgs=[];
 }
 window.addEventListener('DOMContentLoaded',async ()=>{
-  // Auto-login: re-verify credentials AND session validity every time
+  // Show the dashboard INSTANTLY from cache (like a native app resuming),
+  // then verify the session + refresh data in the background. Falls back
+  // to the login screen only if verification actually fails.
   if(localStorage.getItem('rtk_logged_in')==='1'){
+    const cachedUser=localStorage.getItem('rtk_login_user')||localStorage.getItem('rtk_admin_user')||'rijan';
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    const su=document.getElementById('sidebarUsername');if(su)su.textContent=cachedUser;
+    const sa=document.getElementById('sidebarAvatar');if(sa)sa.textContent=cachedUser[0].toUpperCase();
+    const ss=document.getElementById('secUsername');if(ss)ss.textContent=cachedUser;
+    document.getElementById('secLastLogin').textContent=new Date().toLocaleTimeString();
+    restoreLastTab();
+    initDashboard();
+    startSessionHeartbeat();
+
     const token=localStorage.getItem('rtk_session_token');
     let sessionOk=false;
-    if(token){
-      try{
-        const{data:sess}=await sb.from('admin_sessions').select('revoked,login_at').eq('session_token',token).single();
-        if(sess && !sess.revoked && (Date.now()-new Date(sess.login_at).getTime())<SESSION_MAX_AGE_MS){
-          sessionOk=true;
-          sb.from('admin_sessions').update({last_active:new Date().toISOString()}).eq('session_token',token).then(()=>{});
-        }
-      }catch(e){ sessionOk=true; /* sessions table not set up yet — don't lock the owner out */ }
-    }else{
-      sessionOk=true; /* legacy session predating this update — allow once, new token issued on next login */
-    }
-    if(!sessionOk){
-      forceLocalLogout();
-    }else{
-      const c=await getCredsFromDB();
-      // Update sidebar with latest username from Supabase
-      document.getElementById('loginScreen').style.display='none';
-      document.getElementById('dashboard').style.display='block';
-      const su=document.getElementById('sidebarUsername');if(su)su.textContent=c.u;
-      const sa=document.getElementById('sidebarAvatar');if(sa)sa.textContent=c.u[0].toUpperCase();
-      const ss=document.getElementById('secUsername');if(ss)ss.textContent=c.u;
-      document.getElementById('secLastLogin').textContent=new Date().toLocaleTimeString();
-      // Update stored login user to match Supabase
+    const sessionCheck=(async()=>{
+      if(token){
+        try{
+          const{data:sess}=await sb.from('admin_sessions').select('revoked,login_at').eq('session_token',token).single();
+          if(sess && !sess.revoked && (Date.now()-new Date(sess.login_at).getTime())<SESSION_MAX_AGE_MS){
+            sessionOk=true;
+            sb.from('admin_sessions').update({last_active:new Date().toISOString()}).eq('session_token',token).then(()=>{});
+          }
+        }catch(e){ sessionOk=true; /* sessions table not set up yet — don't lock the owner out */ }
+      }else{
+        sessionOk=true; /* legacy session predating this update — allow once, new token issued on next login */
+      }
+    })();
+    getCredsFromDB().then(c=>{
+      // Refresh with the real username once it's back, in case it changed
+      if(su)su.textContent=c.u;
+      if(sa)sa.textContent=c.u[0].toUpperCase();
+      if(ss)ss.textContent=c.u;
       localStorage.setItem('rtk_login_user',c.u);
-      initDashboard();
-      startSessionHeartbeat();
-    }
+    });
+    await sessionCheck;
+    if(!sessionOk) forceLocalLogout();
   }
   document.getElementById('lp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 });
+
+// ══════════ REMEMBER LAST TAB (faster return-visits on mobile) ══════════
+function restoreLastTab(){
+  const last=localStorage.getItem('rtk_last_tab');
+  if(!last||last==='overview')return;
+  const sbBtn=document.querySelector('.sb-btn[data-tab="'+last+'"]')||document.querySelector('.sb-btn[onclick*="\''+last+'\'"]');
+  showTab(last,sbBtn);
+}
+
 
 // ══════════ INIT ══════════
 async function initDashboard(){
@@ -1431,6 +1450,7 @@ function showTab(name,btn){
   if(bnMatch) bnMatch.classList.add('active');
   const sbMatch=document.querySelector('.sb-btn[data-tab="'+name+'"]');
   if(sbMatch) sbMatch.classList.add('active');
+  localStorage.setItem('rtk_last_tab',name);
   const titles={finance:'💰 Finance Dashboard (Assets & Net Worth updated in real-time)',overview:'📊 Overview',files:'📁 File Manager',messages:'✉️ Messages',blog:'✍️ Blog',music:'🎵 Music',places:'🗺️ Places Visited',testimonials:'💬 Fan Love',projects:'🎨 Projects',customize:'⚙️ Customize Site',security:'🔐 Security',analytics:'📈 Analytics'};
   const tb=document.getElementById('topbarTitle');if(tb)tb.textContent=titles[name]||name;
   if(name==='analytics') renderAnalytics();
