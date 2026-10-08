@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 
 <!-- ═══ PRIMARY SEO ═══ -->
-<title>Rijan Thapa Kaji — Music, Mountains & Nepal | RTK</title>
-<meta name="description" content="Rijan Thapa Kaji — A creative soul from the Himalayas of Nepal. Music artist, photographer, hiker and content creator. Explore his journey through melodies, summits, and unforgettable moments."/>
-<meta name="keywords" content="Rijan Thapa Kaji, RTK, Nepal musician, Nepali artist, Himalaya, Nepal music, Thapa Kaji, Nepal photography, Nepal blogger, Nepali content creator, Nepal travel, mountain music Nepal, रिजन थापा काजी"/>
+<title>Rijan Thapa Kaji | Student, Creator & Explorer from Nepal</title>
+<meta name="description" content="Rijan Thapa Kaji is a student and creator from Nepal sharing his journey, digital projects, interests, experiences, places, and ideas."/>
+<meta name="keywords" content="Rijan Thapa Kaji, Rijan Thapa, Nepal, Nepali creator, student from Nepal, personal website, digital creator, Nepal portfolio, RTK"/>
 <meta name="author" content="Rijan Thapa Kaji"/>
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
 <meta name="googlebot" content="index, follow"/>
@@ -40,8 +40,8 @@
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="Rijan Thapa Kaji"/>
 <meta property="og:url" content="https://rijan-website.onrender.com/"/>
-<meta property="og:title" content="Rijan Thapa Kaji — Music, Mountains & Nepal"/>
-<meta property="og:description" content="A creative soul from the Himalayas — chasing melodies, summits, and moments worth remembering. Nepali musician, photographer & content creator."/>
+<meta property="og:title" content="Rijan Thapa Kaji | Student, Creator & Explorer from Nepal"/>
+<meta property="og:description" content="Rijan Thapa Kaji is a student and creator from Nepal sharing his journey, digital projects, interests, experiences, places, and ideas."/>
 <meta property="og:image" content="https://rijan-website.onrender.com/preview.jpg"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
@@ -53,8 +53,8 @@
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:site" content="@rijanthapakaji"/>
 <meta name="twitter:creator" content="@rijanthapakaji"/>
-<meta name="twitter:title" content="Rijan Thapa Kaji — Music, Mountains & Nepal"/>
-<meta name="twitter:description" content="A creative soul from the Himalayas — chasing melodies, summits, and moments worth remembering."/>
+<meta name="twitter:title" content="Rijan Thapa Kaji | Student, Creator & Explorer from Nepal"/>
+<meta name="twitter:description" content="Rijan Thapa Kaji is a student and creator from Nepal sharing his journey, digital projects, interests, experiences, places, and ideas."/>
 <meta name="twitter:image" content="https://rijan-website.onrender.com/preview.jpg"/>
 <meta name="twitter:image:alt" content="Rijan Thapa Kaji"/>
 
@@ -77,8 +77,8 @@
     "https://res.cloudinary.com/dvd5bjlpa/image/upload/c_fill,g_face,ar_3:4,w_600,q_auto,f_auto/v1778823369/rijan-private/IMG_4500_mojoe5.jpg",
     "https://rijan-website.onrender.com/logo.png"
   ],
-  "description": "Rijan Thapa Kaji is a Nepali music artist, photographer, and content creator from the Himalayas of Nepal.",
-  "jobTitle": ["Musician", "Photographer", "Content Creator", "Blogger"],
+  "description": "Rijan Thapa Kaji is a student and creator from Nepal sharing his journey, digital projects, interests, experiences, places, and ideas.",
+  "jobTitle": ["Student", "Creator", "Musician", "Photographer", "Content Creator"],
   "nationality": "Nepali",
   "birthPlace": {
     "@type": "Place",
@@ -231,6 +231,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 @media(max-width:768px){
   #home::before{animation:none;}
   .bio-frame{animation:none;}
+  .bio-stats-row{grid-template-columns:repeat(2,1fr);}
+  .bio-stat-label{font-size:0.6rem;}
+}
+@media(min-width:769px) and (max-width:1024px){
+  .bio-stats-row{grid-template-columns:repeat(3,1fr);}
 }
 .nav-overlay.open{opacity:1;visibility:visible;}
 @media(max-width:768px){
@@ -296,8 +301,8 @@ section{padding:7rem 2rem;}
 .bio-content p{color:var(--text2);line-height:1.9;margin-bottom:1.2rem;font-size:0.96rem;}
 .bio-content p strong{color:var(--text);font-weight:400;}
 .bio-divider{width:60px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin:2rem 0;}
-.bio-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:2rem;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
-.bio-stat{background:var(--card);padding:1.5rem 1rem;text-align:center;}
+.bio-stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;margin-top:2rem;background:var(--border);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+.bio-stat{background:var(--card);padding:1.2rem 0.6rem;text-align:center;}
 .bio-stat-em{display:block;font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:0.4rem;}
 .bio-stat-label{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 15px rgba(201,169,110,0.1);}50%{box-shadow:0 0 35px rgba(201,169,110,0.35);}}
@@ -961,16 +966,16 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   <div class="hero-glow"></div>
   <div class="hero-grid"></div>
   <div class="hero-inner">
-    <div class="hero-badge" id="heroBadge">Welcome to my world</div>
+    <div class="hero-badge" id="heroBadge">Hello, I'm Rijan 👋</div>
     <h1 class="hero-name dynamic-hero-name">
       <span class="line1" id="heroLine1">Rijan</span>
       <span class="line2" id="heroLine2">Thapa Kaji</span>
     </h1>
-    <p class="hero-subtitle" id="heroSubtitle">Nepal &nbsp;·&nbsp; Music &nbsp;·&nbsp; Mountains</p>
-    <p class="hero-desc" id="heroDesc">A creative soul from the Himalayas — chasing melodies, summits, and moments worth remembering.</p>
+    <p class="hero-subtitle" id="heroSubtitle">Student &nbsp;·&nbsp; Creator &nbsp;·&nbsp; Explorer &nbsp;·&nbsp; Future Builder</p>
+    <p class="hero-desc" id="heroDesc">Building my skills, exploring new ideas, and documenting the journey — one step at a time. 🇳🇵</p>
     <div class="hero-cta">
-      <a href="#bio" class="btn btn-primary" id="heroCta1">✦ About Me</a>
-      <a href="#contact" class="btn btn-ghost" id="heroCta2">Say Hello →</a>
+      <a href="#blog" class="btn btn-primary" id="heroCta1">✦ Explore My Journey</a>
+      <a href="#bio" class="btn btn-ghost" id="heroCta2">About Me →</a>
     </div>
   </div>
   <div class="scroll-indicator"><div class="scroll-line"></div><span>Scroll</span></div>
@@ -999,12 +1004,12 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
       </div>
       <div class="bio-content reveal reveal-delay">
         <div class="s-label">About Me</div>
-        <h2 class="s-title" id="bioTitle">A passionate soul<br/>from the mountains</h2>
+        <h2 class="s-title" id="bioTitle">A little about me</h2>
         <div id="bioText">
-          <p>Hey there! I'm <strong>Rijan Thapa Kaji</strong> — a music-loving, adventure-chasing creative from the beautiful land of Nepal. 🇳🇵</p>
-          <p>I carry the pride of the Thapa Kaji heritage — a lineage of strength, honor, and deep roots in Nepali culture.</p>
-          <p>Whether I'm strumming a melody, exploring hidden trails in the Himalayas, or capturing life through a lens, I pour my heart into everything I do.</p>
-          <p>Follow along on my journey, connect with me, or just say hello. Let's make something memorable together. 🙏</p>
+          <p>I'm <strong>Rijan Thapa Kaji</strong>, a student and creator from Nepal. This website is my personal space to share my journey, projects, interests, experiences, places I explore, and the things I create.</p>
+          <p>I believe growth comes from learning, experimenting, and taking small steps consistently. From studying and developing new skills to exploring technology, creating digital projects, discovering new places, and documenting meaningful experiences, I'm constantly learning and building.</p>
+          <p>This website is not just a portfolio — it is a record of my journey.</p>
+          <p><strong>Learning → Creating → Exploring → Growing</strong></p>
         </div>
         <div class="bio-divider"></div>
 
@@ -1130,9 +1135,11 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
         </div><!-- /ftree-section -->
 
         <div class="bio-stats-row">
-          <div class="bio-stat"><span class="bio-stat-em">🎵</span><span class="bio-stat-label">Music</span></div>
-          <div class="bio-stat"><span class="bio-stat-em">🏔️</span><span class="bio-stat-label">Mountains</span></div>
-          <div class="bio-stat"><span class="bio-stat-em">✨</span><span class="bio-stat-label">Creator</span></div>
+          <div class="bio-stat"><span class="bio-stat-em">🎓</span><span class="bio-stat-label">Student</span></div>
+          <div class="bio-stat"><span class="bio-stat-em">🇳🇵</span><span class="bio-stat-label">From Nepal</span></div>
+          <div class="bio-stat"><span class="bio-stat-em">💻</span><span class="bio-stat-label">Digital Creator</span></div>
+          <div class="bio-stat"><span class="bio-stat-em">🌄</span><span class="bio-stat-label">Explorer</span></div>
+          <div class="bio-stat"><span class="bio-stat-em">🚀</span><span class="bio-stat-label">Future Builder</span></div>
         </div>
       </div>
     </div>
@@ -1249,7 +1256,8 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 <footer>
   <img class="footer-logo-img" src="/logo.webp" alt="Rijan Thapa Kaji logo" width="84" height="84" loading="lazy"/>
   <div class="footer-logo" id="footerLogo">Rijan Thapa Kaji</div>
-  <p class="footer-copy" id="footerCopy">© 2025 · Made with ❤️ from Nepal 🇳🇵</p>
+  <p style="font-size:0.75rem;letter-spacing:0.08em;color:var(--muted);margin-bottom:0.6rem;">Learning. Creating. Exploring. Growing.</p>
+  <p class="footer-copy" id="footerCopy">© 2026 Rijan Thapa Kaji. All rights reserved.</p>
   <ul class="footer-links">
     <li><a href="#home">Home</a></li><li><a href="#bio">About</a></li>
     <li><a href="#blog">Blog</a></li><li><a href="#social">Social</a></li><li><a href="#contact">Contact</a></li>
@@ -1736,61 +1744,4 @@ async function loadHeroWeather(){
       0:['☀️','Clear Sky'], 1:['🌤️','Mainly Clear'], 2:['⛅','Partly Cloudy'], 3:['☁️','Overcast'],
       45:['🌫️','Foggy'], 48:['🌫️','Icy Fog'],
       51:['🌦️','Light Drizzle'], 53:['🌦️','Drizzle'], 55:['🌧️','Heavy Drizzle'],
-      61:['🌧️','Light Rain'], 63:['🌧️','Rain'], 65:['⛈️','Heavy Rain'],
-      71:['🌨️','Light Snow'], 73:['🌨️','Snow'], 75:['❄️','Heavy Snow'],
-      80:['🌦️','Rain Showers'], 81:['🌧️','Showers'], 82:['⛈️','Violent Showers'],
-      95:['⛈️','Thunderstorm'], 96:['⛈️','Hail Storm'], 99:['⛈️','Heavy Hail']
-    };
-    const [icon, desc] = weatherMap[code] || ['🌡️','Unknown'];
-
-    const setEl = (id,val) => { const e=document.getElementById(id); if(e) e.textContent=val; };
-    setEl('heroTemp', temp);
-    setEl('heroWeatherDesc', desc);
-    setEl('heroHumidity', humidity+'%');
-    setEl('heroWind', wind+' km/h');
-    const iconEl = document.getElementById('heroWeatherIcon');
-    if(iconEl) iconEl.textContent = icon;
-
-    // Air quality estimate from humidity+temp
-    const aqi = humidity > 80 ? 'Moderate' : humidity > 60 ? 'Good' : 'Very Good';
-    setEl('heroAQI', aqi);
-
-  }catch(e){
-    const d=document.getElementById('heroWeatherDesc');
-    if(d) d.textContent='Kohalpur, Nepal';
-  }
-}
-loadHeroWeather();
-// Refresh weather every 10 minutes
-setInterval(loadHeroWeather, 600000);
-
-// LIVE VISITOR COUNT (realistic simulation based on time of day)
-function updateLiveVisitors(){
-  const hour = new Date().getHours();
-  // More visitors during day, fewer at night
-  const base = hour>=9&&hour<=22 ? 8 : 2;
-  const count = base + Math.floor(Math.random()*5);
-  const el = document.getElementById('liveVisitors');
-  if(el) el.textContent = count;
-}
-updateLiveVisitors();
-setInterval(updateLiveVisitors, 15000);
-
-loadBlog();
-loadPlaylist();
-injectBlogSEO();
-injectPreloads();
-
-// ══════════════════════════════════
-// INIT ALL NEW SECTIONS
-// ══════════════════════════════════
-loadPublicPlaces();
-loadPublicTestimonials();
-loadPublicProjects();
-
-
-</script>
-
-<a id="waBtn" href="https://wa.me/9779763951486?text=Hello%20Rijan!%20I%20found%20your%20website%20%F0%9F%99%8F" target="_blank" rel="noopener">💬<span class="wa-tooltip">Chat on WhatsApp</span></a>
-</body>
-</html>
+      61:['🌧️','Light Rain'], 63:['🌧️','Rain'], 
