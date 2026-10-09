@@ -13,8 +13,8 @@
 <meta name="googlebot" content="index, follow"/>
 <meta name="language" content="English"/>
 <meta name="revisit-after" content="7 days"/>
-<meta name="category" content="Music, Photography, Travel, Nepal"/>
-<meta name="classification" content="Personal, Music, Travel"/>
+<meta name="category" content="Personal Website, Education, Technology, Travel, Nepal"/>
+<meta name="classification" content="Personal, Student, Creator"/>
 <meta name="coverage" content="Worldwide"/>
 <meta name="distribution" content="Global"/>
 <meta name="rating" content="General"/>
@@ -43,9 +43,10 @@
 <meta property="og:title" content="Rijan Thapa Kaji | Student, Creator & Explorer from Nepal"/>
 <meta property="og:description" content="Rijan Thapa Kaji is a student and creator from Nepal sharing his journey, digital projects, interests, experiences, places, and ideas."/>
 <meta property="og:image" content="https://rijan-website.onrender.com/preview.jpg"/>
+<meta property="og:image:type" content="image/jpeg"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
-<meta property="og:image:alt" content="Rijan Thapa Kaji — Nepal"/>
+<meta property="og:image:alt" content="Rijan Thapa Kaji — Student, Creator & Explorer from Nepal"/>
 <meta property="og:locale" content="en_US"/>
 <meta property="og:locale:alternate" content="ne_NP"/>
 
@@ -96,15 +97,25 @@
     "https://www.facebook.com/rijuthapakaji",
     "https://www.tiktok.com/@kaji_mr_rezan_yt"
   ],
-  "knowsAbout": ["Music", "Photography", "Hiking", "Nepal", "Himalayas", "Travel", "Guitar"],
-  "hasOccupation": {
-    "@type": "Occupation",
-    "name": "Musician and Content Creator",
-    "occupationLocation": {
-      "@type": "Country",
-      "name": "Nepal"
+  "knowsAbout": ["Technology", "Digital Creation", "Music", "Photography", "Hiking", "Nepal", "Himalayas", "Travel", "Guitar"],
+  "hasOccupation": [
+    {
+      "@type": "Occupation",
+      "name": "Student",
+      "occupationLocation": {
+        "@type": "Country",
+        "name": "Nepal"
+      }
+    },
+    {
+      "@type": "Occupation",
+      "name": "Digital Creator",
+      "occupationLocation": {
+        "@type": "Country",
+        "name": "Nepal"
+      }
     }
-  }
+  ]
 }
 </script>
 
@@ -116,7 +127,7 @@
   "name": "Rijan Thapa Kaji",
   "alternateName": "RTK",
   "url": "https://rijan-website.onrender.com/",
-  "description": "Official website of Rijan Thapa Kaji — Nepali musician, photographer and content creator from the Himalayas.",
+  "description": "Personal website of Rijan Thapa Kaji — a student and creator from Nepal documenting his journey through projects, interests, experiences and ideas.",
   "inLanguage": ["en", "ne"],
   "potentialAction": {
     "@type": "SearchAction",
@@ -1503,7 +1514,7 @@ async function loadBlog(){
       const card=document.createElement('div');
       card.className='blog-card';card.onclick=()=>openBlogModal(post);
       const cover=post.media_url&&post.media_type==='image'
-        ?`<div class="blog-cover" style="background:#0a0d13;"><img src="${post.media_url}" loading="lazy"/></div>`
+        ?`<div class="blog-cover" style="background:#0a0d13;"><img src="${post.media_url}" loading="lazy" alt="${post.title||'Blog post'}"/></div>`
         :`<div class="blog-cover ${coverCls[i%6]}"><span style="font-size:3.5rem;">${post.emoji||'✍️'}</span></div>`;
       const excerpt=(post.content||'').replace(/\n/g,' ').trim();
       card.innerHTML=`${cover}<div class="blog-body"><div class="blog-cat">${post.category||'General'}</div><h3 class="blog-title">${post.title||'Story'}</h3><p class="blog-excerpt">${excerpt.slice(0,120)}${excerpt.length>120?'…':''}</p><div class="blog-footer"><span class="blog-date">📅 ${date}</span><span class="blog-read">Read more →</span></div></div>`;
@@ -1518,7 +1529,7 @@ function openBlogModal(post){
     <div style="font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;">${post.category||''}</div>
     <h2 style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;margin-bottom:0.5rem;">${post.title||''}</h2>
     <div style="font-size:0.72rem;color:var(--muted);margin-bottom:1.5rem;">📅 ${new Date(post.created_at).toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'})}</div>`;
-  if(post.media_url&&post.media_type==='image') html+=`<div style="margin-bottom:1.2rem;border-radius:10px;overflow:hidden;"><img src="${post.media_url}" style="width:100%;max-height:480px;object-fit:cover;" loading="lazy"/></div>`;
+  if(post.media_url&&post.media_type==='image') html+=`<div style="margin-bottom:1.2rem;border-radius:10px;overflow:hidden;"><img src="${post.media_url}" style="width:100%;max-height:480px;object-fit:cover;" loading="lazy" alt="${post.title||'Blog post'}"/></div>`;
   if(post.content) html+=(post.content||'').split('\n').filter(l=>l.trim()).map(p=>`<p style="color:var(--text2);line-height:1.9;margin-bottom:1rem;font-size:0.96rem;">${p}</p>`).join('');
   c.innerHTML=html;
   document.getElementById('blogModal').classList.add('open');
