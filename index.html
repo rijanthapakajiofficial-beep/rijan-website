@@ -1775,4 +1775,61 @@ async function loadHeroWeather(){
       0:['☀️','Clear Sky'], 1:['🌤️','Mainly Clear'], 2:['⛅','Partly Cloudy'], 3:['☁️','Overcast'],
       45:['🌫️','Foggy'], 48:['🌫️','Icy Fog'],
       51:['🌦️','Light Drizzle'], 53:['🌦️','Drizzle'], 55:['🌧️','Heavy Drizzle'],
-      61:['🌧️','Light Rain'], 63:['🌧️','Rain'], 
+      61:['🌧️','Light Rain'], 63:['🌧️','Rain'], 65:['⛈️','Heavy Rain'],
+      71:['🌨️','Light Snow'], 73:['🌨️','Snow'], 75:['❄️','Heavy Snow'],
+      80:['🌦️','Rain Showers'], 81:['🌧️','Showers'], 82:['⛈️','Violent Showers'],
+      95:['⛈️','Thunderstorm'], 96:['⛈️','Hail Storm'], 99:['⛈️','Heavy Hail']
+    };
+    const [icon, desc] = weatherMap[code] || ['🌡️','Unknown'];
+
+    const setEl = (id,val) => { const e=document.getElementById(id); if(e) e.textContent=val; };
+    setEl('heroTemp', temp);
+    setEl('heroWeatherDesc', desc);
+    setEl('heroHumidity', humidity+'%');
+    setEl('heroWind', wind+' km/h');
+    const iconEl = document.getElementById('heroWeatherIcon');
+    if(iconEl) iconEl.textContent = icon;
+
+    // Air quality estimate from humidity+temp
+    const aqi = humidity > 80 ? 'Moderate' : humidity > 60 ? 'Good' : 'Very Good';
+    setEl('heroAQI', aqi);
+
+  }catch(e){
+    const d=document.getElementById('heroWeatherDesc');
+    if(d) d.textContent='Kohalpur, Nepal';
+  }
+}
+loadHeroWeather();
+// Refresh weather every 10 minutes
+setInterval(loadHeroWeather, 600000);
+
+// LIVE VISITOR COUNT (realistic simulation based on time of day)
+function updateLiveVisitors(){
+  const hour = new Date().getHours();
+  // More visitors during day, fewer at night
+  const base = hour>=9&&hour<=22 ? 8 : 2;
+  const count = base + Math.floor(Math.random()*5);
+  const el = document.getElementById('liveVisitors');
+  if(el) el.textContent = count;
+}
+updateLiveVisitors();
+setInterval(updateLiveVisitors, 15000);
+
+loadBlog();
+loadPlaylist();
+injectBlogSEO();
+injectPreloads();
+
+// ══════════════════════════════════
+// INIT ALL NEW SECTIONS
+// ══════════════════════════════════
+loadPublicPlaces();
+loadPublicTestimonials();
+loadPublicProjects();
+
+
+</script>
+
+<a id="waBtn" href="https://wa.me/9779763951486?text=Hello%20Rijan!%20I%20found%20your%20website%20%F0%9F%99%8F" target="_blank" rel="noopener">💬<span class="wa-tooltip">Chat on WhatsApp</span></a>
+</body>
+</html>
