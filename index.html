@@ -613,8 +613,31 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 .place-name{font-size:0.88rem;color:var(--text);margin-bottom:0.2rem;}
 .place-type{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);}
 .place-desc{font-size:0.72rem;color:var(--muted);margin-top:0.3rem;line-height:1.5;}
-.map-embed{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--border);margin-bottom:2rem;}
-.map-embed iframe{width:100%;height:350px;border:none;display:block;filter:invert(90%) hue-rotate(180deg);}
+/* MAP FRAME — premium presentation around the embedded map */
+.map-frame{position:relative;border-radius:var(--r-lg);overflow:hidden;margin-bottom:2rem;box-shadow:0 24px 60px rgba(0,0,0,0.45);}
+.map-frame::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);z-index:3;}
+.map-embed{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--border);position:relative;}
+/* grayscale BEFORE invert removes all color casts first, so the inversion
+   produces a clean dark slate map instead of the muddy reddish/orange look
+   a plain invert+hue-rotate gives — that was the actual "doesn't look good"
+   culprit. Switched off again in light mode below, where the normal
+   full-color map already matches the page. */
+.map-embed iframe{width:100%;height:380px;border:none;display:block;filter:grayscale(1) invert(92%) contrast(0.88) brightness(0.98);transition:filter 0.3s;}
+body.light-mode .map-embed iframe{filter:none;}
+.map-badge{position:absolute;top:1rem;left:1rem;z-index:4;display:inline-flex;align-items:center;gap:0.4rem;font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);background:rgba(7,9,13,0.72);border:1px solid rgba(201,169,110,0.35);padding:0.4rem 0.9rem;border-radius:100px;backdrop-filter:blur(14px);pointer-events:none;}
+body.light-mode .map-badge{background:rgba(255,255,255,0.85);}
+.map-vignette{position:absolute;inset:0;z-index:2;pointer-events:none;box-shadow:inset 0 0 80px 18px var(--bg);opacity:0.5;}
+body.light-mode .map-vignette{opacity:0.25;}
+.map-corner{position:absolute;width:24px;height:24px;border-color:var(--gold);opacity:0.75;z-index:4;pointer-events:none;}
+.map-corner.tl{top:10px;left:10px;border-top:2px solid;border-left:2px solid;}
+.map-corner.tr{top:10px;right:10px;border-top:2px solid;border-right:2px solid;}
+.map-corner.bl{bottom:10px;left:10px;border-bottom:2px solid;border-left:2px solid;}
+.map-corner.br{bottom:10px;right:10px;border-bottom:2px solid;border-right:2px solid;}
+@media(max-width:768px){
+  .map-embed iframe{height:280px;}
+  .map-badge{font-size:0.58rem;padding:0.32rem 0.7rem;top:0.7rem;left:0.7rem;}
+  .map-corner{width:18px;height:18px;}
+}
 
 /* 6. TESTIMONIALS */
 #testimonials{background:var(--bg);padding:7rem 2rem;}
@@ -1154,8 +1177,16 @@ footer{padding:3.5rem 2rem;border-top:1px solid var(--border);text-align:center;
       <h2 class="s-title">Exploring Nepal 🗺️</h2>
       <p style="color:var(--text2);font-size:0.95rem;max-width:480px;margin:0 auto;">Every mountain, every valley — the beauty of my homeland through my eyes.</p>
     </div>
-    <div class="map-embed reveal">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.0!2d85.3240!3d27.7172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb198a307baabf%3A0xb978d6bcea9a9ef!2sKathmandu%2C%20Nepal!5e0!3m2!1sen!2snp!4v1" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <div class="map-frame reveal">
+      <div class="map-badge">🇳🇵 Based in Nepal</div>
+      <div class="map-embed">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.0!2d85.3240!3d27.7172!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb198a307baabf%3A0xb978d6bcea9a9ef!2sKathmandu%2C%20Nepal!5e0!3m2!1sen!2snp!4v1" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="map-vignette"></div>
+      <div class="map-corner tl"></div>
+      <div class="map-corner tr"></div>
+      <div class="map-corner bl"></div>
+      <div class="map-corner br"></div>
     </div>
     <div class="places-grid reveal" id="publicPlaces">
       <div style="grid-column:1/-1;text-align:center;padding:2rem;color:var(--muted)">Loading places…</div>
