@@ -448,6 +448,93 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
   .portfolio-table { font-size:0.7rem; }
 }
 
+
+/* ══════════ FINANCE v2 ══════════ */
+#tab-finance{--fx-up:var(--success,#81c784);--fx-down:var(--danger,#e87070);}
+.fx-bar{display:flex;align-items:center;justify-content:space-between;gap:.8rem;flex-wrap:wrap;margin-bottom:1.1rem;}
+.fx-tabs{display:flex;gap:.25rem;background:var(--surface);padding:.3rem;border-radius:10px;overflow-x:auto;max-width:100%;}
+.fx-tab{padding:.5rem 1rem;border:0;background:none;color:var(--text2);font:400 .8rem 'Outfit',sans-serif;border-radius:8px;cursor:pointer;white-space:nowrap;}
+.fx-tab.active{background:var(--card);color:var(--gold);box-shadow:0 1px 4px rgba(0,0,0,.3);}
+.fx-tools{display:flex;align-items:center;gap:.4rem;}
+.fx-status{font-size:.72rem;color:var(--muted);margin-right:.3rem;}
+.fx-status.err{color:var(--fx-down);}
+.fx-ico{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-size:1rem;line-height:1;}
+.fx-ico:hover,.fx-ico[aria-pressed="true"]{border-color:var(--gold);color:var(--gold);}
+.fx-pane{display:none;}
+.fx-pane.active{display:block;}
+.fx-lbl{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.fx-hero{display:flex;justify-content:space-between;align-items:flex-end;gap:1.2rem;flex-wrap:wrap;background:linear-gradient(135deg,var(--card),var(--card2));border:1px solid var(--border);border-radius:var(--r-lg);padding:1.4rem 1.5rem;margin-bottom:.9rem;}
+.fx-big{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,6vw,3rem);line-height:1.1;color:var(--text);font-variant-numeric:tabular-nums;margin:.25rem 0;}
+.fx-delta{font-size:.82rem;color:var(--text2);}
+.fx-break{display:flex;gap:1.4rem;flex-wrap:wrap;}
+.fx-break div{min-width:84px;}
+.fx-break b{display:block;font:400 .95rem 'Outfit',sans-serif;color:var(--text);font-variant-numeric:tabular-nums;}
+.fx-break span{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.fx-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.7rem;margin-bottom:.9rem;}
+.fx-tile{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:.95rem 1rem;}
+.fx-tile .v{font:400 1.25rem 'Outfit',sans-serif;color:var(--text);font-variant-numeric:tabular-nums;margin:.3rem 0 .15rem;}
+.fx-tile .s{font-size:.72rem;color:var(--text2);}
+.fx-up{color:var(--fx-up);}
+.fx-down{color:var(--fx-down);}
+.fx-flat{color:var(--text2);}
+.fx-grid2{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;margin-bottom:.9rem;align-items:start;}
+.fx-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);padding:1.1rem 1.2rem;margin-bottom:.9rem;min-width:0;}
+.fx-grid2 .fx-box{margin-bottom:0;}
+.fx-box h4{font:500 .78rem 'Outfit',sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);margin-bottom:.8rem;}
+.fx-cv{position:relative;height:210px;}
+.fx-empty{font-size:.8rem;color:var(--muted);padding:.4rem 0;}
+.fx-onboard{background:var(--gold-dim);border:1px solid rgba(201,169,110,.3);border-radius:var(--r-lg);padding:1rem 1.2rem;margin-bottom:.9rem;font-size:.85rem;color:var(--text);}
+.fx-onboard ol{margin:.5rem 0 0 1.2rem;line-height:1.7;color:var(--text2);}
+.fx-onboard a{color:var(--gold);}
+.fx-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.7rem;align-items:end;}
+.fx-f{display:flex;flex-direction:column;gap:.3rem;min-width:0;}
+.fx-f.fx-wide{grid-column:span 2;}
+.fx-f label{font-size:.72rem;color:var(--text2);}
+.fx-f input,.fx-f select{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text);padding:.6rem .7rem;font:300 .85rem 'Outfit',sans-serif;width:100%;min-width:0;}
+.fx-f input:focus,.fx-f select:focus{outline:2px solid var(--gold);outline-offset:1px;}
+.fx-btn{background:var(--gold);color:#0b0d12;border:0;border-radius:var(--r);padding:.65rem 1rem;font:500 .82rem 'Outfit',sans-serif;cursor:pointer;width:100%;}
+.fx-btn:hover{background:var(--gold-light);}
+.fx-link{background:none;border:0;color:var(--gold);cursor:pointer;font:300 .78rem 'Outfit',sans-serif;margin-top:.6rem;padding:0;}
+.fx-monthbar{display:flex;align-items:center;justify-content:center;gap:1rem;margin:.2rem 0 .8rem;}
+.fx-monthbar strong{min-width:110px;text-align:center;font-weight:400;color:var(--text);}
+.fx-scroll{overflow-x:auto;}
+.fx-table{width:100%;border-collapse:collapse;font-size:.8rem;}
+.fx-table th{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:.5rem .6rem;border-bottom:1px solid var(--border);font-weight:400;white-space:nowrap;}
+.fx-table td{padding:.6rem;border-bottom:1px solid var(--border);color:var(--text);font-variant-numeric:tabular-nums;vertical-align:middle;}
+.fx-table .r{text-align:right;white-space:nowrap;}
+.fx-table .sym{color:var(--gold);font-weight:500;}
+.fx-table .sub{display:block;font-size:.68rem;color:var(--muted);}
+.fx-x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:.95rem;padding:.2rem .4rem;border-radius:6px;}
+.fx-x:hover{color:var(--fx-down);}
+.fx-mini{background:none;border:1px solid var(--border);color:var(--text2);cursor:pointer;font:300 .72rem 'Outfit',sans-serif;border-radius:6px;padding:.2rem .5rem;margin-right:.2rem;}
+.fx-mini:hover{border-color:var(--gold);color:var(--gold);}
+.fx-bars .row{margin-bottom:.7rem;}
+.fx-bars .top{display:flex;justify-content:space-between;font-size:.8rem;color:var(--text);margin-bottom:.25rem;gap:.6rem;}
+.fx-track{height:7px;background:var(--surface);border-radius:99px;overflow:hidden;}
+.fx-fill{height:100%;background:var(--gold);border-radius:99px;}
+.fx-alloc{display:flex;height:14px;border-radius:99px;overflow:hidden;background:var(--surface);margin-bottom:.8rem;}
+.fx-legend{display:flex;flex-wrap:wrap;gap:.4rem 1.1rem;font-size:.78rem;color:var(--text2);}
+.fx-legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:.35rem;}
+.fx-goal{padding:.8rem 0;border-bottom:1px solid var(--border);}
+.fx-goal:last-child{border-bottom:0;}
+.fx-goal .top{display:flex;justify-content:space-between;gap:.6rem;align-items:baseline;font-size:.85rem;color:var(--text);}
+.fx-goal .meta{font-size:.74rem;color:var(--text2);margin:.35rem 0 .15rem;}
+.fx-note{font-size:.74rem;color:var(--muted);margin-top:.7rem;line-height:1.5;}
+.fx-item{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.85rem;color:var(--text);}
+.fx-grp{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:.9rem 0 .2rem;}
+.fx-up-row{display:flex;justify-content:space-between;gap:.8rem;padding:.55rem 0;border-bottom:1px solid var(--border);font-size:.84rem;color:var(--text);}
+.fx-up-row:last-child{border-bottom:0;}
+.fx-up-row small{color:var(--text2);}
+#tab-finance.fx-hidden .fx-amt,#tab-finance.fx-hidden .fx-big,#tab-finance.fx-hidden .fx-tile .v{filter:blur(8px);user-select:none;}
+#tab-finance.fx-hidden canvas{filter:blur(10px);}
+@media(max-width:768px){
+  .fx-grid2{grid-template-columns:1fr;}
+  .fx-grid2 .fx-box{margin-bottom:.9rem;}
+  .fx-f.fx-wide{grid-column:span 1;}
+  .fx-hero{padding:1.1rem;}
+  .fx-tiles.fx-scrollx{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.3rem;}
+  .fx-tiles.fx-scrollx .fx-tile{flex:0 0 160px;scroll-snap-align:start;}
+}
 </style>
 </head>
 <body>
@@ -801,224 +888,137 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
         </div>
 
 
-        <!-- ══ FINANCE DASHBOARD ══ -->
+        <!-- ══ FINANCE DASHBOARD v2 ══ -->
         <div class="tab-pane" id="tab-finance">
 
-          <!-- Finance Sub-tabs -->
-          <div class="fin-tabs" id="finTabs">
-            <button class="fin-tab active" onclick="showFinTab('overview',this)">📊 Overview</button>
-            <button class="fin-tab" onclick="showFinTab('portfolio',this)">📈 Portfolio</button>
-            <button class="fin-tab" onclick="showFinTab('income',this)">💵 Income</button>
-            <button class="fin-tab" onclick="showFinTab('expense',this)">💸 Expense</button>
-            <button class="fin-tab" onclick="showFinTab('sip',this)">🔄 SIP</button>
-            <button class="fin-tab" onclick="showFinTab('ipo',this)">🏦 IPO</button>
-            <button class="fin-tab" onclick="showFinTab('watchlist',this)">👁️ Watchlist</button>
-            <button class="fin-tab" onclick="showFinTab('goals',this)">🎯 Goals</button>
-            <button class="fin-tab" onclick="showFinTab('calendar',this)">📅 Calendar</button>
-            <button class="fin-tab" onclick="showFinTab('notifications',this)">🔔 Alerts</button>
-            <button class="fin-tab" onclick="showFinTab('assets',this)">🏠 Assets</button>
+          <div class="fx-bar">
+            <div class="fx-tabs" role="tablist" aria-label="Finance sections">
+              <button class="fx-tab active" role="tab" data-ft="overview" onclick="fxTab('overview')">Overview</button>
+              <button class="fx-tab" role="tab" data-ft="cash" onclick="fxTab('cash')">Cash flow</button>
+              <button class="fx-tab" role="tab" data-ft="invest" onclick="fxTab('invest')">Investments</button>
+              <button class="fx-tab" role="tab" data-ft="plan" onclick="fxTab('plan')">Plan</button>
+            </div>
+            <div class="fx-tools">
+              <span class="fx-status" id="fxStatus" aria-live="polite"></span>
+              <button class="fx-ico" id="fxHideBtn" onclick="fxToggleHide()" aria-label="Hide amounts" aria-pressed="false" title="Hide amounts">◐</button>
+              <button class="fx-ico" onclick="fxExport()" aria-label="Download CSV backup" title="Download CSV backup">⤓</button>
+            </div>
           </div>
 
-          <!-- ── OVERVIEW ── -->
-          <div class="fin-tab-pane active" id="ftp-overview">
-            <div class="fin-grid">
-              <div class="fin-card gold"><div class="fin-label">Net Worth</div><div class="fin-value" id="fNetWorth">NPR 0</div><div class="fin-sub" id="fNetSub">Portfolio + Cash</div><span class="fin-icon">💎</span></div>
-              <div class="fin-card green"><div class="fin-label">Monthly Income</div><div class="fin-value sm" id="fMonthly">NPR 0</div><div class="fin-sub">Govt + Army allowance</div><span class="fin-icon">💵</span></div>
-              <div class="fin-card blue"><div class="fin-label">Portfolio Value</div><div class="fin-value sm" id="fPortfolio">NPR 0</div><div class="fin-sub" id="fPortfolioSub">6 stocks</div><span class="fin-icon">📈</span></div>
-              <div class="fin-card purple"><div class="fin-label">SIP Investment</div><div class="fin-value sm" id="fSIP">NPR 0</div><div class="fin-sub">SSIS monthly</div><span class="fin-icon">🔄</span></div>
-              <div class="fin-card gold"><div class="fin-label">Cash Balance</div><div class="fin-value sm" id="fCash">NPR 0</div><div class="fin-sub" id="fCashSub">After expenses</div><span class="fin-icon">💰</span></div>
-              <div class="fin-card green"><div class="fin-label">Total P&L</div><div class="fin-value sm" id="fPnL">NPR 0</div><div class="fin-sub" id="fPnLSub">Portfolio gain/loss</div><span class="fin-icon">📊</span></div>
+          <!-- OVERVIEW -->
+          <section class="fx-pane active" id="fxp-overview">
+            <div class="fx-onboard" id="fxOnboard" style="display:none">
+              <strong>Your finance dashboard is empty — start in 2 steps</strong>
+              <ol>
+                <li><a href="#" onclick="fxTab('plan');return false">Plan</a> → enter your current cash &amp; bank balance as the starting balance.</li>
+                <li><a href="#" onclick="fxTab('cash');return false">Cash flow</a> → log your first income or expense.</li>
+              </ol>
             </div>
-
-            <!-- Charts row -->
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
-              <div class="fin-chart-wrap"><h4>Portfolio Allocation</h4><canvas id="pieChart"></canvas></div>
-              <div class="fin-chart-wrap"><h4>Monthly Cash Flow</h4><canvas id="cashFlowChart"></canvas></div>
+            <div class="fx-hero">
+              <div>
+                <div class="fx-lbl">Net worth</div>
+                <div class="fx-big" id="fxNW">—</div>
+                <div class="fx-delta" id="fxNWd"></div>
+              </div>
+              <div class="fx-break" id="fxBreak"></div>
             </div>
-            <div class="fin-chart-wrap"><h4>Net Worth Trend</h4><canvas id="netWorthChart"></canvas></div>
-          </div>
+            <div class="fx-tiles" id="fxTiles"></div>
+            <div class="fx-grid2">
+              <div class="fx-box"><h4>Net worth over time</h4><div class="fx-cv"><canvas id="fxNWChart" aria-label="Net worth over time"></canvas></div><div class="fx-empty" id="fxNWEmpty"></div></div>
+              <div class="fx-box"><h4>Income vs expense · last 6 months</h4><div class="fx-cv"><canvas id="fxCFChart" aria-label="Income versus expense by month"></canvas></div><div class="fx-empty" id="fxCFEmpty"></div></div>
+            </div>
+            <div class="fx-box"><h4>Coming up</h4><div id="fxUpcoming"></div></div>
+          </section>
 
-          <!-- ── PORTFOLIO ── -->
-          <div class="fin-tab-pane" id="ftp-portfolio">
-            <div class="fin-grid" id="stockCards"></div>
-            <div class="fin-chart-wrap" style="margin-top:1rem"><h4>📊 Portfolio Performance</h4><canvas id="portfolioBarChart"></canvas></div>
-            <div class="card" style="margin-top:1rem">
-              <div class="card-title">All Holdings</div>
-              <div style="overflow-x:auto;margin-top:0.5rem">
-                <table class="portfolio-table">
-                  <thead><tr><th>Symbol</th><th>Units</th><th>Avg Price</th><th>Mkt Value</th><th>P&L</th><th>%</th><th>Action</th></tr></thead>
-                  <tbody id="portfolioTableBody"></tbody>
-                </table>
+          <!-- CASH FLOW -->
+          <section class="fx-pane" id="fxp-cash">
+            <div class="fx-box">
+              <h4>Log a transaction</h4>
+              <div class="fx-form">
+                <div class="fx-f"><label for="fxType">Type</label>
+                  <select id="fxType" onchange="fxCatOptions()"><option value="expense">Expense</option><option value="income">Income</option></select></div>
+                <div class="fx-f"><label for="fxAmt">Amount (NPR)</label><input id="fxAmt" type="number" inputmode="decimal" min="0" step="any" placeholder="0"/></div>
+                <div class="fx-f"><label for="fxCat">Category</label><input id="fxCat" list="fxCatList" placeholder="Food, Salary…"/><datalist id="fxCatList"></datalist></div>
+                <div class="fx-f"><label for="fxDate">Date</label><input id="fxDate" type="date"/></div>
+                <div class="fx-f fx-wide"><label for="fxNote">Note (optional)</label><input id="fxNote" type="text" maxlength="120" placeholder="What was it for?"/></div>
+                <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxAddTxn()">Add</button></div>
               </div>
             </div>
-          </div>
 
-          <!-- ── INCOME ── -->
-          <div class="fin-tab-pane" id="ftp-income">
-            <div class="card accent" style="margin-bottom:1rem">
-              <div class="card-title">➕ Add Income</div>
-              <div class="fg-row">
-                <div class="fg"><label>Source</label><input type="text" id="incSource" placeholder="Government Allowance"/></div>
-                <div class="fg"><label>Amount (NPR)</label><input type="number" id="incAmount" placeholder="2160"/></div>
+            <div class="fx-monthbar">
+              <button class="fx-ico" onclick="fxMonthShift(-1)" aria-label="Previous month">‹</button>
+              <strong id="fxMonthLbl"></strong>
+              <button class="fx-ico" onclick="fxMonthShift(1)" aria-label="Next month">›</button>
+            </div>
+            <div class="fx-tiles" id="fxMonthTiles"></div>
+
+            <div class="fx-grid2">
+              <div class="fx-box"><h4>Where it went</h4><div id="fxCatBars"></div></div>
+              <div class="fx-box"><h4>Transactions</h4>
+                <div class="fx-scroll"><table class="fx-table"><thead><tr><th>Date</th><th>Category</th><th>Note</th><th class="r">Amount</th><th></th></tr></thead><tbody id="fxLedger"></tbody></table></div>
               </div>
-              <div class="fg-row">
-                <div class="fg"><label>Date</label><input type="date" id="incDate"/></div>
-                <div class="fg"><label>Type</label>
-                  <select id="incType">
-                    <option>Monthly</option><option>One-time</option><option>Semi-annual</option><option>Annual</option>
-                  </select>
+            </div>
+          </section>
+
+          <!-- INVESTMENTS -->
+          <section class="fx-pane" id="fxp-invest">
+            <div class="fx-tiles" id="fxInvTiles"></div>
+            <div class="fx-box"><h4>Allocation</h4><div id="fxAlloc"></div></div>
+            <div class="fx-box">
+              <h4 id="fxHoldTitle">Add a holding</h4>
+              <div class="fx-form">
+                <div class="fx-f"><label for="hSym">Symbol</label><input id="hSym" maxlength="12" placeholder="SSIS"/></div>
+                <div class="fx-f fx-wide"><label for="hName">Name (optional)</label><input id="hName" maxlength="60" placeholder="Siddhartha Investment Scheme"/></div>
+                <div class="fx-f"><label for="hUnits">Units</label><input id="hUnits" type="number" inputmode="decimal" min="0" step="any"/></div>
+                <div class="fx-f"><label for="hAvg">Avg buy price</label><input id="hAvg" type="number" inputmode="decimal" min="0" step="any"/></div>
+                <div class="fx-f"><label for="hPrice">Current price</label><input id="hPrice" type="number" inputmode="decimal" min="0" step="any" placeholder="= avg"/></div>
+                <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" id="hSave" onclick="fxSaveHolding()">Add</button></div>
+              </div>
+              <button class="fx-link" id="hCancel" style="display:none" onclick="fxCancelHolding()">Cancel editing</button>
+            </div>
+            <div class="fx-box"><h4>Holdings</h4>
+              <div class="fx-scroll"><table class="fx-table"><thead><tr><th>Symbol</th><th class="r">Units</th><th class="r">Avg</th><th class="r">Price</th><th class="r">Value</th><th class="r">Gain / loss</th><th></th></tr></thead><tbody id="fxHold"></tbody></table></div>
+              <div class="fx-note" id="fxHoldNote"></div>
+            </div>
+          </section>
+
+          <!-- PLAN -->
+          <section class="fx-pane" id="fxp-plan">
+            <div class="fx-box">
+              <h4>Settings</h4>
+              <div class="fx-form">
+                <div class="fx-f"><label for="sOpen">Starting cash &amp; bank balance (NPR)</label><input id="sOpen" type="number" inputmode="decimal" step="any"/></div>
+                <div class="fx-f"><label for="sSip">Monthly SIP (NPR)</label><input id="sSip" type="number" inputmode="decimal" min="0" step="any"/></div>
+                <div class="fx-f"><label for="sSipDay">SIP day of month</label><input id="sSipDay" type="number" min="1" max="28"/></div>
+                <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxSaveSettings()">Save</button></div>
+              </div>
+              <div class="fx-note">Cash balance = starting balance + all income − all expenses you log. Log your SIP as an expense (category “Investment”) so cash stays accurate.</div>
+            </div>
+
+            <div class="fx-grid2">
+              <div class="fx-box">
+                <h4>Goals</h4>
+                <div class="fx-form">
+                  <div class="fx-f fx-wide"><label for="gName">Goal</label><input id="gName" maxlength="60" placeholder="Laptop, trek fund…"/></div>
+                  <div class="fx-f"><label for="gTarget">Target (NPR)</label><input id="gTarget" type="number" inputmode="decimal" min="0" step="any"/></div>
+                  <div class="fx-f"><label for="gSaved">Saved so far</label><input id="gSaved" type="number" inputmode="decimal" min="0" step="any"/></div>
+                  <div class="fx-f"><label for="gDate">Deadline</label><input id="gDate" type="date"/></div>
+                  <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxAddGoal()">Add</button></div>
                 </div>
+                <div id="fxGoals"></div>
               </div>
-              <div class="fg"><label>Notes</label><input type="text" id="incNotes" placeholder="Optional notes"/></div>
-              <button class="btn-primary" onclick="saveIncome()">➕ Add Income</button>
-            </div>
-            <div class="fin-chart-wrap"><h4>Income History</h4><canvas id="incomeChart"></canvas></div>
-            <div id="incomeList" style="margin-top:1rem"></div>
-          </div>
-
-          <!-- ── EXPENSE ── -->
-          <div class="fin-tab-pane" id="ftp-expense">
-            <div class="card accent" style="margin-bottom:1rem">
-              <div class="card-title">➕ Add Expense</div>
-              <div class="fg-row">
-                <div class="fg"><label>Description</label><input type="text" id="expDesc" placeholder="Lunch, Books…"/></div>
-                <div class="fg"><label>Amount (NPR)</label><input type="number" id="expAmount" placeholder="150"/></div>
-              </div>
-              <div class="fg-row">
-                <div class="fg"><label>Category</label>
-                  <select id="expCat">
-                    <option>Food</option><option>Education</option><option>Internet</option><option>Transport</option>
-                    <option>Medical</option><option>Investment</option><option>Entertainment</option><option>Shopping</option><option>Others</option>
-                  </select>
+              <div class="fx-box">
+                <h4>Assets &amp; debts</h4>
+                <div class="fx-form">
+                  <div class="fx-f"><label for="iKind">Kind</label><select id="iKind"><option value="asset">Asset</option><option value="debt">Debt</option></select></div>
+                  <div class="fx-f fx-wide"><label for="iName">Name</label><input id="iName" maxlength="60" placeholder="Phone, land, loan from…"/></div>
+                  <div class="fx-f"><label for="iVal">Value (NPR)</label><input id="iVal" type="number" inputmode="decimal" min="0" step="any"/></div>
+                  <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxAddItem()">Add</button></div>
                 </div>
-                <div class="fg"><label>Date</label><input type="date" id="expDate"/></div>
-              </div>
-              <button class="btn-primary" onclick="saveExpense()">➕ Add Expense</button>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
-              <div class="fin-chart-wrap"><h4>Category Breakdown</h4><canvas id="expensePieChart"></canvas></div>
-              <div class="fin-chart-wrap"><h4>Monthly Trend</h4><canvas id="expenseTrendChart"></canvas></div>
-            </div>
-            <!-- Budget tracker -->
-            <div class="card"><div class="card-title">Budget Tracker — This Month</div>
-              <div id="budgetTracker" style="margin-top:0.8rem"></div>
-            </div>
-            <div id="expenseList" style="margin-top:1rem"></div>
-          </div>
-
-          <!-- ── SIP ── -->
-          <div class="fin-tab-pane" id="ftp-sip">
-            <div class="fin-grid">
-              <div class="fin-card gold"><div class="fin-label">Monthly SIP</div><div class="fin-value">NPR 1,000</div><div class="fin-sub">SSIS — Siddharth Capital</div></div>
-              <div class="fin-card green"><div class="fin-label">Total Invested</div><div class="fin-value sm" id="sipTotalInvested">NPR 0</div><div class="fin-sub" id="sipMonthsLabel">0 months</div></div>
-              <div class="fin-card blue"><div class="fin-label">Next SIP Date</div><div class="fin-value sm" id="sipNextDate">--</div><div class="fin-sub">Auto-deduct</div></div>
-              <div class="fin-card purple"><div class="fin-label">Expected Value</div><div class="fin-value sm" id="sipExpected">NPR 0</div><div class="fin-sub">At 12% p.a. (5yr)</div></div>
-            </div>
-            <div class="fin-chart-wrap"><h4>SIP Growth Projection (5 Years @ 12% p.a.)</h4><canvas id="sipGrowthChart"></canvas></div>
-            <!-- SIP Calculator -->
-            <div class="card"><div class="card-title">🧮 SIP Calculator</div>
-              <div class="fg-row" style="margin-top:0.8rem">
-                <div class="fg"><label>Monthly Amount (NPR)</label><input type="number" id="calcAmt" value="1000" oninput="calcSIP()"/></div>
-                <div class="fg"><label>Annual Return (%)</label><input type="number" id="calcRate" value="12" oninput="calcSIP()"/></div>
-                <div class="fg"><label>Years</label><input type="number" id="calcYears" value="5" oninput="calcSIP()"/></div>
-              </div>
-              <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:0.8rem">
-                <div class="fin-card blue" style="flex:1;margin:0"><div class="fin-label">Total Invested</div><div class="fin-value sm" id="calcInvested">NPR 60,000</div></div>
-                <div class="fin-card green" style="flex:1;margin:0"><div class="fin-label">Expected Value</div><div class="fin-value sm" id="calcValue">NPR 81,669</div></div>
-                <div class="fin-card gold" style="flex:1;margin:0"><div class="fin-label">Est. Returns</div><div class="fin-value sm" id="calcReturns">NPR 21,669</div></div>
+                <div id="fxItems"></div>
               </div>
             </div>
-          </div>
-
-          <!-- ── IPO ── -->
-          <div class="fin-tab-pane" id="ftp-ipo">
-            <div class="card accent" style="margin-bottom:1rem">
-              <div class="card-title">➕ Add IPO</div>
-              <div class="fg-row">
-                <div class="fg"><label>Company Name</label><input type="text" id="ipoName" placeholder="Company Ltd."/></div>
-                <div class="fg"><label>Symbol</label><input type="text" id="ipoSym" placeholder="ABCD"/></div>
-              </div>
-              <div class="fg-row">
-                <div class="fg"><label>Status</label>
-                  <select id="ipoStatus">
-                    <option value="upcoming">Upcoming</option><option value="applied">Applied</option>
-                    <option value="allotted">Allotted</option><option value="refunded">Refunded</option>
-                  </select>
-                </div>
-                <div class="fg"><label>Issue Price (NPR)</label><input type="number" id="ipoPrice" placeholder="100"/></div>
-              </div>
-              <div class="fg-row">
-                <div class="fg"><label>Opening Date</label><input type="date" id="ipoOpen"/></div>
-                <div class="fg"><label>Closing Date</label><input type="date" id="ipoClose"/></div>
-              </div>
-              <div class="fg-row">
-                <div class="fg"><label>Units Applied</label><input type="number" id="ipoUnits" placeholder="10"/></div>
-                <div class="fg"><label>Listing Price (NPR)</label><input type="number" id="ipoListing" placeholder="Enter after listing"/></div>
-              </div>
-              <button class="btn-primary" onclick="saveIPO()">➕ Add IPO</button>
-            </div>
-            <div id="ipoList"></div>
-          </div>
-
-          <!-- ── WATCHLIST ── -->
-          <div class="fin-tab-pane" id="ftp-watchlist">
-            <div class="card accent" style="margin-bottom:1rem">
-              <div class="card-title">➕ Add to Watchlist</div>
-              <div class="fg-row">
-                <div class="fg"><label>Symbol</label><input type="text" id="wlSym" placeholder="NIFRA, NTC…"/></div>
-                <div class="fg"><label>Company Name</label><input type="text" id="wlName" placeholder="Full company name"/></div>
-              </div>
-              <div class="fg-row">
-                <div class="fg"><label>Current Price (NPR)</label><input type="number" id="wlPrice" placeholder="500"/></div>
-                <div class="fg"><label>Target Price (NPR)</label><input type="number" id="wlTarget" placeholder="600"/></div>
-              </div>
-              <div class="fg-row">
-                <div class="fg"><label>52W High</label><input type="number" id="wl52h" placeholder="800"/></div>
-                <div class="fg"><label>52W Low</label><input type="number" id="wl52l" placeholder="300"/></div>
-              </div>
-              <button class="btn-primary" onclick="saveWatchlist()">➕ Add to Watchlist</button>
-            </div>
-            <div id="watchlistContainer"></div>
-          </div>
-
-          <!-- ── GOALS ── -->
-          <div class="fin-tab-pane" id="ftp-goals">
-            <div class="card accent" style="margin-bottom:1rem">
-              <div class="card-title">🎯 Add Financial Goal</div>
-              <div class="fg-row">
-                <div class="fg"><label>Goal Name</label><input type="text" id="goalName" placeholder="Emergency Fund, Laptop…"/></div>
-                <div class="fg"><label>Emoji</label><input type="text" id="goalEmoji" placeholder="💻" maxlength="2" style="text-align:center;font-size:1.2rem"/></div>
-              </div>
-              <div class="fg-row">
-                <div class="fg"><label>Target Amount (NPR)</label><input type="number" id="goalTarget" placeholder="50000"/></div>
-                <div class="fg"><label>Current Saved (NPR)</label><input type="number" id="goalCurrent" placeholder="5000"/></div>
-              </div>
-              <div class="fg-row">
-                <div class="fg"><label>Deadline</label><input type="date" id="goalDeadline"/></div>
-                <div class="fg"><label>Monthly Contribution</label><input type="number" id="goalMonthly" placeholder="1000"/></div>
-              </div>
-              <button class="btn-primary" onclick="saveGoal()">➕ Add Goal</button>
-            </div>
-            <div id="goalsList"></div>
-          </div>
-
-          <!-- ── CALENDAR ── -->
-          <div class="fin-tab-pane" id="ftp-calendar">
-            <div class="card">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-                <button class="btn-ghost" onclick="calNav(-1)">‹</button>
-                <span style="font-size:0.9rem;color:var(--text)" id="calTitle">--</span>
-                <button class="btn-ghost" onclick="calNav(1)">›</button>
-              </div>
-              <div class="fin-cal" id="calGrid"></div>
-            </div>
-            <div style="margin-top:1rem" id="calEvents"></div>
-          </div>
-
-          <!-- ── NOTIFICATIONS ── -->
-          <div class="fin-tab-pane" id="ftp-notifications">
-            <div id="notifList"></div>
-          </div>
+          </section>
 
         </div>
 
@@ -1478,7 +1478,7 @@ function showTab(name,btn){
   const sbMatch=document.querySelector('.sb-btn[data-tab="'+name+'"]');
   if(sbMatch) sbMatch.classList.add('active');
   localStorage.setItem('rtk_last_tab',name);
-  const titles={finance:'💰 Finance Dashboard (Assets & Net Worth updated in real-time)',overview:'📊 Overview',files:'📁 File Manager',messages:'✉️ Messages',blog:'✍️ Blog',music:'🎵 Music',places:'🗺️ Places Visited',testimonials:'💬 Fan Love',projects:'🎨 Projects',customize:'⚙️ Customize Site',security:'🔐 Security',analytics:'📈 Analytics'};
+  const titles={finance:'💰 Finance',overview:'📊 Overview',files:'📁 File Manager',messages:'✉️ Messages',blog:'✍️ Blog',music:'🎵 Music',places:'🗺️ Places Visited',testimonials:'💬 Fan Love',projects:'🎨 Projects',customize:'⚙️ Customize Site',security:'🔐 Security',analytics:'📈 Analytics'};
   const tb=document.getElementById('topbarTitle');if(tb)tb.textContent=titles[name]||name;
   if(name==='analytics') renderAnalytics();
   if(name==='security'){loadSecuritySessions();loadActivityLog();}
@@ -1488,14 +1488,7 @@ function showTab(name,btn){
   if(name==='places') setTimeout(loadPlaces,100);
   if(name==='testimonials') setTimeout(loadTestimonials,100);
   if(name==='projects') setTimeout(loadProjects,100);
-  if(name==='finance'){
-    loadChartJS().then(()=>{
-      setTimeout(()=>{
-        const firstTab=document.querySelector('.fin-tab');
-        if(firstTab) showFinTab('overview',firstTab);
-      },150);
-    });
-  }
+  if(name==='finance') fxOpen();
 }
 
 // Chart.js (≈200KB) is only needed on the Finance tab — loading it on every
@@ -2837,691 +2830,334 @@ async function deleteProject(id){
 }
 
 // ══════════════════════════════════════════════════════
-// FINANCE DASHBOARD
+// FINANCE DASHBOARD v2 — ledger-based, synced to Supabase table `finance_data`
+// Net worth = starting cash + income − expenses + investments + assets − debts
 // ══════════════════════════════════════════════════════
+const FX_KEYS=['ledger','holdings','goals','items','snaps','settings'];
+const FX_COLORS=['#c9a96e','#64b5f6','#81c784','#ba8cf0','#e8a070','#5fc7c0'];
+const FX_CATS={
+  income:['Salary','Allowance','Freelance','Gift','Interest / dividend','Other'],
+  expense:['Food','Transport','Bills','Rent','Shopping','Health','Education','Entertainment','Investment','Other']
+};
+const FX={
+  d:{ledger:[],holdings:[],goals:[],items:[],snaps:[],settings:{opening:0,sipAmount:0,sipDay:1}},
+  month:null, loaded:false, hide:false, charts:{}, editHolding:null, tab:'overview'
+};
 
-// ── DATA ──
-let finAssets = JSON.parse(localStorage.getItem('fin_assets') || '[]');
-let finLiabilities = JSON.parse(localStorage.getItem('fin_liabs') || '[]');
-
-const PORTFOLIO = [
-  { sym:'MSIP',  name:'Mero Microfinance Laghubitta',  units:100,  avg:11.56,   mktPrice:11.56,  color:'#3b82f6' },
-  { sym:'NSY',   name:'Nabil Samriddhi Fund',           units:100,  avg:9.33,    mktPrice:9.33,   color:'#22c55e' },
-  { sym:'PSIS',  name:'Prabhu Smart Fund',              units:100,  avg:10.49,   mktPrice:10.49,  color:'#a855f7' },
-  { sym:'SSIS',  name:'Siddharth Investment Scheme',    units:732,  avg:11.01,   mktPrice:11.01,  color:'#f59e0b' },
-  { sym:'SYPNL', name:'Sanima Equity Fund',             units:10,   avg:1424.0,  mktPrice:1424.0, color:'#ef4444' },
-  { sym:'VLBS',  name:'Vijaya Laghubitta Bittiya',      units:1,    avg:706.0,   mktPrice:706.0,  color:'#06b6d4' }
-];
-
-const MONTHLY_INCOME = 3660;
-const SIP_MONTHLY = 1000;
-const SIP_START_DATE = new Date('2023-01-01');
-
-let finIncome = JSON.parse(localStorage.getItem('fin_income') || '[]');
-let finExpenses = JSON.parse(localStorage.getItem('fin_expenses') || '[]');
-let finIPOs = JSON.parse(localStorage.getItem('fin_ipos') || '[]');
-let finWatchlist = JSON.parse(localStorage.getItem('fin_watchlist') || '[]');
-let finGoals = JSON.parse(localStorage.getItem('fin_goals') || '[]');
-let finCash = parseFloat(localStorage.getItem('fin_cash') || '0');
-let calMonth = new Date().getMonth();
-let calYear = new Date().getFullYear();
-
-let pieChartInst, cashFlowChartInst, netWorthChartInst, portfolioBarInst, sipGrowthInst, incomeChartInst, expensePieInst, expenseTrendInst;
-
-function saveFin(){ 
-  localStorage.setItem('fin_income', JSON.stringify(finIncome));
-  localStorage.setItem('fin_expenses', JSON.stringify(finExpenses));
-  localStorage.setItem('fin_ipos', JSON.stringify(finIPOs));
-  localStorage.setItem('fin_watchlist', JSON.stringify(finWatchlist));
-  localStorage.setItem('fin_goals', JSON.stringify(finGoals));
-  localStorage.setItem('fin_assets', JSON.stringify(finAssets));
-  localStorage.setItem('fin_liabs', JSON.stringify(finLiabilities));
+/* ── helpers ── */
+function fxEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function fxNum(n){return (Number(n)||0).toLocaleString('en-IN',{maximumFractionDigits:2});}
+function fxMoney(n,sign){n=Math.round((Number(n)||0)*100)/100;const s=(sign&&n>0?'+':'')+(n<0?'−':'');return '<span class="fx-amt">'+s+'NPR '+fxNum(Math.abs(n))+'</span>';}
+function fxId(){return Date.now()*1000+Math.floor(Math.random()*1000);}
+function fxToday(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fxYM(s){return String(s).slice(0,7);}
+function fxShiftYM(ym,n){const p=ym.split('-').map(Number);const d=new Date(p[0],p[1]-1+n,1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function fxMonthLabel(ym){const p=ym.split('-').map(Number);return new Date(p[0],p[1]-1,1).toLocaleDateString('en-GB',{month:'short',year:'numeric'});}
+function fxEl(id){return document.getElementById(id);}
+function fxVal(id){const e=fxEl(id);return e?e.value.trim():'';}
+function fxSet(id,v){const e=fxEl(id);if(e)e.value=v;}
+function fxPct(x){return (x>0?'+':'')+(x*100).toFixed(1)+'%';}
+function fxGain(n,pct){
+  if(!n)return '<span class="fx-flat">– 0</span>';
+  const up=n>0;
+  return '<span class="'+(up?'fx-up':'fx-down')+'">'+(up?'▲ ':'▼ ')+fxMoney(Math.abs(n))+(pct==null?'':' · '+fxPct(pct))+'</span>';
 }
+function fxStatus(msg,err){const e=fxEl('fxStatus');if(!e)return;e.textContent=msg||'';e.className='fx-status'+(err?' err':'');}
 
-// ── REAL CASH BALANCE ──
-function getTotalIncome(){
-  // Fixed monthly income
-  const now = new Date();
-  const monthsElapsed = (now.getFullYear()-2024)*12 + now.getMonth() + 1;
-  const govtTotal = 2160 * monthsElapsed;
-  // Army allowance every 6 months
-  const armyPayments = Math.floor(monthsElapsed/6);
-  const armyTotal = armyPayments * 9000;
-  // One-time income records
-  const oneTimeTotal = finIncome.reduce((a,i)=>a+i.amount,0);
-  return govtTotal + armyTotal + oneTimeTotal;
-}
-
-function getTotalExpenses(){
-  return finExpenses.reduce((a,e)=>a+e.amount,0);
-}
-
-function getTotalAssets(){
-  return finAssets.filter(a=>a.cat!=='Liability').reduce((a,item)=>a+parseFloat(item.value||0),0);
-}
-
-function getTotalLiabilities(){
-  // Debts I owe
-  return finLiabilities.filter(l=>l.type==='I owe (debt)').reduce((a,l)=>a+parseFloat(l.amt||0),0);
-}
-
-function getCashBalance(){
-  return getTotalIncome() - getTotalExpenses() - getTotalLiabilities();
-}
-
-function getRealNetWorth(){
-  return getPortfolioTotal() + Math.max(getCashBalance(),0) + getTotalAssets();
-}
-
-function fmtNPR(n){ return 'NPR ' + parseFloat(n).toLocaleString('en-IN', {minimumFractionDigits:0, maximumFractionDigits:2}); }
-function fmtNum(n){ return parseFloat(n).toLocaleString('en-IN', {minimumFractionDigits:2, maximumFractionDigits:2}); }
-
-// ── FIN SUB-TABS ──
-function showFinTab(name, btn){
-  document.querySelectorAll('.fin-tab-pane').forEach(p=>{
-    p.classList.remove('active');
-    p.style.display='none';
-  });
-  document.querySelectorAll('.fin-tab').forEach(b=>b.classList.remove('active'));
-  const pane = document.getElementById('ftp-'+name);
-  if(pane){ pane.classList.add('active'); pane.style.display='block'; }
-  if(btn) btn.classList.add('active');
-  // Init content after display is set (required for charts)
-  setTimeout(()=>{
-    if(name==='overview') initFinOverview();
-    if(name==='portfolio') initPortfolio();
-    if(name==='income') initIncome();
-    if(name==='expense') initExpense();
-    if(name==='sip') initSIP();
-    if(name==='ipo') renderIPOs();
-    if(name==='watchlist') renderWatchlist();
-    if(name==='goals') renderGoals();
-    if(name==='calendar') renderCalendar();
-    if(name==='notifications') renderNotifications();
-    if(name==='assets') renderAssets();
-  }, 50);
-}
-
-// ── PORTFOLIO CALC ──
-function getPortfolioTotal(){ return PORTFOLIO.reduce((a,s)=>a+s.units*s.mktPrice, 0); }
-function getPortfolioCost(){ return PORTFOLIO.reduce((a,s)=>a+s.units*s.avg, 0); }
-function getPortfolioPnL(){ return getPortfolioTotal()-getPortfolioCost(); }
-
-// ── OVERVIEW ──
-function initFinOverview(){
-  const total = getPortfolioTotal();
-  const pnl = getPortfolioPnL();
-  const cash = getCashBalance();
-  const assets = getTotalAssets();
-  const liabs = getTotalLiabilities();
-  const netWorth = getRealNetWorth();
-
-  const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
-  setEl('fNetWorth', fmtNPR(netWorth));
-  setEl('fNetSub', `Portfolio + Cash + Assets - Debts`);
-  setEl('fMonthly', fmtNPR(MONTHLY_INCOME));
-  setEl('fPortfolio', fmtNPR(total));
-  setEl('fPortfolioSub', PORTFOLIO.length+' stocks');
-  setEl('fSIP', fmtNPR(SIP_MONTHLY));
-  setEl('fCash', fmtNPR(Math.max(cash,0)));
-  setEl('fCashSub', `Income: ${fmtNPR(getTotalIncome())} - Exp: ${fmtNPR(getTotalExpenses())}`);
-  const pnlEl = document.getElementById('fPnL');
-  if(pnlEl){ pnlEl.textContent = fmtNPR(Math.abs(pnl)); pnlEl.style.color = pnl>=0?'#22c55e':'#ef4444'; }
-  setEl('fPnLSub', (pnl>=0?'▲ Gain ':'▼ Loss ')+((pnl/getPortfolioCost()*100).toFixed(1))+'%');
-
-  // Pie chart
-  const pieCtx = document.getElementById('pieChart');
-  if(pieCtx){
-    if(pieChartInst) pieChartInst.destroy();
-    pieChartInst = new Chart(pieCtx, {
-      type:'doughnut',
-      data:{ labels:PORTFOLIO.map(s=>s.sym), datasets:[{ data:PORTFOLIO.map(s=>s.units*s.mktPrice), backgroundColor:PORTFOLIO.map(s=>s.color), borderWidth:2, borderColor:'rgba(0,0,0,0.3)' }] },
-      options:{ responsive:true, maintainAspectRatio:true, plugins:{ legend:{ position:'right', labels:{ color:'rgba(255,255,255,0.7)', font:{size:11} } } } }
+/* ── load / save ── */
+async function fxLoad(){
+  if(FX.loaded)return;
+  FX.month=fxToday().slice(0,7);
+  FX.hide=localStorage.getItem('fx_hide')==='1';
+  FX_KEYS.forEach(k=>{try{const v=JSON.parse(localStorage.getItem('fx2_'+k)||'null');if(v!==null)FX.d[k]=v;}catch(e){}});
+  fxStatus('Syncing…');
+  try{
+    const r=await sb.from('finance_data').select('category,data');
+    if(r.error)throw r.error;
+    (r.data||[]).forEach(row=>{
+      if(FX_KEYS.includes(row.category)&&row.data!=null){FX.d[row.category]=row.data;try{localStorage.setItem('fx2_'+row.category,JSON.stringify(row.data));}catch(e){}}
     });
+    fxStatus('Synced ✓');
+  }catch(e){fxStatus('Offline — saved on this device only',true);}
+  FX.loaded=true;
+}
+async function fxSave(k){
+  try{localStorage.setItem('fx2_'+k,JSON.stringify(FX.d[k]));}catch(e){}
+  try{
+    const r=await sb.from('finance_data').upsert({category:k,data:FX.d[k],updated_at:new Date().toISOString()},{onConflict:'category'});
+    if(r.error)throw r.error;
+    fxStatus('Synced ✓');
+  }catch(e){fxStatus('Not synced — '+(e.message||'error'),true);}
+}
+
+/* ── calculations ── */
+function fxCalc(){
+  const d=FX.d;let inc=0,exp=0;
+  d.ledger.forEach(t=>{const a=+t.amount||0;if(t.type==='income')inc+=a;else exp+=a;});
+  const cash=(+d.settings.opening||0)+inc-exp;
+  let inv=0,cost=0;d.holdings.forEach(h=>{inv+=(+h.units||0)*(+h.price||0);cost+=(+h.units||0)*(+h.avg||0);});
+  let assets=0,debts=0;d.items.forEach(i=>{if(i.kind==='debt')debts+=+i.value||0;else assets+=+i.value||0;});
+  return {cash,inv,cost,pnl:inv-cost,assets,debts,nw:Math.round((cash+inv+assets-debts)*100)/100};
+}
+function fxMonthStats(ym){
+  let inc=0,exp=0;
+  FX.d.ledger.forEach(t=>{if(fxYM(t.date)!==ym)return;const a=+t.amount||0;if(t.type==='income')inc+=a;else exp+=a;});
+  return {inc,exp,net:inc-exp,rate:inc>0?(inc-exp)/inc:null};
+}
+function fxHasData(){const d=FX.d;return d.ledger.length||d.holdings.length||d.items.length||d.goals.length||(+d.settings.opening||0)!==0;}
+function fxSnapshot(){
+  if(!fxHasData())return;
+  const ym=fxToday().slice(0,7),nw=fxCalc().nw,s=FX.d.snaps,i=s.findIndex(x=>x.ym===ym);
+  if(i>=0){if(s[i].nw===nw)return;s[i].nw=nw;}else s.push({ym:ym,nw:nw});
+  s.sort((a,b)=>a.ym<b.ym?-1:1);
+  fxSave('snaps');
+}
+function fxAvgNet3(){
+  // average net of the last 3 full months that have activity; falls back to this month
+  const now=fxToday().slice(0,7),nets=[];
+  for(let i=1;i<=3;i++){const ym=fxShiftYM(now,-i);if(FX.d.ledger.some(t=>fxYM(t.date)===ym))nets.push(fxMonthStats(ym).net);}
+  if(!nets.length)return fxMonthStats(now).net;
+  return nets.reduce((a,b)=>a+b,0)/nets.length;
+}
+
+/* ── entry points ── */
+function fxOpen(){
+  const go=()=>fxLoad().then(()=>{fxApplyHide();fxTab(FX.tab||'overview');});
+  if(typeof loadChartJS==='function')loadChartJS().then(go,go);else go();
+}
+function fxTab(name){
+  FX.tab=name;
+  document.querySelectorAll('.fx-tab').forEach(b=>{const on=b.dataset.ft===name;b.classList.toggle('active',on);b.setAttribute('aria-selected',on);});
+  document.querySelectorAll('.fx-pane').forEach(p=>p.classList.toggle('active',p.id==='fxp-'+name));
+  if(!FX.loaded)return;
+  if(name==='overview')fxRenderOverview();
+  if(name==='cash'){fxCatOptions();if(!fxVal('fxDate'))fxSet('fxDate',fxToday());fxRenderCash();}
+  if(name==='invest')fxRenderInvest();
+  if(name==='plan')fxRenderPlan();
+}
+function fxRefresh(){fxSnapshot();fxTab(FX.tab);}
+function fxToggleHide(){FX.hide=!FX.hide;try{localStorage.setItem('fx_hide',FX.hide?'1':'0');}catch(e){}fxApplyHide();}
+function fxApplyHide(){
+  const t=fxEl('tab-finance');if(t)t.classList.toggle('fx-hidden',FX.hide);
+  const b=fxEl('fxHideBtn');if(b)b.setAttribute('aria-pressed',FX.hide?'true':'false');
+}
+
+/* ── OVERVIEW ── */
+function fxTile(label,value,sub){return '<div class="fx-tile"><div class="fx-lbl">'+label+'</div><div class="v">'+value+'</div><div class="s">'+sub+'</div></div>';}
+function fxRenderOverview(){
+  const c=fxCalc(),ym=fxToday().slice(0,7),m=fxMonthStats(ym);
+  fxEl('fxOnboard').style.display=fxHasData()?'none':'block';
+  fxEl('fxNW').innerHTML=fxMoney(c.nw);
+  const prev=FX.d.snaps.filter(s=>s.ym<ym).pop();
+  fxEl('fxNWd').innerHTML=prev
+    ? fxGain(c.nw-prev.nw)+' <span class="fx-flat">since '+fxMonthLabel(prev.ym)+'</span>'
+    : '<span class="fx-flat">Month-by-month change appears next month</span>';
+  fxEl('fxBreak').innerHTML=
+    '<div><b>'+fxMoney(c.cash)+'</b><span>Cash</span></div>'+
+    '<div><b>'+fxMoney(c.inv)+'</b><span>Investments</span></div>'+
+    '<div><b>'+fxMoney(c.assets)+'</b><span>Assets</span></div>'+
+    '<div><b>'+fxMoney(-c.debts)+'</b><span>Debts</span></div>';
+  const t=fxEl('fxTiles');t.className='fx-tiles fx-scrollx';
+  t.innerHTML=
+    fxTile('Income · '+fxMonthLabel(ym),fxMoney(m.inc),'this month')+
+    fxTile('Expenses · '+fxMonthLabel(ym),fxMoney(m.exp),'this month')+
+    fxTile('Savings rate',m.rate==null?'—':'<span class="'+(m.rate>=0?'fx-up':'fx-down')+'">'+(m.rate*100).toFixed(0)+'%</span>',m.rate==null?'log income to see it':'of income kept')+
+    fxTile('Investments',fxMoney(c.inv),c.cost>0?fxGain(c.pnl,c.pnl/c.cost):'<span class="fx-flat">no holdings yet</span>')+
+    fxTile('Debt',fxMoney(c.debts),c.debts>0?'to repay':'debt-free');
+  fxRenderUpcoming();
+  fxDrawCharts();
+}
+function fxUpcomingList(){
+  const out=[],now=new Date();now.setHours(0,0,0,0);const s=FX.d.settings;
+  if(+s.sipAmount>0){
+    const day=Math.min(28,Math.max(1,+s.sipDay||1));
+    let n=new Date(now.getFullYear(),now.getMonth(),day);if(n<now)n=new Date(now.getFullYear(),now.getMonth()+1,day);
+    out.push({when:n,label:'SIP contribution',amt:+s.sipAmount});
   }
-
-  // Cash flow chart
-  const cfCtx = document.getElementById('cashFlowChart');
-  if(cfCtx){
-    if(cashFlowChartInst) cashFlowChartInst.destroy();
-    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    cashFlowChartInst = new Chart(cfCtx, {
-      type:'bar',
-      data:{ labels:months.slice(0,new Date().getMonth()+1),
-        datasets:[
-          { label:'Income', data:months.slice(0,new Date().getMonth()+1).map(()=>MONTHLY_INCOME), backgroundColor:'rgba(34,197,94,0.5)', borderColor:'#22c55e', borderWidth:1 },
-          { label:'Expense', data:months.slice(0,new Date().getMonth()+1).map((m,i)=>getExpensesByMonth(i)), backgroundColor:'rgba(239,68,68,0.4)', borderColor:'#ef4444', borderWidth:1 }
-        ]
-      },
-      options:{ responsive:true, maintainAspectRatio:true, plugins:{legend:{labels:{color:'rgba(255,255,255,0.7)',font:{size:10}}}}, scales:{ x:{ticks:{color:'rgba(255,255,255,0.5)',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'rgba(255,255,255,0.5)',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'},beginAtZero:true} } }
-    });
-  }
-
-  // Net worth trend
-  const nwCtx = document.getElementById('netWorthChart');
-  if(nwCtx){
-    if(netWorthChartInst) netWorthChartInst.destroy();
-    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul'];
-    netWorthChartInst = new Chart(nwCtx, {
-      type:'line',
-      data:{ labels:months, datasets:[{ label:'Net Worth (NPR)', data:[18000,19500,21000,22500,24000,25500,netWorth], borderColor:'#c9a96e', backgroundColor:'rgba(201,169,110,0.1)', tension:0.4, fill:true, pointBackgroundColor:'#c9a96e', pointRadius:4 }] },
-      options:{ responsive:true, maintainAspectRatio:true, plugins:{legend:{labels:{color:'rgba(255,255,255,0.7)',font:{size:10}}}}, scales:{ x:{ticks:{color:'rgba(255,255,255,0.5)',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'rgba(255,255,255,0.5)',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'},beginAtZero:false} } }
-    });
-  }
+  FX.d.goals.forEach(g=>{if(g.deadline&&(+g.saved||0)<(+g.target||0))out.push({when:new Date(g.deadline+'T00:00:00'),label:'Goal: '+g.name,amt:(+g.target)-(+g.saved||0),goal:true});});
+  out.sort((a,b)=>a.when-b.when);
+  return out.slice(0,5).map(o=>Object.assign(o,{days:Math.round((o.when-now)/864e5)}));
+}
+function fxRenderUpcoming(){
+  const l=fxUpcomingList();
+  fxEl('fxUpcoming').innerHTML=l.length?l.map(o=>{
+    const when=o.days<0?'overdue by '+(-o.days)+' d':o.days===0?'today':'in '+o.days+' d';
+    return '<div class="fx-up-row"><span>'+fxEsc(o.label)+'<br/><small>'+o.when.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+' · '+when+'</small></span><span>'+(o.goal?'<small>still needed</small><br/>':'')+fxMoney(o.amt)+'</span></div>';
+  }).join(''):'<div class="fx-empty">Nothing scheduled. Add a goal deadline or a monthly SIP in Plan.</div>';
+}
+function fxChartTheme(){
+  const cs=getComputedStyle(document.body),g=n=>cs.getPropertyValue(n).trim();
+  return {gold:g('--gold')||'#c9a96e',text:g('--text2')||'#b5afa6',grid:'rgba(128,128,128,.18)',up:g('--success')||'#81c784',down:g('--danger')||'#e87070'};
+}
+function fxDrawCharts(){
+  Object.values(FX.charts).forEach(c=>{try{c.destroy();}catch(e){}});FX.charts={};
+  const th=fxChartTheme(),ym=fxToday().slice(0,7);
+  const nwC=fxEl('fxNWChart'),cfC=fxEl('fxCFChart');
+  const snaps=FX.d.snaps,showNW=snaps.length>=2,months=[];
+  for(let i=5;i>=0;i--)months.push(fxShiftYM(ym,-i));
+  const stats=months.map(fxMonthStats),showCF=stats.some(s=>s.inc||s.exp);
+  nwC.parentElement.style.display=showNW?'block':'none';
+  fxEl('fxNWEmpty').textContent=showNW?'':'The net worth line appears once you have two months of data — your balance is saved automatically each month.';
+  cfC.parentElement.style.display=showCF?'block':'none';
+  fxEl('fxCFEmpty').textContent=showCF?'':'Log income and expenses to see the monthly comparison.';
+  if(!window.Chart)return;
+  const base={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:th.text,font:{size:11}}},tooltip:{callbacks:{label:c=>' '+(c.dataset.label?c.dataset.label+': ':'')+'NPR '+fxNum(c.parsed.y)}}},scales:{x:{ticks:{color:th.text,font:{size:10}},grid:{display:false}},y:{ticks:{color:th.text,font:{size:10},callback:v=>fxNum(v)},grid:{color:th.grid}}}};
+  if(showNW)FX.charts.nw=new Chart(nwC,{type:'line',data:{labels:snaps.map(s=>fxMonthLabel(s.ym)),datasets:[{label:'Net worth',data:snaps.map(s=>s.nw),borderColor:th.gold,backgroundColor:th.gold+'22',fill:true,tension:.3,pointRadius:3,pointBackgroundColor:th.gold}]},options:Object.assign({},base,{plugins:Object.assign({},base.plugins,{legend:{display:false}})})});
+  if(showCF)FX.charts.cf=new Chart(cfC,{type:'bar',data:{labels:months.map(fxMonthLabel),datasets:[{label:'Income',data:stats.map(s=>s.inc),backgroundColor:th.up+'cc',borderRadius:4},{label:'Expense',data:stats.map(s=>s.exp),backgroundColor:th.down+'cc',borderRadius:4}]},options:base});
 }
 
-// ── PORTFOLIO ──
-function initPortfolio(){
-  const cards = document.getElementById('stockCards');
-  if(cards){
-    cards.innerHTML = PORTFOLIO.map(s=>{
-      const mktVal = s.units*s.mktPrice;
-      const costVal = s.units*s.avg;
-      const pnl = mktVal-costVal;
-      const pct = ((pnl/costVal)*100).toFixed(1);
-      const up = pnl>=0;
-      return `<div class="fin-card ${up?'green':'red'}">
-        <div class="fin-label">${s.sym}</div>
-        <div class="fin-value sm">${fmtNPR(mktVal)}</div>
-        <div style="margin-top:0.4rem;display:flex;align-items:center;gap:0.4rem">
-          <span class="fin-badge ${up?'up':'down'}">${up?'▲':'▼'} ${Math.abs(pct)}%</span>
-          <span style="font-size:0.65rem;color:var(--muted)">${s.units} units</span>
-        </div>
-        <div class="fin-sub" style="margin-top:0.3rem">${up?'Gain':'Loss'}: ${fmtNPR(Math.abs(pnl))}</div>
-        <span class="fin-icon" style="color:${s.color}">●</span>
-      </div>`;
-    }).join('');
-  }
-
-  const tbody = document.getElementById('portfolioTableBody');
-  if(tbody){
-    tbody.innerHTML = PORTFOLIO.map(s=>{
-      const mktVal = s.units*s.mktPrice;
-      const costVal = s.units*s.avg;
-      const pnl = mktVal-costVal;
-      const pct = ((pnl/costVal)*100).toFixed(1);
-      const up = pnl>=0;
-      return `<tr>
-        <td class="sym">${s.sym}<div style="font-size:0.62rem;color:var(--muted);font-weight:400">${s.name.substring(0,20)}…</div></td>
-        <td>${s.units}</td>
-        <td>NPR ${fmtNum(s.avg)}</td>
-        <td>NPR ${fmtNum(mktVal)}</td>
-        <td class="${up?'profit':'loss'}">${up?'+':'-'}NPR ${fmtNum(Math.abs(pnl))}</td>
-        <td class="${up?'profit':'loss'}">${up?'+':''}${pct}%</td>
-        <td><button class="btn-ghost" style="font-size:0.65rem;padding:0.2rem 0.5rem" onclick="updateStockPrice('${s.sym}')">📝 Update</button></td>
-      </tr>`;
-    }).join('');
-  }
-
-  // Bar chart
-  const barCtx = document.getElementById('portfolioBarChart');
-  if(barCtx){
-    if(portfolioBarInst) portfolioBarInst.destroy();
-    portfolioBarInst = new Chart(barCtx, {
-      type:'bar',
-      data:{ labels:PORTFOLIO.map(s=>s.sym),
-        datasets:[
-          { label:'Market Value', data:PORTFOLIO.map(s=>s.units*s.mktPrice), backgroundColor:PORTFOLIO.map(s=>s.color+'99'), borderColor:PORTFOLIO.map(s=>s.color), borderWidth:1 },
-          { label:'Cost Basis', data:PORTFOLIO.map(s=>s.units*s.avg), backgroundColor:'rgba(255,255,255,0.1)', borderColor:'rgba(255,255,255,0.3)', borderWidth:1 }
-        ]
-      },
-      options:{ responsive:true, maintainAspectRatio:true, plugins:{legend:{labels:{color:'rgba(255,255,255,0.7)',font:{size:10}}}}, scales:{ x:{ticks:{color:'rgba(255,255,255,0.5)'},grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'rgba(255,255,255,0.5)'},grid:{color:'rgba(255,255,255,0.05)'},beginAtZero:true} } }
-    });
-  }
+/* ── CASH FLOW ── */
+function fxCatOptions(){
+  const type=fxVal('fxType')||'expense';
+  const used=[...new Set(FX.d.ledger.filter(t=>t.type===type).map(t=>t.category))];
+  const all=[...new Set(FX_CATS[type].concat(used))];
+  fxEl('fxCatList').innerHTML=all.map(c=>'<option value="'+fxEsc(c)+'"></option>').join('');
+}
+function fxAddTxn(){
+  const amount=parseFloat(fxVal('fxAmt'));
+  if(!(amount>0)){showToast('⚠️ Enter an amount above 0','error');return;}
+  const type=fxVal('fxType')==='income'?'income':'expense';
+  const date=fxVal('fxDate')||fxToday();
+  FX.d.ledger.push({id:fxId(),type:type,amount:amount,category:fxVal('fxCat')||'Other',date:date,note:fxVal('fxNote')});
+  FX.month=fxYM(date);
+  fxSave('ledger');fxSet('fxAmt','');fxSet('fxNote','');
+  showToast('✅ '+(type==='income'?'Income':'Expense')+' added','success');
+  fxRefresh();
+}
+function fxDelTxn(id){
+  if(!confirm('Delete this transaction?'))return;
+  FX.d.ledger=FX.d.ledger.filter(t=>t.id!==id);fxSave('ledger');fxRefresh();
+}
+function fxMonthShift(n){FX.month=fxShiftYM(FX.month,n);fxRenderCash();}
+function fxRenderCash(){
+  const ym=FX.month,m=fxMonthStats(ym);
+  fxEl('fxMonthLbl').textContent=fxMonthLabel(ym);
+  const mt=fxEl('fxMonthTiles');mt.className='fx-tiles';
+  mt.innerHTML=fxTile('Income',fxMoney(m.inc),'')+fxTile('Expenses',fxMoney(m.exp),'')+fxTile('Net',fxGain(m.net),m.rate==null?'':(m.rate*100).toFixed(0)+'% saved');
+  const rows=FX.d.ledger.filter(t=>fxYM(t.date)===ym).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:b.id-a.id);
+  fxEl('fxLedger').innerHTML=rows.length?rows.map(t=>
+    '<tr><td>'+fxEsc(t.date.slice(5))+'</td><td>'+fxEsc(t.category)+'</td><td>'+fxEsc(t.note||'')+'</td>'+
+    '<td class="r '+(t.type==='income'?'fx-up':'')+'">'+(t.type==='income'?fxMoney(t.amount,true):fxMoney(-t.amount))+'</td>'+
+    '<td><button class="fx-x" aria-label="Delete transaction" onclick="fxDelTxn('+t.id+')">✕</button></td></tr>').join('')
+    :'<tr><td colspan="5" class="fx-empty">No transactions in '+fxMonthLabel(ym)+'.</td></tr>';
+  const byCat={};rows.filter(t=>t.type==='expense').forEach(t=>{byCat[t.category]=(byCat[t.category]||0)+(+t.amount||0);});
+  const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]),max=cats.length?cats[0][1]:1,tot=m.exp||1;
+  fxEl('fxCatBars').innerHTML=cats.length?'<div class="fx-bars">'+cats.map(c=>
+    '<div class="row"><div class="top"><span>'+fxEsc(c[0])+'</span><span>'+fxMoney(c[1])+' <small class="fx-flat">'+Math.round(c[1]/tot*100)+'%</small></span></div><div class="fx-track"><div class="fx-fill" style="width:'+(c[1]/max*100).toFixed(1)+'%"></div></div></div>').join('')+'</div>'
+    :'<div class="fx-empty">No expenses logged this month.</div>';
 }
 
-function updateStockPrice(sym){
-  const newPrice = prompt('Enter current market price for '+sym+' (NPR):');
-  if(!newPrice || isNaN(newPrice)) return;
-  const stock = PORTFOLIO.find(s=>s.sym===sym);
-  if(stock){ stock.mktPrice = parseFloat(newPrice); initPortfolio(); showToast('✅ Price updated for '+sym,'success'); }
+/* ── INVESTMENTS ── */
+function fxSaveHolding(){
+  const sym=fxVal('hSym').toUpperCase(),units=parseFloat(fxVal('hUnits')),avg=parseFloat(fxVal('hAvg'));
+  let price=parseFloat(fxVal('hPrice'));
+  if(!sym||!(units>0)||!(avg>=0)){showToast('⚠️ Symbol, units and average price are required','error');return;}
+  if(!(price>=0))price=avg;
+  const rec={sym:sym,name:fxVal('hName'),units:units,avg:avg,price:price,priceDate:fxToday()};
+  if(FX.editHolding){const h=FX.d.holdings.find(x=>x.id===FX.editHolding);if(h)Object.assign(h,rec);}
+  else FX.d.holdings.push(Object.assign({id:fxId()},rec));
+  fxCancelHolding();fxSave('holdings');showToast('✅ Holding saved','success');fxRefresh();
+}
+function fxEditHolding(id){
+  const h=FX.d.holdings.find(x=>x.id===id);if(!h)return;
+  FX.editHolding=id;
+  fxSet('hSym',h.sym);fxSet('hName',h.name||'');fxSet('hUnits',h.units);fxSet('hAvg',h.avg);fxSet('hPrice',h.price);
+  fxEl('hSave').textContent='Save';fxEl('hCancel').style.display='inline';fxEl('fxHoldTitle').textContent='Edit '+h.sym;
+  fxEl('hSym').scrollIntoView({behavior:'smooth',block:'center'});
+}
+function fxCancelHolding(){
+  FX.editHolding=null;['hSym','hName','hUnits','hAvg','hPrice'].forEach(i=>fxSet(i,''));
+  fxEl('hSave').textContent='Add';fxEl('hCancel').style.display='none';fxEl('fxHoldTitle').textContent='Add a holding';
+}
+function fxPrice(id){
+  const h=FX.d.holdings.find(x=>x.id===id);if(!h)return;
+  const v=prompt('Current price of '+h.sym+' (NPR):',h.price);if(v===null)return;
+  const p=parseFloat(v);if(!(p>=0)){showToast('⚠️ Enter a valid price','error');return;}
+  h.price=p;h.priceDate=fxToday();fxSave('holdings');fxRefresh();
+}
+function fxDelHolding(id){
+  if(!confirm('Remove this holding?'))return;
+  FX.d.holdings=FX.d.holdings.filter(h=>h.id!==id);fxSave('holdings');fxRefresh();
+}
+function fxRenderInvest(){
+  const c=fxCalc(),H=FX.d.holdings;
+  const t=fxEl('fxInvTiles');t.className='fx-tiles';
+  t.innerHTML=fxTile('Current value',fxMoney(c.inv),H.length+' holding'+(H.length===1?'':'s'))+fxTile('Cost',fxMoney(c.cost),'what you paid')+fxTile('Gain / loss',fxGain(c.pnl,c.cost>0?c.pnl/c.cost:null),'')+
+    fxTile('Monthly SIP',fxMoney(+FX.d.settings.sipAmount||0),+FX.d.settings.sipAmount>0?'on day '+(+FX.d.settings.sipDay||1):'set it in Plan');
+  const vals=H.map(h=>({sym:h.sym,v:(+h.units||0)*(+h.price||0)})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v),tot=vals.reduce((a,x)=>a+x.v,0);
+  fxEl('fxAlloc').innerHTML=tot>0
+    ?'<div class="fx-alloc" role="img" aria-label="Portfolio allocation">'+vals.map((x,i)=>'<div style="width:'+(x.v/tot*100)+'%;background:'+FX_COLORS[i%FX_COLORS.length]+'"></div>').join('')+'</div><div class="fx-legend">'+vals.map((x,i)=>'<span><i style="background:'+FX_COLORS[i%FX_COLORS.length]+'"></i>'+fxEsc(x.sym)+' '+(x.v/tot*100).toFixed(0)+'%</span>').join('')+'</div>'
+    :'<div class="fx-empty">Add a holding to see how your money is spread.</div>';
+  fxEl('fxHold').innerHTML=H.length?H.slice().sort((a,b)=>b.units*b.price-a.units*a.price).map(h=>{
+    const v=h.units*h.price,cost=h.units*h.avg,pnl=v-cost;
+    return '<tr><td><span class="sym">'+fxEsc(h.sym)+'</span>'+(h.name?'<span class="sub">'+fxEsc(h.name)+'</span>':'')+'</td><td class="r">'+fxNum(h.units)+'</td><td class="r">'+fxNum(h.avg)+'</td><td class="r">'+fxNum(h.price)+'</td><td class="r">'+fxMoney(v)+'</td><td class="r">'+fxGain(pnl,cost>0?pnl/cost:null)+'</td>'+
+      '<td class="r"><button class="fx-mini" onclick="fxPrice('+h.id+')">Price</button><button class="fx-mini" onclick="fxEditHolding('+h.id+')">Edit</button><button class="fx-x" aria-label="Remove holding" onclick="fxDelHolding('+h.id+')">✕</button></td></tr>';
+  }).join(''):'<tr><td colspan="7" class="fx-empty">No holdings yet.</td></tr>';
+  const stale=H.filter(h=>h.priceDate&&(Date.now()-new Date(h.priceDate+'T00:00:00'))>14*864e5);
+  fxEl('fxHoldNote').textContent=stale.length?'Prices not updated in 14+ days: '+stale.map(h=>h.sym).join(', ')+'. Tap “Price” to refresh.':'Prices are entered by hand — tap “Price” to update.';
 }
 
-// ── INCOME ──
-function saveIncome(){
-  const source = document.getElementById('incSource').value.trim();
-  const amount = parseFloat(document.getElementById('incAmount').value);
-  if(!source||!amount){showToast('⚠️ Fill all fields','error');return;}
-  finIncome.push({ id:Date.now(), source, amount, date:document.getElementById('incDate').value||new Date().toISOString().split('T')[0], type:document.getElementById('incType').value, notes:document.getElementById('incNotes').value });
-  saveFin(); initIncome();
-  ['incSource','incAmount','incDate','incNotes'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  showToast('✅ Income added!','success');
+/* ── PLAN ── */
+function fxSaveSettings(){
+  const s=FX.d.settings;
+  s.opening=parseFloat(fxVal('sOpen'))||0;s.sipAmount=parseFloat(fxVal('sSip'))||0;
+  s.sipDay=Math.min(28,Math.max(1,parseInt(fxVal('sSipDay'))||1));
+  fxSave('settings');showToast('✅ Settings saved','success');fxRefresh();
+}
+function fxAddGoal(){
+  const name=fxVal('gName'),target=parseFloat(fxVal('gTarget'));
+  if(!name||!(target>0)){showToast('⚠️ Goal name and target are required','error');return;}
+  FX.d.goals.push({id:fxId(),name:name,target:target,saved:parseFloat(fxVal('gSaved'))||0,deadline:fxVal('gDate')||''});
+  ['gName','gTarget','gSaved','gDate'].forEach(i=>fxSet(i,''));
+  fxSave('goals');showToast('✅ Goal added','success');fxRefresh();
+}
+function fxGoalAdd(id){
+  const g=FX.d.goals.find(x=>x.id===id);if(!g)return;
+  const v=prompt('Add to “'+g.name+'” (NPR):');if(v===null)return;
+  const a=parseFloat(v);if(!a){showToast('⚠️ Enter a number','error');return;}
+  g.saved=Math.max(0,(+g.saved||0)+a);fxSave('goals');fxRefresh();
+}
+function fxDelGoal(id){if(!confirm('Delete this goal?'))return;FX.d.goals=FX.d.goals.filter(g=>g.id!==id);fxSave('goals');fxRefresh();}
+function fxAddItem(){
+  const name=fxVal('iName'),value=parseFloat(fxVal('iVal'));
+  if(!name||!(value>=0)){showToast('⚠️ Name and value are required','error');return;}
+  FX.d.items.push({id:fxId(),kind:fxVal('iKind')==='debt'?'debt':'asset',name:name,value:value});
+  ['iName','iVal'].forEach(i=>fxSet(i,''));fxSave('items');showToast('✅ Added','success');fxRefresh();
+}
+function fxDelItem(id){if(!confirm('Remove this entry?'))return;FX.d.items=FX.d.items.filter(i=>i.id!==id);fxSave('items');fxRefresh();}
+function fxRenderPlan(){
+  const s=FX.d.settings;
+  if(document.activeElement!==fxEl('sOpen'))fxSet('sOpen',s.opening||'');
+  fxSet('sSip',s.sipAmount||'');fxSet('sSipDay',s.sipDay||1);
+  const avg=fxAvgNet3(),now=new Date();now.setHours(0,0,0,0);
+  fxEl('fxGoals').innerHTML=FX.d.goals.length?FX.d.goals.map(g=>{
+    const saved=+g.saved||0,target=+g.target||1,pct=Math.min(100,saved/target*100),left=Math.max(0,target-saved);let meta='';
+    if(left<=0)meta='<span class="fx-up">Goal reached ✓</span>';
+    else if(g.deadline){
+      const dl=new Date(g.deadline+'T00:00:00'),months=(dl.getFullYear()-now.getFullYear())*12+dl.getMonth()-now.getMonth()+(dl.getDate()>=now.getDate()?0:-1);
+      meta=dl<now?'<span class="fx-down">Deadline passed — NPR '+fxNum(left)+' short</span>':'Needs '+fxMoney(left/Math.max(1,months))+' / month to finish by '+dl.toLocaleDateString('en-GB',{month:'short',year:'numeric'});
+    }else meta=avg>0?'At your recent saving pace (~NPR '+fxNum(avg)+'/mo): about '+Math.ceil(left/avg)+' months':'Log income and expenses to estimate a finish date';
+    return '<div class="fx-goal"><div class="top"><strong>'+fxEsc(g.name)+'</strong><span>'+fxMoney(saved)+' / '+fxMoney(target)+'</span></div>'+
+      '<div class="meta">'+meta+'</div><div class="fx-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct.toFixed(0)+'" aria-label="'+fxEsc(g.name)+' progress"><div class="fx-fill" style="width:'+pct+'%"></div></div>'+
+      '<div style="margin-top:.5rem"><button class="fx-mini" onclick="fxGoalAdd('+g.id+')">+ Add saved</button><button class="fx-x" aria-label="Delete goal" onclick="fxDelGoal('+g.id+')">✕</button></div></div>';
+  }).join(''):'<div class="fx-empty">No goals yet — add one above.</div>';
+  const grp=(kind,title)=>{const l=FX.d.items.filter(i=>i.kind===kind);if(!l.length)return '';
+    return '<div class="fx-grp">'+title+' · '+fxMoney(l.reduce((a,i)=>a+(+i.value||0),0))+'</div>'+l.map(i=>'<div class="fx-item"><span>'+fxEsc(i.name)+'</span><span>'+fxMoney(i.value)+' <button class="fx-x" aria-label="Remove" onclick="fxDelItem('+i.id+')">✕</button></span></div>').join('');};
+  fxEl('fxItems').innerHTML=(grp('asset','Assets')+grp('debt','Debts'))||'<div class="fx-empty">Nothing added yet.</div>';
 }
 
-function initIncome(){
-  const list = document.getElementById('incomeList');
-  if(list){
-    if(!finIncome.length){ list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No income records yet</div>'; }
-    else{ list.innerHTML='<div class="card-title" style="margin-bottom:0.5rem">Income Records</div>'+finIncome.slice().reverse().map(i=>`
-      <div class="blog-admin-card">
-        <div style="flex:1"><div style="font-size:0.85rem;color:var(--text)">${i.source}</div><div style="font-size:0.68rem;color:var(--muted)">${i.date} · ${i.type}</div>${i.notes?`<div style="font-size:0.7rem;color:var(--muted);margin-top:0.2rem">${i.notes}</div>`:''}</div>
-        <div style="font-size:0.9rem;color:#22c55e;font-weight:500">+${fmtNPR(i.amount)}</div>
-        <button onclick="deleteIncome(${i.id})" style="padding:0.25rem 0.5rem;border-radius:100px;border:1px solid rgba(239,68,68,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.68rem;font-family:'Outfit',sans-serif">🗑️</button>
-      </div>`).join(''); }
-  }
-  // Income chart
-  const incCtx = document.getElementById('incomeChart');
-  if(incCtx){
-    if(incomeChartInst) incomeChartInst.destroy();
-    const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    incomeChartInst = new Chart(incCtx, {
-      type:'line',
-      data:{ labels:months.slice(0,new Date().getMonth()+1), datasets:[{ label:'Income (NPR)', data:months.slice(0,new Date().getMonth()+1).map(()=>MONTHLY_INCOME), borderColor:'#22c55e', backgroundColor:'rgba(34,197,94,0.1)', tension:0.4, fill:true }] },
-      options:{ responsive:true, maintainAspectRatio:true, plugins:{legend:{labels:{color:'rgba(255,255,255,0.7)'}}}, scales:{ x:{ticks:{color:'rgba(255,255,255,0.5)'},grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'rgba(255,255,255,0.5)'},grid:{color:'rgba(255,255,255,0.05)'},beginAtZero:true} } }
-    });
-  }
+/* ── EXPORT ── */
+function fxCsvCell(v){let s=String(v==null?'':v);if(/^[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"';}
+function fxDownload(name,rows){
+  const blob=new Blob(['﻿'+rows.map(r=>r.map(fxCsvCell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
 }
-function deleteIncome(id){ finIncome=finIncome.filter(i=>i.id!==id); saveFin(); initIncome(); showToast('🗑️ Deleted','success'); }
-
-// ── EXPENSE ──
-function saveExpense(){
-  const desc = document.getElementById('expDesc').value.trim();
-  const amount = parseFloat(document.getElementById('expAmount').value);
-  if(!desc||!amount){showToast('⚠️ Fill all fields','error');return;}
-  finExpenses.push({ id:Date.now(), desc, amount, cat:document.getElementById('expCat').value, date:document.getElementById('expDate').value||new Date().toISOString().split('T')[0] });
-  saveFin(); initExpense();
-  ['expDesc','expAmount','expDate'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  showToast('✅ Expense added!','success');
+function fxExport(){
+  const d=fxToday();
+  fxDownload('finance-ledger-'+d+'.csv',[['date','type','category','note','amount']].concat(FX.d.ledger.slice().sort((a,b)=>a.date<b.date?-1:1).map(t=>[t.date,t.type,t.category,t.note,t.amount])));
+  if(FX.d.holdings.length)setTimeout(()=>fxDownload('finance-holdings-'+d+'.csv',[['symbol','name','units','avg_price','current_price','price_date']].concat(FX.d.holdings.map(h=>[h.sym,h.name,h.units,h.avg,h.price,h.priceDate]))),400);
+  showToast('⤓ Backup downloaded','success');
 }
-
-function getExpensesByMonth(month){ const yr=new Date().getFullYear(); return finExpenses.filter(e=>{ const d=new Date(e.date); return d.getMonth()===month&&d.getFullYear()===yr; }).reduce((a,e)=>a+e.amount,0); }
-function getTotalExpensesThisMonth(){ return getExpensesByMonth(new Date().getMonth()); }
-
-function initExpense(){
-  const BUDGETS = {Food:800,Education:500,Internet:500,Transport:300,Medical:200,Investment:1000,Entertainment:300,Shopping:400,Others:300};
-  const thisMonth = finExpenses.filter(e=>{ const d=new Date(e.date); return d.getMonth()===new Date().getMonth()&&d.getFullYear()===new Date().getFullYear(); });
-  const byCat = {};
-  Object.keys(BUDGETS).forEach(k=>byCat[k]=0);
-  thisMonth.forEach(e=>{ if(byCat[e.cat]!==undefined) byCat[e.cat]+=e.amount; });
-
-  const budget = document.getElementById('budgetTracker');
-  if(budget){
-    budget.innerHTML = Object.entries(BUDGETS).map(([cat,budg])=>{
-      const spent = byCat[cat]||0;
-      const pct = Math.min((spent/budg*100),100).toFixed(0);
-      const over = spent>budg;
-      return `<div style="margin-bottom:0.8rem">
-        <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--text2);margin-bottom:0.25rem">
-          <span>${cat}</span><span style="color:${over?'#ef4444':'var(--muted)'}">${fmtNPR(spent)} / ${fmtNPR(budg)}</span>
-        </div>
-        <div class="goal-bar-wrap"><div class="goal-bar-fill" style="width:${pct}%;background:${over?'#ef4444':'linear-gradient(90deg,var(--gold),#e8c87a)'}"></div></div>
-      </div>`;
-    }).join('');
-  }
-
-  // Expense pie
-  const epCtx = document.getElementById('expensePieChart');
-  if(epCtx){
-    if(expensePieInst) expensePieInst.destroy();
-    const cats=Object.keys(byCat).filter(k=>byCat[k]>0);
-    expensePieInst = new Chart(epCtx, {
-      type:'doughnut',
-      data:{ labels:cats, datasets:[{ data:cats.map(k=>byCat[k]), backgroundColor:['#ef4444','#3b82f6','#22c55e','#f59e0b','#a855f7','#06b6d4','#ec4899','#84cc16','#6366f1'], borderWidth:1, borderColor:'rgba(0,0,0,0.3)' }] },
-      options:{ responsive:true, maintainAspectRatio:true, plugins:{legend:{position:'right',labels:{color:'rgba(255,255,255,0.7)',font:{size:10}}}} }
-    });
-  }
-
-  const list = document.getElementById('expenseList');
-  if(list){
-    if(!finExpenses.length){ list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No expenses yet</div>'; return; }
-    list.innerHTML='<div class="card-title" style="margin-bottom:0.5rem">Recent Expenses</div>'+finExpenses.slice().reverse().slice(0,20).map(e=>`
-      <div class="blog-admin-card">
-        <span style="font-size:1.1rem">${{Food:'🍛',Education:'📚',Internet:'🌐',Transport:'🚌',Medical:'💊',Investment:'📈',Entertainment:'🎬',Shopping:'🛍️',Others:'📦'}[e.cat]||'📦'}</span>
-        <div style="flex:1"><div style="font-size:0.82rem;color:var(--text)">${e.desc}</div><div style="font-size:0.65rem;color:var(--muted)">${e.date} · ${e.cat}</div></div>
-        <div style="font-size:0.85rem;color:#ef4444">-${fmtNPR(e.amount)}</div>
-        <button onclick="deleteExpense(${e.id})" style="padding:0.25rem 0.5rem;border-radius:100px;border:1px solid rgba(239,68,68,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.68rem;font-family:'Outfit',sans-serif">🗑️</button>
-      </div>`).join('');
-  }
-}
-function deleteExpense(id){ finExpenses=finExpenses.filter(e=>e.id!==id); saveFin(); initExpense(); showToast('🗑️ Deleted','success'); }
-
-// ── SIP ──
-function initSIP(){
-  const now = new Date();
-  const months = (now.getFullYear()-SIP_START_DATE.getFullYear())*12+(now.getMonth()-SIP_START_DATE.getMonth());
-  const totalInvested = months*SIP_MONTHLY;
-  const rate = 12/100/12;
-  const expected = SIP_MONTHLY*((Math.pow(1+rate,months*1)-1)/rate)*(1+rate);
-  const nextDate = new Date(now.getFullYear(),now.getMonth()+1,1);
-
-  const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
-  setEl('sipTotalInvested', fmtNPR(totalInvested));
-  setEl('sipMonthsLabel', months+' months invested');
-  setEl('sipNextDate', nextDate.toLocaleDateString('en-NP',{day:'numeric',month:'short',year:'numeric'}));
-  setEl('sipExpected', fmtNPR(expected));
-
-  // Growth chart
-  const sipCtx = document.getElementById('sipGrowthChart');
-  if(sipCtx){
-    if(sipGrowthInst) sipGrowthInst.destroy();
-    const labels=[], invested=[], growth=[];
-    for(let m=1;m<=60;m++){
-      labels.push('M'+m);
-      invested.push(m*SIP_MONTHLY);
-      const val = SIP_MONTHLY*((Math.pow(1+rate,m)-1)/rate)*(1+rate);
-      growth.push(Math.round(val));
-    }
-    sipGrowthInst = new Chart(sipCtx, {
-      type:'line',
-      data:{ labels, datasets:[
-        { label:'Expected Value', data:growth, borderColor:'#22c55e', backgroundColor:'rgba(34,197,94,0.1)', tension:0.4, fill:true },
-        { label:'Amount Invested', data:invested, borderColor:'#c9a96e', backgroundColor:'rgba(201,169,110,0.05)', tension:0.4, borderDash:[5,5] }
-      ]},
-      options:{ responsive:true, maintainAspectRatio:true, plugins:{legend:{labels:{color:'rgba(255,255,255,0.7)',font:{size:10}}}}, scales:{ x:{ticks:{color:'rgba(255,255,255,0.4)',font:{size:9},maxTicksLimit:12},grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'rgba(255,255,255,0.5)'},grid:{color:'rgba(255,255,255,0.05)'},beginAtZero:true} } }
-    });
-  }
-  calcSIP();
-}
-
-function calcSIP(){
-  const amt = parseFloat(document.getElementById('calcAmt')?.value)||1000;
-  const rate = (parseFloat(document.getElementById('calcRate')?.value)||12)/100/12;
-  const yrs = parseFloat(document.getElementById('calcYears')?.value)||5;
-  const months = yrs*12;
-  const invested = amt*months;
-  const value = amt*((Math.pow(1+rate,months)-1)/rate)*(1+rate);
-  const returns = value-invested;
-  const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
-  setEl('calcInvested', fmtNPR(invested));
-  setEl('calcValue', fmtNPR(value));
-  setEl('calcReturns', fmtNPR(returns));
-}
-
-// ── IPO ──
-function saveIPO(){
-  const name = document.getElementById('ipoName').value.trim();
-  if(!name){showToast('⚠️ Company name required','error');return;}
-  finIPOs.push({ id:Date.now(), name, sym:document.getElementById('ipoSym').value, status:document.getElementById('ipoStatus').value, price:parseFloat(document.getElementById('ipoPrice').value)||100, openDate:document.getElementById('ipoOpen').value, closeDate:document.getElementById('ipoClose').value, units:parseInt(document.getElementById('ipoUnits').value)||0, listingPrice:parseFloat(document.getElementById('ipoListing').value)||0 });
-  saveFin(); renderIPOs();
-  showToast('✅ IPO added!','success');
-}
-
-function renderIPOs(){
-  const list = document.getElementById('ipoList');
-  if(!list) return;
-  if(!finIPOs.length){ list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No IPO records yet. Add your first IPO above!</div>'; return; }
-  list.innerHTML = finIPOs.slice().reverse().map(i=>{
-    const cost = i.price*i.units;
-    const listVal = i.listingPrice*i.units;
-    const gain = listVal-cost;
-    return `<div class="blog-admin-card" style="flex-direction:column;align-items:flex-start;gap:0.6rem">
-      <div style="display:flex;align-items:center;gap:0.8rem;width:100%">
-        <div style="flex:1"><div style="font-size:0.88rem;color:var(--text)">${i.name} ${i.sym?'('+i.sym+')':''}</div>
-          <div style="font-size:0.65rem;color:var(--muted);margin-top:0.15rem">${i.openDate?i.openDate+' → ':''} ${i.closeDate||''}</div>
-        </div>
-        <span class="ipo-status ${i.status}">${i.status.charAt(0).toUpperCase()+i.status.slice(1)}</span>
-        <button onclick="deleteIPO(${i.id})" style="padding:0.25rem 0.5rem;border-radius:100px;border:1px solid rgba(239,68,68,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.68rem;font-family:'Outfit',sans-serif">🗑️</button>
-      </div>
-      <div style="display:flex;gap:1.5rem;font-size:0.7rem;color:var(--muted)">
-        <span>Issue: <strong style="color:var(--text)">NPR ${i.price}</strong></span>
-        <span>Units: <strong style="color:var(--text)">${i.units}</strong></span>
-        <span>Cost: <strong style="color:var(--text)">${fmtNPR(cost)}</strong></span>
-        ${i.listingPrice?`<span>Listing: <strong style="color:var(--text)">NPR ${i.listingPrice}</strong></span><span>P&L: <strong style="color:${gain>=0?'#22c55e':'#ef4444'}">${gain>=0?'+':''} ${fmtNPR(gain)}</strong></span>`:''}
-      </div>
-    </div>`;
-  }).join('');
-}
-function deleteIPO(id){ finIPOs=finIPOs.filter(i=>i.id!==id); saveFin(); renderIPOs(); showToast('🗑️ Deleted','success'); }
-
-// ── WATCHLIST ──
-function saveWatchlist(){
-  const sym = document.getElementById('wlSym').value.trim().toUpperCase();
-  if(!sym){showToast('⚠️ Symbol required','error');return;}
-  finWatchlist.push({ id:Date.now(), sym, name:document.getElementById('wlName').value, price:parseFloat(document.getElementById('wlPrice').value)||0, target:parseFloat(document.getElementById('wlTarget').value)||0, high52:parseFloat(document.getElementById('wl52h').value)||0, low52:parseFloat(document.getElementById('wl52l').value)||0, addedAt:new Date().toLocaleDateString() });
-  saveFin(); renderWatchlist();
-  ['wlSym','wlName','wlPrice','wlTarget','wl52h','wl52l'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  showToast('✅ Added to watchlist!','success');
-}
-function renderWatchlist(){
-  const c = document.getElementById('watchlistContainer');
-  if(!c) return;
-  if(!finWatchlist.length){ c.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">Watchlist empty. Add stocks to track!</div>'; return; }
-  c.innerHTML = finWatchlist.map(w=>{
-    const pctToTarget = w.target?((w.target-w.price)/w.price*100).toFixed(1):0;
-    return `<div class="watchlist-row">
-      <span class="wl-sym">${w.sym}</span>
-      <div class="wl-name">${w.name||'—'}<div style="font-size:0.58rem;margin-top:0.1rem;color:var(--muted)">Added: ${w.addedAt}</div></div>
-      <div>
-        <div class="wl-price">NPR ${w.price.toLocaleString()}</div>
-        <div style="font-size:0.6rem;color:var(--muted);text-align:right">Target: ${w.target?'NPR '+w.target:'—'}</div>
-      </div>
-      <div class="wl-change ${pctToTarget>=0?'profit':'loss'}">${pctToTarget>=0?'▲':'▼'} ${Math.abs(pctToTarget)}%<div style="font-size:0.58rem;color:var(--muted);text-align:right">to target</div></div>
-      <div style="font-size:0.65rem;color:var(--muted);min-width:80px;text-align:right">H: ${w.high52||'—'}<br/>L: ${w.low52||'—'}</div>
-      <button onclick="deleteWatchlist(${w.id})" style="padding:0.25rem 0.5rem;border-radius:100px;border:1px solid rgba(239,68,68,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.68rem;font-family:'Outfit',sans-serif">✕</button>
-    </div>`;
-  }).join('');
-}
-function deleteWatchlist(id){ finWatchlist=finWatchlist.filter(w=>w.id!==id); saveFin(); renderWatchlist(); }
-
-// ── GOALS ──
-function saveGoal(){
-  const name = document.getElementById('goalName').value.trim();
-  const target = parseFloat(document.getElementById('goalTarget').value);
-  if(!name||!target){showToast('⚠️ Name and target required','error');return;}
-  finGoals.push({ id:Date.now(), name, emoji:document.getElementById('goalEmoji').value||'🎯', target, current:parseFloat(document.getElementById('goalCurrent').value)||0, deadline:document.getElementById('goalDeadline').value, monthly:parseFloat(document.getElementById('goalMonthly').value)||0 });
-  saveFin(); renderGoals();
-  ['goalName','goalEmoji','goalTarget','goalCurrent','goalDeadline','goalMonthly'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  showToast('✅ Goal added!','success');
-}
-function renderGoals(){
-  const list = document.getElementById('goalsList');
-  if(!list) return;
-  if(!finGoals.length){ list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--muted)">No goals yet. Add your first financial goal!</div>'; return; }
-  list.innerHTML = finGoals.map(g=>{
-    const pct = Math.min((g.current/g.target*100),100).toFixed(1);
-    const remaining = g.target-g.current;
-    const months = g.monthly>0?Math.ceil(remaining/g.monthly):null;
-    const eta = months?`~${months} months to complete`:'Add monthly contribution';
-    return `<div class="goal-card">
-      <div class="goal-header">
-        <div style="display:flex;align-items:center;gap:0.5rem">
-          <span style="font-size:1.2rem">${g.emoji}</span>
-          <span class="goal-name">${g.name}</span>
-          ${parseFloat(pct)>=100?'<span class="fin-badge up">✅ Complete</span>':''}
-        </div>
-        <div style="display:flex;align-items:center;gap:0.5rem">
-          <button onclick="addToGoal(${g.id})" style="padding:0.25rem 0.6rem;border-radius:100px;border:1px solid rgba(34,197,94,0.3);background:rgba(34,197,94,0.08);color:#22c55e;cursor:pointer;font-size:0.65rem;font-family:'Outfit',sans-serif">+ Add</button>
-          <button onclick="deleteGoal(${g.id})" style="padding:0.25rem 0.5rem;border-radius:100px;border:1px solid rgba(239,68,68,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.65rem;font-family:'Outfit',sans-serif">🗑️</button>
-        </div>
-      </div>
-      <div class="goal-bar-wrap"><div class="goal-bar-fill" style="width:${pct}%"></div></div>
-      <div class="goal-meta">
-        <span>${fmtNPR(g.current)} / ${fmtNPR(g.target)}</span>
-        <span>${pct}%</span>
-        <span>${g.deadline?'Due: '+g.deadline:eta}</span>
-      </div>
-      <div style="font-size:0.62rem;color:var(--muted);margin-top:0.3rem">${eta}</div>
-    </div>`;
-  }).join('');
-}
-function addToGoal(id){
-  const amt = parseFloat(prompt('Add amount (NPR):'));
-  if(!amt||isNaN(amt)) return;
-  const g = finGoals.find(g=>g.id===id);
-  if(g){ g.current=Math.min(g.current+amt,g.target); saveFin(); renderGoals(); showToast('✅ Progress updated!','success'); }
-}
-function deleteGoal(id){ finGoals=finGoals.filter(g=>g.id!==id); saveFin(); renderGoals(); }
-
-// ── CALENDAR ──
-function renderCalendar(){
-  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const title = document.getElementById('calTitle');
-  if(title) title.textContent = months[calMonth]+' '+calYear;
-  const grid = document.getElementById('calGrid');
-  if(!grid) return;
-  const firstDay = new Date(calYear,calMonth,1).getDay();
-  const daysInMonth = new Date(calYear,calMonth+1,0).getDate();
-  const today = new Date();
-  const finEvents = getFinEvents();
-  let html = days.map(d=>`<div class="fin-cal-day header">${d}</div>`).join('');
-  for(let i=0;i<firstDay;i++) html+=`<div class="fin-cal-day"></div>`;
-  for(let d=1;d<=daysInMonth;d++){
-    const isToday = d===today.getDate()&&calMonth===today.getMonth()&&calYear===today.getFullYear();
-    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const hasEvent = finEvents.some(e=>e.date===dateStr);
-    html+=`<div class="fin-cal-day${isToday?' today':''}${hasEvent?' has-event':''}" onclick="showCalEvents('${dateStr}')" title="${dateStr}">${d}</div>`;
-  }
-  grid.innerHTML = html;
-  renderCalEvents();
-}
-function calNav(dir){ calMonth+=dir; if(calMonth>11){calMonth=0;calYear++;} if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
-function getFinEvents(){
-  const events=[];
-  const now = new Date();
-  // SIP due on 1st each month
-  for(let m=0;m<12;m++){ events.push({date:`${now.getFullYear()}-${String(m+1).padStart(2,'0')}-01`,type:'SIP',label:'SIP Due — NPR 1,000'}); }
-  // Govt allowance on 25th
-  for(let m=0;m<12;m++){ events.push({date:`${now.getFullYear()}-${String(m+1).padStart(2,'0')}-25`,type:'Income',label:'Govt Allowance — NPR 2,160'}); }
-  // Army allowance every 6 months
-  events.push({date:`${now.getFullYear()}-01-15`,type:'Income',label:'Army Allowance — NPR 9,000'});
-  events.push({date:`${now.getFullYear()}-07-15`,type:'Income',label:'Army Allowance — NPR 9,000'});
-  // IPO events
-  finIPOs.forEach(i=>{ if(i.openDate) events.push({date:i.openDate,type:'IPO',label:'IPO Opens: '+i.name}); if(i.closeDate) events.push({date:i.closeDate,type:'IPO',label:'IPO Closes: '+i.name}); });
-  return events;
-}
-function showCalEvents(date){
-  const events = getFinEvents().filter(e=>e.date===date);
-  const el = document.getElementById('calEvents');
-  if(!el) return;
-  if(!events.length){ el.innerHTML=`<div style="text-align:center;padding:1rem;color:var(--muted);font-size:0.78rem">No events on ${date}</div>`; return; }
-  el.innerHTML=`<div class="card-title" style="margin-bottom:0.5rem">Events — ${date}</div>`+events.map(e=>`
-    <div class="notif-item">
-      <div class="notif-icon" style="background:${e.type==='SIP'?'rgba(168,85,247,0.15)':e.type==='Income'?'rgba(34,197,94,0.15)':'rgba(59,130,246,0.15)'}">
-        ${e.type==='SIP'?'🔄':e.type==='Income'?'💵':'🏦'}
-      </div>
-      <div><div class="notif-text">${e.label}</div><div class="notif-time">${e.type}</div></div>
-    </div>`).join('');
-}
-function renderCalEvents(){ showCalEvents(new Date().toISOString().split('T')[0]); }
-
-// ── NOTIFICATIONS ──
-function renderNotifications(){
-  const now = new Date();
-  const list = document.getElementById('notifList');
-  if(!list) return;
-  const notifs=[
-    {icon:'🔄',color:'rgba(168,85,247,0.15)',title:'SIP Due in 3 Days',desc:`NPR ${SIP_MONTHLY.toLocaleString()} — SSIS Siddharth Capital`,time:'Upcoming'},
-    {icon:'💵',color:'rgba(34,197,94,0.15)',title:'Govt Allowance Expected',desc:'NPR 2,160 — 25th of this month',time:'Regular'},
-    {icon:'📈',color:'rgba(201,169,110,0.1)',title:'Portfolio Value Updated',desc:`Total: ${fmtNPR(getPortfolioTotal())} — ${PORTFOLIO.length} stocks`,time:'Just now'},
-    {icon:'🎯',color:'rgba(59,130,246,0.15)',title:'Goals Reminder',desc:`${finGoals.length} active goals. Check your progress!`,time:'Daily'},
-    {icon:'⚠️',color:'rgba(239,68,68,0.12)',title:'IPO Alert',desc:'Check Meroshare for new IPO openings',time:'Weekly check'},
-    {icon:'📊',color:'rgba(34,197,94,0.1)',title:'Monthly Report Ready',desc:`Month: ${now.toLocaleString('en-NP',{month:'long'})} — Review income & expenses`,time:'Monthly'}
-  ];
-  list.innerHTML = notifs.map(n=>`
-    <div class="notif-item">
-      <div class="notif-icon" style="background:${n.color}">${n.icon}</div>
-      <div><div class="notif-text">${n.title}</div><div style="font-size:0.72rem;color:var(--text2);margin-top:0.15rem">${n.desc}</div><div class="notif-time">${n.time}</div></div>
-    </div>`).join('');
-}
-
-// ── INIT when finance tab opened ──
-const origShowTab = typeof showTab !== 'undefined' ? showTab : null;
-
-
-// ══════════════════════════════════
-// ASSETS & LIABILITIES
-// ══════════════════════════════════
-function saveAsset(){
-  const name = document.getElementById('assetName').value.trim();
-  const value = parseFloat(document.getElementById('assetValue').value);
-  if(!name||!value){showToast('⚠️ Name and value required','error');return;}
-  finAssets.push({
-    id:Date.now(), name, value, 
-    cat:document.getElementById('assetCat').value,
-    date:document.getElementById('assetDate').value||new Date().toISOString().split('T')[0],
-    emoji:document.getElementById('assetEmoji').value||'📦',
-    notes:document.getElementById('assetNotes').value
-  });
-  saveFin(); renderAssets();
-  ['assetName','assetValue','assetDate','assetEmoji','assetNotes'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  showToast('✅ Asset added!','success');
-}
-
-function saveLiability(){
-  const name = document.getElementById('liabName').value.trim();
-  const amt = parseFloat(document.getElementById('liabAmt').value);
-  if(!name||!amt){showToast('⚠️ Fill required fields','error');return;}
-  finLiabilities.push({
-    id:Date.now(), name, amt,
-    type:document.getElementById('liabType').value,
-    person:document.getElementById('liabPerson').value,
-    due:document.getElementById('liabDue').value,
-    notes:document.getElementById('liabNotes').value,
-    paid:false
-  });
-  saveFin(); renderAssets();
-  ['liabName','liabAmt','liabPerson','liabDue','liabNotes'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  showToast('✅ Added!','success');
-}
-
-function renderAssets(){
-  // Summary cards
-  const summary = document.getElementById('assetsSummary');
-  if(summary){
-    const totalAssets = getTotalAssets();
-    const totalLiabs = getTotalLiabilities();
-    const iOwe = finLiabilities.filter(l=>l.type==='I owe (debt)'&&!l.paid).reduce((a,l)=>a+l.amt,0);
-    const owedToMe = finLiabilities.filter(l=>l.type==='Someone owes me'&&!l.paid).reduce((a,l)=>a+l.amt,0);
-    summary.innerHTML = `
-      <div class="fin-card gold"><div class="fin-label">Total Assets</div><div class="fin-value sm">${fmtNPR(totalAssets)}</div><div class="fin-sub">${finAssets.length} items</div><span class="fin-icon">🏠</span></div>
-      <div class="fin-card red"><div class="fin-label">I Owe</div><div class="fin-value sm">${fmtNPR(iOwe)}</div><div class="fin-sub">My debts</div><span class="fin-icon">💳</span></div>
-      <div class="fin-card green"><div class="fin-label">Owed to Me</div><div class="fin-value sm">${fmtNPR(owedToMe)}</div><div class="fin-sub">To receive</div><span class="fin-icon">🤝</span></div>
-      <div class="fin-card blue"><div class="fin-label">Net Assets</div><div class="fin-value sm">${fmtNPR(totalAssets+owedToMe-iOwe)}</div><div class="fin-sub">Assets - Debts</div><span class="fin-icon">📊</span></div>
-    `;
-  }
-
-  // Assets list
-  const list = document.getElementById('assetsList');
-  if(list){
-    if(!finAssets.length){list.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:0.8rem">No assets yet. Add gadgets, property, valuables!</div>'; }
-    else{
-      // Group by category
-      const cats={};
-      finAssets.forEach(a=>{if(!cats[a.cat])cats[a.cat]=[];cats[a.cat].push(a);});
-      list.innerHTML = Object.entries(cats).map(([cat,items])=>`
-        <div style="margin-bottom:0.8rem">
-          <div style="font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.4rem">${cat}</div>
-          ${items.map(a=>`
-            <div class="blog-admin-card" style="margin-bottom:0.35rem">
-              <span style="font-size:1.3rem">${a.emoji||'📦'}</span>
-              <div style="flex:1">
-                <div style="font-size:0.85rem;color:var(--text)">${a.name}</div>
-                <div style="font-size:0.65rem;color:var(--muted)">${a.date}${a.notes?' · '+a.notes:''}</div>
-              </div>
-              <div style="font-size:0.88rem;color:var(--gold);font-weight:500">${fmtNPR(a.value)}</div>
-              <button onclick="deleteAsset(${a.id})" style="padding:0.25rem 0.5rem;border-radius:100px;border:1px solid rgba(239,68,68,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.68rem;font-family:'Outfit',sans-serif">🗑️</button>
-            </div>`).join('')}
-        </div>`).join('');
-    }
-  }
-
-  // Liabilities list
-  const liabList = document.getElementById('liabsList');
-  if(liabList){
-    if(!finLiabilities.length){liabList.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--muted);font-size:0.8rem">No liabilities yet.</div>';}
-    else{
-      liabList.innerHTML = finLiabilities.map(l=>`
-        <div class="blog-admin-card" style="${l.paid?'opacity:0.5':''}">
-          <span style="font-size:1.2rem">${l.type==='I owe (debt)'?'💳':'🤝'}</span>
-          <div style="flex:1">
-            <div style="font-size:0.85rem;color:var(--text)">${l.name}</div>
-            <div style="font-size:0.65rem;color:var(--muted)">${l.person?l.person+' · ':''}${l.due?'Due: '+l.due:''}</div>
-          </div>
-          <div style="text-align:right">
-            <div style="font-size:0.88rem;color:${l.type==='I owe (debt)'?'#ef4444':'#22c55e'};font-weight:500">${l.type==='I owe (debt)'?'-':'+'} ${fmtNPR(l.amt)}</div>
-            <div style="font-size:0.6rem;color:var(--muted)">${l.type}</div>
-          </div>
-          ${!l.paid?`<button onclick="markPaid(${l.id})" style="padding:0.25rem 0.6rem;border-radius:100px;border:1px solid rgba(34,197,94,0.3);background:rgba(34,197,94,0.08);color:#22c55e;cursor:pointer;font-size:0.65rem;font-family:'Outfit',sans-serif">✅ Paid</button>`:'<span style="font-size:0.65rem;color:#22c55e">✅ Cleared</span>'}
-          <button onclick="deleteLiab(${l.id})" style="padding:0.25rem 0.5rem;border-radius:100px;border:1px solid rgba(239,68,68,0.25);background:transparent;color:var(--danger);cursor:pointer;font-size:0.68rem;font-family:'Outfit',sans-serif">🗑️</button>
-        </div>`).join('');
-    }
-  }
-}
-
-function deleteAsset(id){ finAssets=finAssets.filter(a=>a.id!==id); saveFin(); renderAssets(); showToast('🗑️ Asset removed','success'); }
-function deleteLiab(id){ finLiabilities=finLiabilities.filter(l=>l.id!==id); saveFin(); renderAssets(); showToast('🗑️ Removed','success'); }
-function markPaid(id){ const l=finLiabilities.find(l=>l.id===id); if(l){l.paid=true; saveFin(); renderAssets(); showToast('✅ Marked as paid!','success');} }
 
 // ══════════ KEYBOARD SHORTCUTS ══════════
 document.addEventListener('keydown',e=>{
