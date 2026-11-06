@@ -551,6 +551,7 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
 .fx-ta:focus{outline:2px solid var(--gold);outline-offset:1px;}
 .fx-check{display:flex;gap:.5rem;align-items:flex-start;font-size:.78rem;color:var(--text2);margin-top:.8rem;line-height:1.4;}
 .fx-rep{font-size:.74rem;color:var(--text2);padding:.25rem 0 0 .2rem;}
+.fx-auth{background:var(--gold-dim);border:1px solid rgba(201,169,110,.3);border-radius:var(--r-lg);padding:1rem 1.2rem;margin-bottom:.9rem;color:var(--text);font-size:.85rem;}
 </style>
 </head>
 <body>
@@ -921,6 +922,17 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
               <button class="fx-ico" id="fxHideBtn" onclick="fxToggleHide()" aria-label="Hide amounts" aria-pressed="false" title="Hide amounts">◐</button>
               <button class="fx-ico" onclick="fxExport()" aria-label="Download CSV backup" title="Download CSV backup">⤓</button>
             </div>
+          </div>
+
+          <div class="fx-auth" id="fxAuth" style="display:none">
+            <strong>Turn on secure sync</strong>
+            <div class="fx-note" style="margin:.3rem 0 .8rem">Right now your finance data is saved only in this browser. Sign in with your Supabase admin account to back it up and open it on any device. Without this sign-in nobody can read it.</div>
+            <div class="fx-form">
+              <div class="fx-f fx-wide"><label for="fxEmail">Admin email</label><input id="fxEmail" type="email" autocomplete="username"/></div>
+              <div class="fx-f"><label for="fxPass">Password</label><input id="fxPass" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')fxSignIn()"/></div>
+              <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxSignIn()">Sign in &amp; sync</button></div>
+            </div>
+            <div class="fx-note" id="fxAuthMsg" role="status"></div>
           </div>
 
           <!-- OVERVIEW -->
@@ -2974,31 +2986,58 @@ function fxAcctById(id){return FX.d.accounts.find(a=>a.id===Number(id));}
 function fxTxAcct(t){const a=fxAcctById(t.acct);return a?a.id:(FX.d.accounts[0]?FX.d.accounts[0].id:null);}
 function fxAcctName(id){const a=fxAcctById(id);return a?a.name:'Unknown';}
 
-/* ── load / save ── */
+/* ── load / save ──
+   Sync needs a signed-in Supabase Auth session (finance_data is locked to your admin email by RLS).
+   Without a session the dashboard still works and keeps everything in this browser. */
+function fxHasMeaning(v){if(Array.isArray(v))return v.length>0;return !!(v&&(v.seeded||v.sipSym));}
+function fxAuthUI(show,msg){const e=fxEl('fxAuth');if(e)e.style.display=show?'block':'none';const m=fxEl('fxAuthMsg');if(m&&msg!==undefined)m.textContent=msg;}
+async function fxSession(){try{const r=await sb.auth.getSession();FX.auth=!!(r&&r.data&&r.data.session);}catch(e){FX.auth=false;}}
+async function fxPull(){
+  fxStatus('Syncing…');
+  const r=await sb.from('finance_data').select('category,data');
+  if(r.error){fxStatus('Not synced — '+r.error.message,true);return false;}
+  const remote={};(r.data||[]).forEach(x=>{if(x.data!=null)remote[x.category]=x.data;});
+  for(const k of FX_KEYS){
+    if(remote[k]!==undefined){FX.d[k]=remote[k];try{localStorage.setItem('fx2_'+k,JSON.stringify(remote[k]));}catch(e){}}
+    else if(fxHasMeaning(FX.d[k]))await fxSave(k);   // first sign-in: upload what was saved in this browser
+  }
+  if(FX.auth)fxStatus('Synced ✓');
+  return true;
+}
 async function fxLoad(){
   if(FX.loaded)return;
   FX.month=fxToday().slice(0,7);
   FX.hide=localStorage.getItem('fx_hide')==='1';
   FX_KEYS.forEach(k=>{try{const v=JSON.parse(localStorage.getItem('fx2_'+k)||'null');if(v!==null)FX.d[k]=v;}catch(e){}});
-  fxStatus('Syncing…');
-  try{
-    const r=await sb.from('finance_data').select('category,data');
-    if(r.error)throw r.error;
-    (r.data||[]).forEach(row=>{
-      if(FX_KEYS.includes(row.category)&&row.data!=null){FX.d[row.category]=row.data;try{localStorage.setItem('fx2_'+row.category,JSON.stringify(row.data));}catch(e){}}
-    });
-    fxStatus('Synced ✓');
-  }catch(e){fxStatus('Offline — saved on this device only',true);}
+  await fxSession();
+  if(FX.auth)await fxPull();
+  else{fxStatus('Saved on this device only',true);fxAuthUI(true);}
   FX.loaded=true;
   fxSeed();
 }
 async function fxSave(k){
   try{localStorage.setItem('fx2_'+k,JSON.stringify(FX.d[k]));}catch(e){}
+  if(!FX.auth){fxStatus('Saved on this device only — sign in to sync',true);return;}
   try{
     const r=await sb.from('finance_data').upsert({category:k,data:FX.d[k],updated_at:new Date().toISOString()},{onConflict:'category'});
     if(r.error)throw r.error;
     fxStatus('Synced ✓');
-  }catch(e){fxStatus('Not synced — '+(e.message||'error'),true);}
+  }catch(e){
+    if(e&&(e.code==='42501'||/row-level security/i.test(e.message||''))){FX.auth=false;fxAuthUI(true,'This sign-in is not allowed to save finance data. Sign in with the admin account whose email is in finance-setup.sql.');fxStatus('Not synced — sign-in needed',true);}
+    else fxStatus('Not synced — '+((e&&e.message)||'error'),true);
+  }
+}
+async function fxSignIn(){
+  const email=fxVal('fxEmail'),pw=fxEl('fxPass').value;
+  if(!email||!pw){fxAuthUI(true,'Enter your email and password.');return;}
+  fxAuthUI(true,'Signing in…');
+  try{
+    const r=await sb.auth.signInWithPassword({email:email,password:pw});
+    if(r.error)throw r.error;
+    fxEl('fxPass').value='';FX.auth=true;
+    if(await fxPull()){fxAuthUI(false,'');fxTab(FX.tab);showToast('✅ Finance sync is on','success');}
+    else fxAuthUI(true,'Signed in, but the finance table could not be read — run finance-setup.sql in Supabase first.');
+  }catch(e){FX.auth=false;fxAuthUI(true,'Sign-in failed: '+((e&&e.message)||'check your email and password'));}
 }
 // First run only: your accounts and the holdings from Mero Share (6 Nov 2026).
 // Balances start at 0 — use "Set balance" on each account. Avg prices are carried over from
