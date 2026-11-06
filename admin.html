@@ -547,6 +547,10 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
 .fx-btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold);}
 .fx-btn.ghost:hover{background:var(--gold-dim);}
 .fx-monthbar{flex-wrap:wrap;}
+.fx-ta{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text);padding:.6rem .7rem;font:300 .82rem 'Outfit',sans-serif;resize:vertical;}
+.fx-ta:focus{outline:2px solid var(--gold);outline-offset:1px;}
+.fx-check{display:flex;gap:.5rem;align-items:flex-start;font-size:.78rem;color:var(--text2);margin-top:.8rem;line-height:1.4;}
+.fx-rep{font-size:.74rem;color:var(--text2);padding:.25rem 0 0 .2rem;}
 </style>
 </head>
 <body>
@@ -908,6 +912,7 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
               <button class="fx-tab active" role="tab" data-ft="overview" onclick="fxTab('overview')">Overview</button>
               <button class="fx-tab" role="tab" data-ft="accounts" onclick="fxTab('accounts')">Accounts</button>
               <button class="fx-tab" role="tab" data-ft="cash" onclick="fxTab('cash')">Cash flow</button>
+              <button class="fx-tab" role="tab" data-ft="loans" onclick="fxTab('loans')">Lend / borrow</button>
               <button class="fx-tab" role="tab" data-ft="invest" onclick="fxTab('invest')">Investments</button>
               <button class="fx-tab" role="tab" data-ft="plan" onclick="fxTab('plan')">Plan</button>
             </div>
@@ -1013,11 +1018,54 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
             </div>
           </section>
 
+          <!-- LEND / BORROW -->
+          <section class="fx-pane" id="fxp-loans">
+            <div class="fx-tiles" id="fxLoanTiles"></div>
+            <div class="fx-grid2">
+              <div class="fx-box">
+                <h4>New lend / borrow</h4>
+                <div class="fx-form">
+                  <div class="fx-f fx-wide"><label for="lDir">What happened?</label><select id="lDir"><option value="lent">I gave money (they owe me)</option><option value="borrowed">I took money (I owe them)</option></select></div>
+                  <div class="fx-f fx-wide"><label for="lPerson">Person</label><input id="lPerson" maxlength="40" placeholder="Name"/></div>
+                  <div class="fx-f"><label for="lAmt">Amount (NPR)</label><input id="lAmt" type="number" inputmode="decimal" min="0" step="any"/></div>
+                  <div class="fx-f"><label for="lAcct">Money moved in/out of</label><select id="lAcct"></select></div>
+                  <div class="fx-f"><label for="lDate">Date</label><input id="lDate" type="date"/></div>
+                  <div class="fx-f"><label for="lDue">Return by (optional)</label><input id="lDue" type="date"/></div>
+                  <div class="fx-f fx-wide"><label for="lNote">Note (optional)</label><input id="lNote" maxlength="120" placeholder="Why / how"/></div>
+                  <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxAddLoan()">Add</button></div>
+                </div>
+                <label class="fx-check"><input type="checkbox" id="lSkip"/> Old loan — already reflected in my balances (don’t change any account)</label>
+              </div>
+              <div class="fx-box">
+                <h4>Record a repayment</h4>
+                <div class="fx-form">
+                  <div class="fx-f fx-wide"><label for="rLoan">Which loan</label><select id="rLoan"></select></div>
+                  <div class="fx-f"><label for="rAmt">Amount (NPR)</label><input id="rAmt" type="number" inputmode="decimal" min="0" step="any"/></div>
+                  <div class="fx-f"><label for="rAcct">Account</label><select id="rAcct"></select></div>
+                  <div class="fx-f"><label for="rDate">Date</label><input id="rDate" type="date"/></div>
+                  <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxRepay()">Record</button></div>
+                </div>
+                <div class="fx-note">When someone pays you back, the money goes into the account you pick; when you repay, it comes out of it. Part payments are fine.</div>
+              </div>
+            </div>
+            <div class="fx-grid2">
+              <div class="fx-box"><h4>Others owe you</h4><div id="fxLent"></div></div>
+              <div class="fx-box"><h4>You owe</h4><div id="fxBorrowed"></div></div>
+            </div>
+            <div class="fx-box"><h4>Settled</h4><div id="fxSettled"></div></div>
+          </section>
+
           <!-- INVESTMENTS -->
           <section class="fx-pane" id="fxp-invest">
             <div class="fx-tiles" id="fxInvTiles"></div>
             <div class="fx-box"><h4>Allocation</h4><div id="fxAlloc"></div></div>
 
+            <div class="fx-box">
+              <h4>Update prices from Mero Share</h4>
+              <textarea id="pasteBox" class="fx-ta" rows="4" aria-label="Paste Mero Share portfolio table" placeholder="Mero Share → My Portfolio → select the table → copy → paste here"></textarea>
+              <div style="margin-top:.6rem;max-width:220px"><button class="fx-btn" onclick="fxApplyPaste()">Update prices</button></div>
+              <div class="fx-note" id="fxPasteNote">Takes each row’s Last Transaction Price and units, and updates the matching holdings in one go (new symbols are added). Takes 10 seconds — gain / loss then shows today’s real figures.</div>
+            </div>
             <div class="fx-box">
               <h4>Monthly SIP</h4>
               <div class="fx-form">
@@ -2890,7 +2938,7 @@ async function deleteProject(id){
 // FINANCE DASHBOARD v3 — accounts + ledger, synced to Supabase table `finance_data`
 // Net worth = account balances + investments + other assets − debts
 // ══════════════════════════════════════════════════════
-const FX_KEYS=['accounts','ledger','holdings','goals','items','snaps','settings'];
+const FX_KEYS=['accounts','ledger','holdings','goals','items','snaps','settings','loans'];
 const FX_COLORS=['#c9a96e','#64b5f6','#81c784','#ba8cf0','#e8a070','#5fc7c0'];
 const FX_TYPE_LABEL={bank:'Bank',wallet:'Wallet',cash:'Cash'};
 const FX_CATS={
@@ -2898,7 +2946,7 @@ const FX_CATS={
   expense:['Food','Transport','Mobile / Data','Bills','Rent','Shopping','Health','Education','Entertainment','Investment','Other']
 };
 const FX={
-  d:{accounts:[],ledger:[],holdings:[],goals:[],items:[],snaps:[],settings:{sipSym:'',sipAmount:0,sipDay:1}},
+  d:{accounts:[],ledger:[],holdings:[],goals:[],items:[],snaps:[],loans:[],settings:{sipSym:'',sipAmount:0,sipDay:1}},
   month:null, loaded:false, hide:false, charts:{}, editHolding:null, tab:'overview'
 };
 
@@ -2985,6 +3033,7 @@ function fxBalances(){
     if(t.type==='income')b[from]+=a;
     else if(t.type==='expense')b[from]-=a;
     else if(t.type==='transfer'){b[from]-=a;if(b[t.to]!==undefined)b[t.to]+=a;}
+    else if(t.type==='loan')b[from]+=(t.flow==='in'?a:-a);
   });
   return b;
 }
@@ -2993,18 +3042,19 @@ function fxCalc(){
   const cash=Object.values(bal).reduce((a,v)=>a+v,0);
   let inv=0,cost=0;d.holdings.forEach(h=>{inv+=(+h.units||0)*(+h.price||0);cost+=(+h.units||0)*(+h.avg||0);});
   let assets=0,debts=0;d.items.forEach(i=>{if(i.kind==='debt')debts+=+i.value||0;else assets+=+i.value||0;});
-  return {cash,bal,inv,cost,pnl:inv-cost,assets,debts,nw:Math.round((cash+inv+assets-debts)*100)/100};
+  let recv=0,pay=0;(d.loans||[]).forEach(l=>{const o=fxLoanOut(l);if(l.dir==='borrowed')pay+=o;else recv+=o;});
+  return {cash,bal,inv,cost,pnl:inv-cost,assets,debts,recv,pay,nw:Math.round((cash+inv+assets+recv-debts-pay)*100)/100};
 }
 function fxMonthStats(ym,acct){
   let inc=0,exp=0;
   FX.d.ledger.forEach(t=>{
-    if(t.type==='transfer'||fxYM(t.date)!==ym)return;
+    if(t.type==='transfer'||t.type==='loan'||fxYM(t.date)!==ym)return;
     if(acct&&fxTxAcct(t)!==Number(acct))return;
     const a=+t.amount||0;if(t.type==='income')inc+=a;else exp+=a;
   });
   return {inc,exp,net:inc-exp,rate:inc>0?(inc-exp)/inc:null};
 }
-function fxHasData(){const d=FX.d;return d.ledger.length||d.items.length||d.goals.length||d.accounts.some(a=>+a.opening)||d.holdings.length;}
+function fxHasData(){const d=FX.d;return d.ledger.length||(d.loans||[]).length||d.items.length||d.goals.length||d.accounts.some(a=>+a.opening)||d.holdings.length;}
 function fxSnapshot(){
   if(!fxHasData())return;
   const ym=fxToday().slice(0,7),nw=fxCalc().nw,s=FX.d.snaps,i=s.findIndex(x=>x.ym===ym);
@@ -3027,7 +3077,7 @@ function fxOpen(){
 }
 function fxFillAccounts(){
   const opts=FX.d.accounts.map(a=>'<option value="'+a.id+'">'+fxEsc(a.name)+'</option>').join('');
-  ['fxAcct','tFrom','tTo','sipAcct'].forEach(id=>{const e=fxEl(id);if(!e)return;const keep=e.value;e.innerHTML=opts;if(keep&&fxAcctById(keep))e.value=keep;});
+  ['fxAcct','tFrom','tTo','sipAcct','lAcct','rAcct'].forEach(id=>{const e=fxEl(id);if(!e)return;const keep=e.value;e.innerHTML=opts;if(keep&&fxAcctById(keep))e.value=keep;});
   const to=fxEl('tTo');if(to&&FX.d.accounts.length>1&&to.value===fxEl('tFrom').value)to.selectedIndex=1;
   const f=fxEl('fxFilter');if(f){const keep=f.value;f.innerHTML='<option value="">All accounts</option>'+opts;if(keep&&fxAcctById(keep))f.value=keep;}
 }
@@ -3040,6 +3090,7 @@ function fxTab(name){
   if(name==='overview')fxRenderOverview();
   if(name==='accounts'){if(!fxVal('tDate'))fxSet('tDate',fxToday());fxRenderAccounts();}
   if(name==='cash'){fxCatOptions();if(!fxVal('fxDate'))fxSet('fxDate',fxToday());fxRenderCash();}
+  if(name==='loans'){if(!fxVal('lDate'))fxSet('lDate',fxToday());if(!fxVal('rDate'))fxSet('rDate',fxToday());fxRenderLoans();}
   if(name==='invest')fxRenderInvest();
   if(name==='plan')fxRenderPlan();
 }
@@ -3068,12 +3119,12 @@ function fxRenderOverview(){
   fxEl('fxBreak').innerHTML=
     '<div><b>'+fxMoney(c.cash)+'</b><span>Cash &amp; banks</span></div>'+
     '<div><b>'+fxMoney(c.inv)+'</b><span>Investments</span></div>'+
-    '<div><b>'+fxMoney(c.assets)+'</b><span>Other assets</span></div>'+
-    '<div><b>'+fxMoney(-c.debts)+'</b><span>Debts</span></div>';
+    '<div><b>'+fxMoney(c.assets+c.recv)+'</b><span>Other assets</span></div>'+
+    '<div><b>'+fxMoney(-(c.debts+c.pay))+'</b><span>Debts</span></div>';
   fxEl('fxAcctList').innerHTML=fxAcctRows(c);
   const recent=FX.d.ledger.slice().sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:b.id-a.id).slice(0,6);
   fxEl('fxRecent').innerHTML=recent.length?recent.map(t=>{
-    const amt=t.type==='income'?fxMoney(t.amount,true):t.type==='expense'?fxMoney(-t.amount):'<span class="fx-flat">'+fxMoney(t.amount)+'</span>';
+    const amt=fxTxAmt(t);
     const who=t.type==='transfer'?fxAcctName(t.acct)+' → '+fxAcctName(t.to):fxAcctName(fxTxAcct(t));
     return '<div class="fx-up-row"><span>'+fxEsc(t.type==='transfer'?'Transfer':t.category)+(t.note?' · '+fxEsc(t.note):'')+'<br/><small>'+fxEsc(t.date.slice(5))+' · '+fxEsc(who)+'</small></span><span class="'+(t.type==='income'?'fx-up':'')+'">'+amt+'</span></div>';
   }).join(''):'<div class="fx-empty">Nothing logged yet. Start in Accounts → “Set balance”, then log your first expense.</div>';
@@ -3083,7 +3134,7 @@ function fxRenderOverview(){
     fxTile('Spent · '+fxMonthLabel(ym),fxMoney(m.exp),'this month')+
     fxTile('Savings rate',m.rate==null?'—':'<span class="'+(m.rate>=0?'fx-up':'fx-down')+'">'+(m.rate*100).toFixed(0)+'%</span>',m.rate==null?'log income to see it':'of income kept')+
     fxTile('Investments',fxMoney(c.inv),c.cost>0?fxGain(c.pnl,c.pnl/c.cost):'<span class="fx-flat">no holdings yet</span>')+
-    fxTile('Debt',fxMoney(c.debts),c.debts>0?'to repay':'debt-free');
+    fxTile('Debt',fxMoney(c.debts+c.pay),(c.debts+c.pay)>0?'to repay':'debt-free');
   fxRenderUpcoming();
   fxDrawCharts();
 }
@@ -3095,7 +3146,8 @@ function fxUpcomingList(){
     const n=new Date(now.getFullYear(),now.getMonth()+(fxSipRecorded(fxYM(fxToday()))?1:0),day);
     out.push({when:n,label:s.sipSym+' SIP',amt:+s.sipAmount});
   }
-  FX.d.goals.forEach(g=>{if(g.deadline&&(+g.saved||0)<(+g.target||0))out.push({when:new Date(g.deadline+'T00:00:00'),label:'Goal: '+g.name,amt:(+g.target)-(+g.saved||0),goal:true});});
+  FX.d.goals.forEach(g=>{if(g.deadline&&(+g.saved||0)<(+g.target||0))out.push({when:new Date(g.deadline+'T00:00:00'),label:'Goal: '+g.name,amt:(+g.target)-(+g.saved||0),tag:'still needed'});});
+  (FX.d.loans||[]).forEach(l=>{const o=fxLoanOut(l);if(l.due&&o>0)out.push({when:new Date(l.due+'T00:00:00'),label:(l.dir==='borrowed'?'Repay ':'Collect from ')+l.person,amt:o,tag:l.dir==='borrowed'?'you owe':'owed to you'});});
   out.sort((a,b)=>a.when-b.when);
   return out.slice(0,5).map(o=>Object.assign(o,{days:Math.round((o.when-now)/864e5)}));
 }
@@ -3103,7 +3155,7 @@ function fxRenderUpcoming(){
   const l=fxUpcomingList();
   fxEl('fxUpcoming').innerHTML=l.length?l.map(o=>{
     const when=o.days<0?'overdue by '+(-o.days)+' d':o.days===0?'today':'in '+o.days+' d';
-    return '<div class="fx-up-row"><span>'+fxEsc(o.label)+'<br/><small>'+o.when.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+' · '+when+'</small></span><span>'+(o.goal?'<small>still needed</small><br/>':'')+fxMoney(o.amt)+'</span></div>';
+    return '<div class="fx-up-row"><span>'+fxEsc(o.label)+'<br/><small>'+o.when.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+' · '+when+'</small></span><span>'+(o.tag?'<small>'+fxEsc(o.tag)+'</small><br/>':'')+fxMoney(o.amt)+'</span></div>';
   }).join(''):'<div class="fx-empty">Nothing scheduled. Add a goal deadline or set your SIP in Investments.</div>';
 }
 function fxChartTheme(){
@@ -3199,9 +3251,9 @@ function fxRenderCash(){
   const rows=FX.d.ledger.filter(t=>fxYM(t.date)===ym&&(!acct||fxTxAcct(t)===Number(acct)||t.to===Number(acct))).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:b.id-a.id);
   fxEl('fxLedger').innerHTML=rows.length?rows.map(t=>{
     const isT=t.type==='transfer';
-    const amt=isT?'<span class="fx-flat">'+fxMoney(t.amount)+'</span>':t.type==='income'?fxMoney(t.amount,true):fxMoney(-t.amount);
+    const amt=fxTxAmt(t);
     return '<tr><td>'+fxEsc(t.date.slice(5))+'</td><td>'+fxEsc(isT?'Transfer':t.category)+'</td><td>'+fxEsc(isT?fxAcctName(t.acct)+' → '+fxAcctName(t.to):fxAcctName(fxTxAcct(t)))+'</td><td>'+fxEsc(t.note||'')+'</td>'+
-      '<td class="r '+(t.type==='income'?'fx-up':'')+'">'+amt+'</td><td><button class="fx-x" aria-label="Delete transaction" onclick="fxDelTxn('+t.id+')">✕</button></td></tr>';
+      '<td class="r '+(t.type==='income'?'fx-up':'')+'">'+amt+'</td><td>'+(t.type==='loan'?'':'<button class="fx-x" aria-label="Delete transaction" onclick="fxDelTxn('+t.id+')">✕</button>')+'</td></tr>';
   }).join(''):'<tr><td colspan="6" class="fx-empty">No transactions in '+fxMonthLabel(ym)+'.</td></tr>';
   const byCat={};
   FX.d.ledger.forEach(t=>{if(t.type!=='expense'||fxYM(t.date)!==ym||(acct&&fxTxAcct(t)!==Number(acct)))return;byCat[t.category]=(byCat[t.category]||0)+(+t.amount||0);});
@@ -3336,7 +3388,102 @@ function fxExport(){
   fxDownload('finance-ledger-'+d+'.csv',[['date','type','category','account','to_account','note','amount']].concat(FX.d.ledger.slice().sort((a,b)=>a.date<b.date?-1:1).map(t=>[t.date,t.type,t.category,fxAcctName(fxTxAcct(t)),t.to?fxAcctName(t.to):'',t.note,t.amount])));
   setTimeout(()=>fxDownload('finance-accounts-'+d+'.csv',[['account','type','balance']].concat(FX.d.accounts.map(a=>[a.name,a.type,bal[a.id]]))),400);
   if(FX.d.holdings.length)setTimeout(()=>fxDownload('finance-holdings-'+d+'.csv',[['symbol','name','units','avg_price','current_price','price_date']].concat(FX.d.holdings.map(h=>[h.sym,h.name,h.units,h.avg,h.price,h.priceDate]))),800);
+  if((FX.d.loans||[]).length)setTimeout(()=>fxDownload('finance-loans-'+d+'.csv',[['person','direction','amount','date','due','outstanding','note']].concat(FX.d.loans.map(l=>[l.person,l.dir,l.amount,l.date,l.due,fxLoanOut(l),l.note]))),1200);
   showToast('⤓ Backup downloaded','success');
+}
+
+
+/* ── shared amount renderer ── */
+function fxTxAmt(t){
+  if(t.type==='income')return fxMoney(t.amount,true);
+  if(t.type==='expense')return fxMoney(-t.amount);
+  if(t.type==='loan')return '<span class="fx-flat">'+fxMoney(t.flow==='in'?t.amount:-t.amount,true)+'</span>';
+  return '<span class="fx-flat">'+fxMoney(t.amount)+'</span>';
+}
+
+/* ── LEND / BORROW ── a loan is a person + amount; the money movement lives in the ledger (type 'loan') */
+function fxLoanPaid(l){return FX.d.ledger.filter(t=>t.loan===l.id&&t.kind==='repay').reduce((a,t)=>a+(+t.amount||0),0);}
+function fxLoanOut(l){return l.writtenOff?0:Math.max(0,Math.round(((+l.amount||0)-fxLoanPaid(l))*100)/100);}
+function fxAddLoan(){
+  const person=fxVal('lPerson'),amt=parseFloat(fxVal('lAmt')),acct=Number(fxVal('lAcct')),dir=fxVal('lDir')==='borrowed'?'borrowed':'lent';
+  const skip=fxEl('lSkip').checked;
+  if(!person||!(amt>0)){showToast('⚠️ Person and amount are required','error');return;}
+  if(!skip&&!fxAcctById(acct)){showToast('⚠️ Pick the account the money moved in/out of','error');return;}
+  const id=fxId(),date=fxVal('lDate')||fxToday();
+  FX.d.loans.push({id:id,person:person,dir:dir,amount:amt,date:date,due:fxVal('lDue'),note:fxVal('lNote'),writtenOff:false});
+  if(!skip)FX.d.ledger.push({id:id+1,type:'loan',kind:'principal',loan:id,flow:dir==='lent'?'out':'in',acct:acct,amount:amt,date:date,category:(dir==='lent'?'Lent to ':'Borrowed from ')+person,note:fxVal('lNote')});
+  ['lPerson','lAmt','lDue','lNote'].forEach(i=>fxSet(i,''));fxEl('lSkip').checked=false;
+  fxSave('loans');fxSave('ledger');showToast('✅ '+(dir==='lent'?'Lent to ':'Borrowed from ')+person+' recorded','success');fxRefresh();
+}
+function fxRepay(){
+  const l=FX.d.loans.find(x=>x.id===Number(fxVal('rLoan')));
+  const amt=parseFloat(fxVal('rAmt')),acct=Number(fxVal('rAcct'));
+  if(!l){showToast('⚠️ Pick a loan first','error');return;}
+  if(!(amt>0)||!fxAcctById(acct)){showToast('⚠️ Enter the amount and account','error');return;}
+  const out=fxLoanOut(l);
+  if(amt>out+0.004){showToast('⚠️ That is more than the NPR '+fxNum(out)+' still outstanding','error');return;}
+  const lent=l.dir!=='borrowed';
+  FX.d.ledger.push({id:fxId(),type:'loan',kind:'repay',loan:l.id,flow:lent?'in':'out',acct:acct,amount:amt,date:fxVal('rDate')||fxToday(),category:(lent?'Repaid by ':'Repaid to ')+l.person});
+  fxSet('rAmt','');fxSave('ledger');showToast('✅ Repayment recorded','success');fxRefresh();
+}
+function fxDelRepay(id){if(!confirm('Remove this repayment? The account balance will change back.'))return;FX.d.ledger=FX.d.ledger.filter(t=>t.id!==id);fxSave('ledger');fxRefresh();}
+function fxWriteOff(id){const l=FX.d.loans.find(x=>x.id===id);if(!l||!confirm('Write off NPR '+fxNum(fxLoanOut(l))+' with '+l.person+'? No account changes — it just stops counting.'))return;l.writtenOff=true;fxSave('loans');fxRefresh();}
+function fxReopen(id){const l=FX.d.loans.find(x=>x.id===id);if(!l)return;l.writtenOff=false;fxSave('loans');fxRefresh();}
+function fxDelLoan(id){
+  const l=FX.d.loans.find(x=>x.id===id);if(!l)return;
+  if(!confirm('Delete the loan with '+l.person+' and all its account movements? Balances will change back.'))return;
+  FX.d.loans=FX.d.loans.filter(x=>x.id!==id);FX.d.ledger=FX.d.ledger.filter(t=>t.loan!==id);
+  fxSave('loans');fxSave('ledger');fxRefresh();
+}
+function fxLoanCard(l){
+  const out=fxLoanOut(l),paid=fxLoanPaid(l),pct=Math.min(100,paid/(+l.amount||1)*100);
+  let due='';
+  if(l.due&&out>0){const d=Math.round((new Date(l.due+'T00:00:00')-new Date(fxToday()+'T00:00:00'))/864e5);due=d<0?'<span class="fx-down">overdue by '+(-d)+' d</span>':d===0?'due today':'due in '+d+' d';}
+  const reps=FX.d.ledger.filter(t=>t.loan===l.id&&t.kind==='repay').sort((a,b)=>a.date<b.date?-1:1);
+  return '<div class="fx-goal"><div class="top"><strong>'+fxEsc(l.person)+'</strong><span>'+fxMoney(out)+' <small class="fx-flat">of '+fxNum(l.amount)+'</small></span></div>'+
+    '<div class="meta">Since '+fxEsc(l.date)+(due?' · '+due:'')+(l.note?' · '+fxEsc(l.note):'')+'</div>'+
+    '<div class="fx-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="'+pct.toFixed(0)+'" aria-label="Repaid"><div class="fx-fill" style="width:'+pct+'%"></div></div>'+
+    reps.map(t=>'<div class="fx-rep">'+fxEsc(t.date.slice(5))+' · '+fxMoney(t.amount)+' '+(l.dir==='borrowed'?'paid from ':'received in ')+fxEsc(fxAcctName(t.acct))+' <button class="fx-x" aria-label="Remove repayment" onclick="fxDelRepay('+t.id+')">✕</button></div>').join('')+
+    '<div style="margin-top:.5rem">'+(out>0?'<button class="fx-mini" onclick="fxWriteOff('+l.id+')">Write off</button>':'<button class="fx-mini" onclick="fxReopen('+l.id+')">Reopen</button>')+'<button class="fx-x" aria-label="Delete loan" onclick="fxDelLoan('+l.id+')">✕</button></div></div>';
+}
+function fxRenderLoans(){
+  const L=FX.d.loans,c=fxCalc(),today=fxToday();
+  const open=L.filter(l=>fxLoanOut(l)>0),lent=open.filter(l=>l.dir!=='borrowed'),bor=open.filter(l=>l.dir==='borrowed');
+  const late=open.filter(l=>l.due&&l.due<today),lateAmt=late.reduce((a,l)=>a+fxLoanOut(l),0);
+  const t=fxEl('fxLoanTiles');t.className='fx-tiles';
+  t.innerHTML=fxTile('Others owe you',fxMoney(c.recv),lent.length+' open')+fxTile('You owe',fxMoney(c.pay),bor.length+' open')+fxTile('Net',fxGain(c.recv-c.pay),'owed to you minus you owe')+fxTile('Overdue',late.length?'<span class="fx-down">'+fxMoney(lateAmt)+'</span>':fxMoney(0),late.length?late.length+' past the return date':'nothing late');
+  const sel=fxEl('rLoan'),keep=sel.value;
+  sel.innerHTML=open.length?open.map(l=>'<option value="'+l.id+'">'+fxEsc(l.person)+' — '+(l.dir==='borrowed'?'you owe ':'owes you ')+'NPR '+fxNum(fxLoanOut(l))+'</option>').join(''):'<option value="">No open loans</option>';
+  if(keep&&open.some(l=>String(l.id)===keep))sel.value=keep;
+  const byDue=(a,b)=>(a.due||'9999')<(b.due||'9999')?-1:1;
+  fxEl('fxLent').innerHTML=lent.length?lent.slice().sort(byDue).map(fxLoanCard).join(''):'<div class="fx-empty">Nobody owes you right now.</div>';
+  fxEl('fxBorrowed').innerHTML=bor.length?bor.slice().sort(byDue).map(fxLoanCard).join(''):'<div class="fx-empty">You don’t owe anyone.</div>';
+  const done=L.filter(l=>fxLoanOut(l)<=0);
+  fxEl('fxSettled').innerHTML=done.length?done.slice().reverse().map(l=>'<div class="fx-item"><span>'+fxEsc(l.person)+' <span class="fx-badge">'+(l.dir==='borrowed'?'you owed':'they owed')+'</span> <small class="fx-flat">'+(l.writtenOff?'written off':'paid in full')+'</small></span><span>'+fxMoney(l.amount)+' '+(l.writtenOff?'<button class="fx-mini" onclick="fxReopen('+l.id+')">Reopen</button>':'')+'<button class="fx-x" aria-label="Delete loan" onclick="fxDelLoan('+l.id+')">✕</button></span></div>').join(''):'<div class="fx-empty">Settled loans will appear here.</div>';
+}
+
+/* ── PASTE PRICES FROM MERO SHARE ── */
+function fxApplyPaste(){
+  const lines=fxEl('pasteBox').value.split(/\r?\n/);
+  const today=fxToday(),updated=[],added=[],unitChg=[];
+  lines.forEach(line=>{
+    let cells=line.split(/\t+/).map(s=>s.trim()).filter(Boolean);
+    if(cells.length<3)cells=line.trim().split(/\s+/);
+    const si=cells.findIndex(c=>/^[A-Za-z][A-Za-z0-9]{1,11}$/.test(c)&&!/^(scrip|total|current|last|value|balance)$/i.test(c));
+    if(si<0)return;
+    const nums=cells.slice(si+1).map(c=>fxParse(c.replace(/^Rs\.?/i,''))).filter(n=>!isNaN(n));
+    if(nums.length<2)return;
+    const units=nums[0],ltp=nums.length>=4?nums[3]:nums[1],sym=cells[si].toUpperCase();
+    if(!(units>0)||!(ltp>0))return;
+    const h=FX.d.holdings.find(x=>x.sym===sym);
+    if(h){if(+h.units!==units)unitChg.push(sym+' '+fxNum(h.units)+'→'+fxNum(units));h.units=units;h.price=ltp;h.priceDate=today;updated.push(sym);}
+    else{FX.d.holdings.push({id:fxId()+added.length,sym:sym,name:'',units:units,avg:ltp,price:ltp,priceDate:today});added.push(sym);}
+  });
+  const note=fxEl('fxPasteNote');
+  if(!updated.length&&!added.length){note.textContent='Could not find any rows. Copy the whole table from Mero Share → My Portfolio (Scrip, Current Balance, … Last Transaction Price) and paste it here.';return;}
+  fxSave('holdings');fxEl('pasteBox').value='';
+  showToast('✅ Prices updated for '+(updated.length+added.length)+' holdings','success');fxRefresh();
+  fxEl('fxPasteNote').textContent='Updated '+updated.length+' price'+(updated.length===1?'':'s')+(added.length?'; added '+added.join(', ')+' (set their average buy price with Edit)':'')+(unitChg.length?'. Units changed: '+unitChg.join(', ')+' — check average price.':'.');
 }
 
 // ══════════ KEYBOARD SHORTCUTS ══════════
