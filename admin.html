@@ -535,6 +535,18 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
   .fx-tiles.fx-scrollx{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:.3rem;}
   .fx-tiles.fx-scrollx .fx-tile{flex:0 0 160px;scroll-snap-align:start;}
 }
+.fx-badge{display:inline-block;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);border:1px solid var(--border);border-radius:99px;padding:.05rem .45rem;margin-left:.25rem;vertical-align:middle;}
+.fx-acct-row{display:flex;justify-content:space-between;align-items:center;gap:.6rem;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.86rem;color:var(--text);font-variant-numeric:tabular-nums;}
+.fx-acct-row.total{border-bottom:0;font-weight:500;color:var(--gold);padding-top:.8rem;}
+.fx-acct-card{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;padding:.9rem 0;border-bottom:1px solid var(--border);color:var(--text);}
+.fx-acct-card:last-child{border-bottom:0;}
+.fx-acct-r{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;}
+.fx-acct-bal{font:400 1.15rem 'Outfit',sans-serif;font-variant-numeric:tabular-nums;}
+.fx-sub{font-size:.74rem;color:var(--text2);margin-top:.25rem;}
+.fx-sel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);color:var(--text);padding:.45rem .6rem;font:300 .82rem 'Outfit',sans-serif;}
+.fx-btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold);}
+.fx-btn.ghost:hover{background:var(--gold-dim);}
+.fx-monthbar{flex-wrap:wrap;}
 </style>
 </head>
 <body>
@@ -888,12 +900,13 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
         </div>
 
 
-        <!-- ══ FINANCE DASHBOARD v2 ══ -->
+        <!-- ══ FINANCE DASHBOARD v3 ══ -->
         <div class="tab-pane" id="tab-finance">
 
           <div class="fx-bar">
             <div class="fx-tabs" role="tablist" aria-label="Finance sections">
               <button class="fx-tab active" role="tab" data-ft="overview" onclick="fxTab('overview')">Overview</button>
+              <button class="fx-tab" role="tab" data-ft="accounts" onclick="fxTab('accounts')">Accounts</button>
               <button class="fx-tab" role="tab" data-ft="cash" onclick="fxTab('cash')">Cash flow</button>
               <button class="fx-tab" role="tab" data-ft="invest" onclick="fxTab('invest')">Investments</button>
               <button class="fx-tab" role="tab" data-ft="plan" onclick="fxTab('plan')">Plan</button>
@@ -907,13 +920,6 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
 
           <!-- OVERVIEW -->
           <section class="fx-pane active" id="fxp-overview">
-            <div class="fx-onboard" id="fxOnboard" style="display:none">
-              <strong>Your finance dashboard is empty — start in 2 steps</strong>
-              <ol>
-                <li><a href="#" onclick="fxTab('plan');return false">Plan</a> → enter your current cash &amp; bank balance as the starting balance.</li>
-                <li><a href="#" onclick="fxTab('cash');return false">Cash flow</a> → log your first income or expense.</li>
-              </ol>
-            </div>
             <div class="fx-hero">
               <div>
                 <div class="fx-lbl">Net worth</div>
@@ -921,6 +927,18 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
                 <div class="fx-delta" id="fxNWd"></div>
               </div>
               <div class="fx-break" id="fxBreak"></div>
+            </div>
+            <div class="fx-grid2">
+              <div class="fx-box">
+                <h4>Where your money is</h4>
+                <div id="fxAcctList"></div>
+                <button class="fx-link" onclick="fxTab('accounts')">Manage accounts →</button>
+              </div>
+              <div class="fx-box">
+                <h4>Recent activity</h4>
+                <div id="fxRecent"></div>
+                <button class="fx-link" onclick="fxTab('cash')">+ Log a transaction →</button>
+              </div>
             </div>
             <div class="fx-tiles" id="fxTiles"></div>
             <div class="fx-grid2">
@@ -930,6 +948,39 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
             <div class="fx-box"><h4>Coming up</h4><div id="fxUpcoming"></div></div>
           </section>
 
+          <!-- ACCOUNTS -->
+          <section class="fx-pane" id="fxp-accounts">
+            <div class="fx-tiles" id="fxAcctTiles"></div>
+            <div class="fx-box">
+              <h4>Your accounts</h4>
+              <div id="fxAcctCards"></div>
+              <div class="fx-note">Tip: tap “Set balance” and type what your bank / wallet app shows today — the dashboard adjusts itself, so you never need to recount old transactions.</div>
+            </div>
+            <div class="fx-grid2">
+              <div class="fx-box">
+                <h4>Move money between accounts</h4>
+                <div class="fx-form">
+                  <div class="fx-f"><label for="tFrom">From</label><select id="tFrom"></select></div>
+                  <div class="fx-f"><label for="tTo">To</label><select id="tTo"></select></div>
+                  <div class="fx-f"><label for="tAmt">Amount (NPR)</label><input id="tAmt" type="number" inputmode="decimal" min="0" step="any"/></div>
+                  <div class="fx-f"><label for="tDate">Date</label><input id="tDate" type="date"/></div>
+                  <div class="fx-f fx-wide"><label for="tNote">Note (optional)</label><input id="tNote" maxlength="120" placeholder="Load eSewa, withdraw cash…"/></div>
+                  <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxAddTransfer()">Move</button></div>
+                </div>
+                <div class="fx-note">A transfer changes the two balances but not your net worth or spending.</div>
+              </div>
+              <div class="fx-box">
+                <h4>Add an account</h4>
+                <div class="fx-form">
+                  <div class="fx-f fx-wide"><label for="aName">Name</label><input id="aName" maxlength="40" placeholder="Global IME Bank, IME Pay…"/></div>
+                  <div class="fx-f"><label for="aType">Type</label><select id="aType"><option value="bank">Bank</option><option value="wallet">Wallet</option><option value="cash">Cash</option></select></div>
+                  <div class="fx-f"><label for="aBal">Balance now (NPR)</label><input id="aBal" type="number" inputmode="decimal" step="any"/></div>
+                  <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxAddAccount()">Add</button></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           <!-- CASH FLOW -->
           <section class="fx-pane" id="fxp-cash">
             <div class="fx-box">
@@ -937,10 +988,11 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
               <div class="fx-form">
                 <div class="fx-f"><label for="fxType">Type</label>
                   <select id="fxType" onchange="fxCatOptions()"><option value="expense">Expense</option><option value="income">Income</option></select></div>
+                <div class="fx-f"><label for="fxAcct">Account</label><select id="fxAcct"></select></div>
                 <div class="fx-f"><label for="fxAmt">Amount (NPR)</label><input id="fxAmt" type="number" inputmode="decimal" min="0" step="any" placeholder="0"/></div>
                 <div class="fx-f"><label for="fxCat">Category</label><input id="fxCat" list="fxCatList" placeholder="Food, Salary…"/><datalist id="fxCatList"></datalist></div>
                 <div class="fx-f"><label for="fxDate">Date</label><input id="fxDate" type="date"/></div>
-                <div class="fx-f fx-wide"><label for="fxNote">Note (optional)</label><input id="fxNote" type="text" maxlength="120" placeholder="What was it for?"/></div>
+                <div class="fx-f fx-wide"><label for="fxNote">What was it for? (optional)</label><input id="fxNote" type="text" maxlength="120" placeholder="Momo with friends, bus fare…"/></div>
                 <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxAddTxn()">Add</button></div>
               </div>
             </div>
@@ -949,13 +1001,14 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
               <button class="fx-ico" onclick="fxMonthShift(-1)" aria-label="Previous month">‹</button>
               <strong id="fxMonthLbl"></strong>
               <button class="fx-ico" onclick="fxMonthShift(1)" aria-label="Next month">›</button>
+              <select id="fxFilter" class="fx-sel" onchange="fxRenderCash()" aria-label="Filter by account"></select>
             </div>
             <div class="fx-tiles" id="fxMonthTiles"></div>
 
             <div class="fx-grid2">
               <div class="fx-box"><h4>Where it went</h4><div id="fxCatBars"></div></div>
               <div class="fx-box"><h4>Transactions</h4>
-                <div class="fx-scroll"><table class="fx-table"><thead><tr><th>Date</th><th>Category</th><th>Note</th><th class="r">Amount</th><th></th></tr></thead><tbody id="fxLedger"></tbody></table></div>
+                <div class="fx-scroll"><table class="fx-table"><thead><tr><th>Date</th><th>Category</th><th>Account</th><th>Note</th><th class="r">Amount</th><th></th></tr></thead><tbody id="fxLedger"></tbody></table></div>
               </div>
             </div>
           </section>
@@ -964,6 +1017,20 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
           <section class="fx-pane" id="fxp-invest">
             <div class="fx-tiles" id="fxInvTiles"></div>
             <div class="fx-box"><h4>Allocation</h4><div id="fxAlloc"></div></div>
+
+            <div class="fx-box">
+              <h4>Monthly SIP</h4>
+              <div class="fx-form">
+                <div class="fx-f"><label for="sipSym">Fund</label><select id="sipSym"></select></div>
+                <div class="fx-f"><label for="sipAmtIn">Monthly amount (NPR)</label><input id="sipAmtIn" type="number" inputmode="decimal" min="0" step="any"/></div>
+                <div class="fx-f"><label for="sipDay">Pay day (1–28)</label><input id="sipDay" type="number" min="1" max="28"/></div>
+                <div class="fx-f"><label for="sipAcct">Pay from</label><select id="sipAcct"></select></div>
+                <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxRecordSip()">Record this month</button></div>
+                <div class="fx-f"><label>&nbsp;</label><button class="fx-btn ghost" onclick="fxSaveSip()">Save SIP settings</button></div>
+              </div>
+              <div class="fx-note" id="fxSipNote"></div>
+            </div>
+
             <div class="fx-box">
               <h4 id="fxHoldTitle">Add a holding</h4>
               <div class="fx-form">
@@ -984,17 +1051,6 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
 
           <!-- PLAN -->
           <section class="fx-pane" id="fxp-plan">
-            <div class="fx-box">
-              <h4>Settings</h4>
-              <div class="fx-form">
-                <div class="fx-f"><label for="sOpen">Starting cash &amp; bank balance (NPR)</label><input id="sOpen" type="number" inputmode="decimal" step="any"/></div>
-                <div class="fx-f"><label for="sSip">Monthly SIP (NPR)</label><input id="sSip" type="number" inputmode="decimal" min="0" step="any"/></div>
-                <div class="fx-f"><label for="sSipDay">SIP day of month</label><input id="sSipDay" type="number" min="1" max="28"/></div>
-                <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxSaveSettings()">Save</button></div>
-              </div>
-              <div class="fx-note">Cash balance = starting balance + all income − all expenses you log. Log your SIP as an expense (category “Investment”) so cash stays accurate.</div>
-            </div>
-
             <div class="fx-grid2">
               <div class="fx-box">
                 <h4>Goals</h4>
@@ -1008,14 +1064,15 @@ html.low-end #ctxMenu{backdrop-filter:none!important;-webkit-backdrop-filter:non
                 <div id="fxGoals"></div>
               </div>
               <div class="fx-box">
-                <h4>Assets &amp; debts</h4>
+                <h4>Other assets &amp; debts</h4>
                 <div class="fx-form">
                   <div class="fx-f"><label for="iKind">Kind</label><select id="iKind"><option value="asset">Asset</option><option value="debt">Debt</option></select></div>
-                  <div class="fx-f fx-wide"><label for="iName">Name</label><input id="iName" maxlength="60" placeholder="Phone, land, loan from…"/></div>
+                  <div class="fx-f fx-wide"><label for="iName">Name</label><input id="iName" maxlength="60" placeholder="Phone, land, money I owe…"/></div>
                   <div class="fx-f"><label for="iVal">Value (NPR)</label><input id="iVal" type="number" inputmode="decimal" min="0" step="any"/></div>
                   <div class="fx-f"><label>&nbsp;</label><button class="fx-btn" onclick="fxAddItem()">Add</button></div>
                 </div>
                 <div id="fxItems"></div>
+                <div class="fx-note">Bank, wallet and cash balances live in Accounts and shares in Investments — only add things like a phone, bike or money you owe here.</div>
               </div>
             </div>
           </section>
@@ -2830,17 +2887,18 @@ async function deleteProject(id){
 }
 
 // ══════════════════════════════════════════════════════
-// FINANCE DASHBOARD v2 — ledger-based, synced to Supabase table `finance_data`
-// Net worth = starting cash + income − expenses + investments + assets − debts
+// FINANCE DASHBOARD v3 — accounts + ledger, synced to Supabase table `finance_data`
+// Net worth = account balances + investments + other assets − debts
 // ══════════════════════════════════════════════════════
-const FX_KEYS=['ledger','holdings','goals','items','snaps','settings'];
+const FX_KEYS=['accounts','ledger','holdings','goals','items','snaps','settings'];
 const FX_COLORS=['#c9a96e','#64b5f6','#81c784','#ba8cf0','#e8a070','#5fc7c0'];
+const FX_TYPE_LABEL={bank:'Bank',wallet:'Wallet',cash:'Cash'};
 const FX_CATS={
-  income:['Salary','Allowance','Freelance','Gift','Interest / dividend','Other'],
-  expense:['Food','Transport','Bills','Rent','Shopping','Health','Education','Entertainment','Investment','Other']
+  income:['Allowance','Salary','Freelance','Gift','Interest / dividend','Other'],
+  expense:['Food','Transport','Mobile / Data','Bills','Rent','Shopping','Health','Education','Entertainment','Investment','Other']
 };
 const FX={
-  d:{ledger:[],holdings:[],goals:[],items:[],snaps:[],settings:{opening:0,sipAmount:0,sipDay:1}},
+  d:{accounts:[],ledger:[],holdings:[],goals:[],items:[],snaps:[],settings:{sipSym:'',sipAmount:0,sipDay:1}},
   month:null, loaded:false, hide:false, charts:{}, editHolding:null, tab:'overview'
 };
 
@@ -2857,12 +2915,16 @@ function fxEl(id){return document.getElementById(id);}
 function fxVal(id){const e=fxEl(id);return e?e.value.trim():'';}
 function fxSet(id,v){const e=fxEl(id);if(e)e.value=v;}
 function fxPct(x){return (x>0?'+':'')+(x*100).toFixed(1)+'%';}
+function fxParse(v){return parseFloat(String(v).replace(/,/g,''));}
 function fxGain(n,pct){
   if(!n)return '<span class="fx-flat">– 0</span>';
   const up=n>0;
   return '<span class="'+(up?'fx-up':'fx-down')+'">'+(up?'▲ ':'▼ ')+fxMoney(Math.abs(n))+(pct==null?'':' · '+fxPct(pct))+'</span>';
 }
 function fxStatus(msg,err){const e=fxEl('fxStatus');if(!e)return;e.textContent=msg||'';e.className='fx-status'+(err?' err':'');}
+function fxAcctById(id){return FX.d.accounts.find(a=>a.id===Number(id));}
+function fxTxAcct(t){const a=fxAcctById(t.acct);return a?a.id:(FX.d.accounts[0]?FX.d.accounts[0].id:null);}
+function fxAcctName(id){const a=fxAcctById(id);return a?a.name:'Unknown';}
 
 /* ── load / save ── */
 async function fxLoad(){
@@ -2880,6 +2942,7 @@ async function fxLoad(){
     fxStatus('Synced ✓');
   }catch(e){fxStatus('Offline — saved on this device only',true);}
   FX.loaded=true;
+  fxSeed();
 }
 async function fxSave(k){
   try{localStorage.setItem('fx2_'+k,JSON.stringify(FX.d[k]));}catch(e){}
@@ -2889,22 +2952,59 @@ async function fxSave(k){
     fxStatus('Synced ✓');
   }catch(e){fxStatus('Not synced — '+(e.message||'error'),true);}
 }
+// First run only: your accounts and the holdings from Mero Share (6 Nov 2026).
+// Balances start at 0 — use "Set balance" on each account. Avg prices are carried over from
+// your older records (SSIS units have grown since) — correct them with Edit.
+function fxSeed(){
+  const d=FX.d;
+  if(d.settings.seeded||d.accounts.length||d.holdings.length||d.ledger.length)return;
+  const mk=(name,type)=>({id:fxId(),name:name,type:type,opening:0});
+  const accts=[mk('Siddhartha Bank','bank'),mk('Prabhu Bank','bank'),mk('NIMB Mega Bank','bank'),mk('eSewa','wallet'),mk('Khalti by IME','wallet'),mk('Cash in hand','cash')];
+  accts.forEach((a,i)=>{a.id+=i;});
+  const day=fxToday(),h=(sym,name,units,avg,price)=>({id:fxId()+units,sym:sym,name:name,units:units,avg:avg,price:price,priceDate:day});
+  d.accounts=accts;
+  d.holdings=[
+    h('MSIP','Mero Microfinance',100,11.56,11.74),
+    h('NSY','Nabil Samriddhi Fund',100,9.33,9.04),
+    h('PSIS','Prabhu Smart Fund',100,10.49,12.05),
+    h('SSIS','Siddhartha Investment Scheme',1030,11.01,11.09),
+    h('SYPNL','Sanima Equity Fund',10,1424,1273.8),
+    h('VLBS','Vijaya Laghubitta',1,706,628)
+  ];
+  d.holdings.forEach((x,i)=>{x.id+=i;});
+  d.settings=Object.assign({},d.settings,{sipSym:'SSIS',sipAmount:1000,sipDay:1,seeded:true});
+  ['accounts','holdings','settings'].forEach(fxSave);
+}
 
 /* ── calculations ── */
+function fxBalances(){
+  const b={};FX.d.accounts.forEach(a=>{b[a.id]=+a.opening||0;});
+  FX.d.ledger.forEach(t=>{
+    const a=+t.amount||0,from=fxTxAcct(t);
+    if(from==null)return;
+    if(t.type==='income')b[from]+=a;
+    else if(t.type==='expense')b[from]-=a;
+    else if(t.type==='transfer'){b[from]-=a;if(b[t.to]!==undefined)b[t.to]+=a;}
+  });
+  return b;
+}
 function fxCalc(){
-  const d=FX.d;let inc=0,exp=0;
-  d.ledger.forEach(t=>{const a=+t.amount||0;if(t.type==='income')inc+=a;else exp+=a;});
-  const cash=(+d.settings.opening||0)+inc-exp;
+  const d=FX.d,bal=fxBalances();
+  const cash=Object.values(bal).reduce((a,v)=>a+v,0);
   let inv=0,cost=0;d.holdings.forEach(h=>{inv+=(+h.units||0)*(+h.price||0);cost+=(+h.units||0)*(+h.avg||0);});
   let assets=0,debts=0;d.items.forEach(i=>{if(i.kind==='debt')debts+=+i.value||0;else assets+=+i.value||0;});
-  return {cash,inv,cost,pnl:inv-cost,assets,debts,nw:Math.round((cash+inv+assets-debts)*100)/100};
+  return {cash,bal,inv,cost,pnl:inv-cost,assets,debts,nw:Math.round((cash+inv+assets-debts)*100)/100};
 }
-function fxMonthStats(ym){
+function fxMonthStats(ym,acct){
   let inc=0,exp=0;
-  FX.d.ledger.forEach(t=>{if(fxYM(t.date)!==ym)return;const a=+t.amount||0;if(t.type==='income')inc+=a;else exp+=a;});
+  FX.d.ledger.forEach(t=>{
+    if(t.type==='transfer'||fxYM(t.date)!==ym)return;
+    if(acct&&fxTxAcct(t)!==Number(acct))return;
+    const a=+t.amount||0;if(t.type==='income')inc+=a;else exp+=a;
+  });
   return {inc,exp,net:inc-exp,rate:inc>0?(inc-exp)/inc:null};
 }
-function fxHasData(){const d=FX.d;return d.ledger.length||d.holdings.length||d.items.length||d.goals.length||(+d.settings.opening||0)!==0;}
+function fxHasData(){const d=FX.d;return d.ledger.length||d.items.length||d.goals.length||d.accounts.some(a=>+a.opening)||d.holdings.length;}
 function fxSnapshot(){
   if(!fxHasData())return;
   const ym=fxToday().slice(0,7),nw=fxCalc().nw,s=FX.d.snaps,i=s.findIndex(x=>x.ym===ym);
@@ -2913,24 +3013,32 @@ function fxSnapshot(){
   fxSave('snaps');
 }
 function fxAvgNet3(){
-  // average net of the last 3 full months that have activity; falls back to this month
   const now=fxToday().slice(0,7),nets=[];
   for(let i=1;i<=3;i++){const ym=fxShiftYM(now,-i);if(FX.d.ledger.some(t=>fxYM(t.date)===ym))nets.push(fxMonthStats(ym).net);}
   if(!nets.length)return fxMonthStats(now).net;
   return nets.reduce((a,b)=>a+b,0)/nets.length;
 }
+function fxSipRecorded(ym){return FX.d.ledger.some(t=>t.sip&&fxYM(t.date)===ym);}
 
 /* ── entry points ── */
 function fxOpen(){
   const go=()=>fxLoad().then(()=>{fxApplyHide();fxTab(FX.tab||'overview');});
   if(typeof loadChartJS==='function')loadChartJS().then(go,go);else go();
 }
+function fxFillAccounts(){
+  const opts=FX.d.accounts.map(a=>'<option value="'+a.id+'">'+fxEsc(a.name)+'</option>').join('');
+  ['fxAcct','tFrom','tTo','sipAcct'].forEach(id=>{const e=fxEl(id);if(!e)return;const keep=e.value;e.innerHTML=opts;if(keep&&fxAcctById(keep))e.value=keep;});
+  const to=fxEl('tTo');if(to&&FX.d.accounts.length>1&&to.value===fxEl('tFrom').value)to.selectedIndex=1;
+  const f=fxEl('fxFilter');if(f){const keep=f.value;f.innerHTML='<option value="">All accounts</option>'+opts;if(keep&&fxAcctById(keep))f.value=keep;}
+}
 function fxTab(name){
   FX.tab=name;
   document.querySelectorAll('.fx-tab').forEach(b=>{const on=b.dataset.ft===name;b.classList.toggle('active',on);b.setAttribute('aria-selected',on);});
   document.querySelectorAll('.fx-pane').forEach(p=>p.classList.toggle('active',p.id==='fxp-'+name));
   if(!FX.loaded)return;
+  fxFillAccounts();
   if(name==='overview')fxRenderOverview();
+  if(name==='accounts'){if(!fxVal('tDate'))fxSet('tDate',fxToday());fxRenderAccounts();}
   if(name==='cash'){fxCatOptions();if(!fxVal('fxDate'))fxSet('fxDate',fxToday());fxRenderCash();}
   if(name==='invest')fxRenderInvest();
   if(name==='plan')fxRenderPlan();
@@ -2944,23 +3052,35 @@ function fxApplyHide(){
 
 /* ── OVERVIEW ── */
 function fxTile(label,value,sub){return '<div class="fx-tile"><div class="fx-lbl">'+label+'</div><div class="v">'+value+'</div><div class="s">'+sub+'</div></div>';}
+function fxAcctRows(c){
+  const A=FX.d.accounts.slice().sort((a,b)=>c.bal[b.id]-c.bal[a.id]);
+  if(!A.length)return '<div class="fx-empty">No accounts yet.</div>';
+  return A.map(a=>'<div class="fx-acct-row"><span><strong>'+fxEsc(a.name)+'</strong> <span class="fx-badge">'+FX_TYPE_LABEL[a.type]+'</span></span><span>'+fxMoney(c.bal[a.id])+'</span></div>').join('')+
+    '<div class="fx-acct-row total"><span>Total cash &amp; banks</span><span>'+fxMoney(c.cash)+'</span></div>';
+}
 function fxRenderOverview(){
   const c=fxCalc(),ym=fxToday().slice(0,7),m=fxMonthStats(ym);
-  fxEl('fxOnboard').style.display=fxHasData()?'none':'block';
   fxEl('fxNW').innerHTML=fxMoney(c.nw);
   const prev=FX.d.snaps.filter(s=>s.ym<ym).pop();
   fxEl('fxNWd').innerHTML=prev
     ? fxGain(c.nw-prev.nw)+' <span class="fx-flat">since '+fxMonthLabel(prev.ym)+'</span>'
     : '<span class="fx-flat">Month-by-month change appears next month</span>';
   fxEl('fxBreak').innerHTML=
-    '<div><b>'+fxMoney(c.cash)+'</b><span>Cash</span></div>'+
+    '<div><b>'+fxMoney(c.cash)+'</b><span>Cash &amp; banks</span></div>'+
     '<div><b>'+fxMoney(c.inv)+'</b><span>Investments</span></div>'+
-    '<div><b>'+fxMoney(c.assets)+'</b><span>Assets</span></div>'+
+    '<div><b>'+fxMoney(c.assets)+'</b><span>Other assets</span></div>'+
     '<div><b>'+fxMoney(-c.debts)+'</b><span>Debts</span></div>';
+  fxEl('fxAcctList').innerHTML=fxAcctRows(c);
+  const recent=FX.d.ledger.slice().sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:b.id-a.id).slice(0,6);
+  fxEl('fxRecent').innerHTML=recent.length?recent.map(t=>{
+    const amt=t.type==='income'?fxMoney(t.amount,true):t.type==='expense'?fxMoney(-t.amount):'<span class="fx-flat">'+fxMoney(t.amount)+'</span>';
+    const who=t.type==='transfer'?fxAcctName(t.acct)+' → '+fxAcctName(t.to):fxAcctName(fxTxAcct(t));
+    return '<div class="fx-up-row"><span>'+fxEsc(t.type==='transfer'?'Transfer':t.category)+(t.note?' · '+fxEsc(t.note):'')+'<br/><small>'+fxEsc(t.date.slice(5))+' · '+fxEsc(who)+'</small></span><span class="'+(t.type==='income'?'fx-up':'')+'">'+amt+'</span></div>';
+  }).join(''):'<div class="fx-empty">Nothing logged yet. Start in Accounts → “Set balance”, then log your first expense.</div>';
   const t=fxEl('fxTiles');t.className='fx-tiles fx-scrollx';
   t.innerHTML=
     fxTile('Income · '+fxMonthLabel(ym),fxMoney(m.inc),'this month')+
-    fxTile('Expenses · '+fxMonthLabel(ym),fxMoney(m.exp),'this month')+
+    fxTile('Spent · '+fxMonthLabel(ym),fxMoney(m.exp),'this month')+
     fxTile('Savings rate',m.rate==null?'—':'<span class="'+(m.rate>=0?'fx-up':'fx-down')+'">'+(m.rate*100).toFixed(0)+'%</span>',m.rate==null?'log income to see it':'of income kept')+
     fxTile('Investments',fxMoney(c.inv),c.cost>0?fxGain(c.pnl,c.pnl/c.cost):'<span class="fx-flat">no holdings yet</span>')+
     fxTile('Debt',fxMoney(c.debts),c.debts>0?'to repay':'debt-free');
@@ -2969,10 +3089,11 @@ function fxRenderOverview(){
 }
 function fxUpcomingList(){
   const out=[],now=new Date();now.setHours(0,0,0,0);const s=FX.d.settings;
-  if(+s.sipAmount>0){
+  if(+s.sipAmount>0&&s.sipSym){
     const day=Math.min(28,Math.max(1,+s.sipDay||1));
-    let n=new Date(now.getFullYear(),now.getMonth(),day);if(n<now)n=new Date(now.getFullYear(),now.getMonth()+1,day);
-    out.push({when:n,label:'SIP contribution',amt:+s.sipAmount});
+    // not yet recorded this month → this month's date (shows "overdue" if passed); recorded → next month
+    const n=new Date(now.getFullYear(),now.getMonth()+(fxSipRecorded(fxYM(fxToday()))?1:0),day);
+    out.push({when:n,label:s.sipSym+' SIP',amt:+s.sipAmount});
   }
   FX.d.goals.forEach(g=>{if(g.deadline&&(+g.saved||0)<(+g.target||0))out.push({when:new Date(g.deadline+'T00:00:00'),label:'Goal: '+g.name,amt:(+g.target)-(+g.saved||0),goal:true});});
   out.sort((a,b)=>a.when-b.when);
@@ -2983,7 +3104,7 @@ function fxRenderUpcoming(){
   fxEl('fxUpcoming').innerHTML=l.length?l.map(o=>{
     const when=o.days<0?'overdue by '+(-o.days)+' d':o.days===0?'today':'in '+o.days+' d';
     return '<div class="fx-up-row"><span>'+fxEsc(o.label)+'<br/><small>'+o.when.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+' · '+when+'</small></span><span>'+(o.goal?'<small>still needed</small><br/>':'')+fxMoney(o.amt)+'</span></div>';
-  }).join(''):'<div class="fx-empty">Nothing scheduled. Add a goal deadline or a monthly SIP in Plan.</div>';
+  }).join(''):'<div class="fx-empty">Nothing scheduled. Add a goal deadline or set your SIP in Investments.</div>';
 }
 function fxChartTheme(){
   const cs=getComputedStyle(document.body),g=n=>cs.getPropertyValue(n).trim();
@@ -2995,7 +3116,7 @@ function fxDrawCharts(){
   const nwC=fxEl('fxNWChart'),cfC=fxEl('fxCFChart');
   const snaps=FX.d.snaps,showNW=snaps.length>=2,months=[];
   for(let i=5;i>=0;i--)months.push(fxShiftYM(ym,-i));
-  const stats=months.map(fxMonthStats),showCF=stats.some(s=>s.inc||s.exp);
+  const stats=months.map(m=>fxMonthStats(m)),showCF=stats.some(s=>s.inc||s.exp);
   nwC.parentElement.style.display=showNW?'block':'none';
   fxEl('fxNWEmpty').textContent=showNW?'':'The net worth line appears once you have two months of data — your balance is saved automatically each month.';
   cfC.parentElement.style.display=showCF?'block':'none';
@@ -3006,45 +3127,88 @@ function fxDrawCharts(){
   if(showCF)FX.charts.cf=new Chart(cfC,{type:'bar',data:{labels:months.map(fxMonthLabel),datasets:[{label:'Income',data:stats.map(s=>s.inc),backgroundColor:th.up+'cc',borderRadius:4},{label:'Expense',data:stats.map(s=>s.exp),backgroundColor:th.down+'cc',borderRadius:4}]},options:base});
 }
 
+/* ── ACCOUNTS ── */
+function fxAddAccount(){
+  const name=fxVal('aName'),bal=fxParse(fxVal('aBal')||'0');
+  if(!name){showToast('⚠️ Give the account a name','error');return;}
+  if(FX.d.accounts.some(a=>a.name.toLowerCase()===name.toLowerCase())){showToast('⚠️ That account already exists','error');return;}
+  FX.d.accounts.push({id:fxId(),name:name,type:fxVal('aType')||'bank',opening:isNaN(bal)?0:bal});
+  ['aName','aBal'].forEach(i=>fxSet(i,''));fxSave('accounts');showToast('✅ Account added','success');fxRefresh();
+}
+function fxSetBalance(id){
+  const a=fxAcctById(id);if(!a)return;
+  const cur=fxBalances()[a.id];
+  const v=prompt('What does '+a.name+' show right now? (NPR)',Math.round(cur*100)/100);if(v===null)return;
+  const n=fxParse(v);if(isNaN(n)){showToast('⚠️ Enter a number','error');return;}
+  a.opening=(+a.opening||0)+(n-cur);fxSave('accounts');showToast('✅ Balance updated','success');fxRefresh();
+}
+function fxDelAccount(id){
+  const a=fxAcctById(id);if(!a)return;
+  if(FX.d.ledger.some(t=>t.acct===a.id||t.to===a.id)){showToast('⚠️ '+a.name+' has transactions — it can’t be deleted','error');return;}
+  if(!confirm('Delete '+a.name+'?'))return;
+  FX.d.accounts=FX.d.accounts.filter(x=>x.id!==a.id);fxSave('accounts');fxRefresh();
+}
+function fxAddTransfer(){
+  const from=Number(fxVal('tFrom')),to=Number(fxVal('tTo')),amt=parseFloat(fxVal('tAmt'));
+  if(!from||!to||from===to){showToast('⚠️ Pick two different accounts','error');return;}
+  if(!(amt>0)){showToast('⚠️ Enter an amount above 0','error');return;}
+  FX.d.ledger.push({id:fxId(),type:'transfer',acct:from,to:to,amount:amt,category:'Transfer',date:fxVal('tDate')||fxToday(),note:fxVal('tNote')});
+  fxSet('tAmt','');fxSet('tNote','');fxSave('ledger');showToast('✅ Moved NPR '+fxNum(amt),'success');fxRefresh();
+}
+function fxRenderAccounts(){
+  const c=fxCalc(),ym=fxToday().slice(0,7);
+  const byType=t=>FX.d.accounts.filter(a=>a.type===t).reduce((s,a)=>s+c.bal[a.id],0);
+  const tl=fxEl('fxAcctTiles');tl.className='fx-tiles';
+  tl.innerHTML=fxTile('Total cash',fxMoney(c.cash),FX.d.accounts.length+' accounts')+fxTile('Banks',fxMoney(byType('bank')),'')+fxTile('Wallets',fxMoney(byType('wallet')),'eSewa, Khalti…')+fxTile('Cash in hand',fxMoney(byType('cash')),'');
+  fxEl('fxAcctCards').innerHTML=FX.d.accounts.length?FX.d.accounts.map(a=>{
+    const m=fxMonthStats(ym,a.id);
+    return '<div class="fx-acct-card"><div><strong>'+fxEsc(a.name)+'</strong> <span class="fx-badge">'+FX_TYPE_LABEL[a.type]+'</span>'+
+      '<div class="fx-sub">This month: <span class="'+(m.inc?'fx-up':'fx-flat')+'">'+(m.inc?'+':'')+fxNum(m.inc)+'</span> in · <span class="'+(m.exp?'fx-down':'fx-flat')+'">'+(m.exp?'−':'')+fxNum(m.exp)+'</span> spent</div></div>'+
+      '<div class="fx-acct-r"><div class="fx-acct-bal">'+fxMoney(c.bal[a.id])+'</div><button class="fx-mini" onclick="fxSetBalance('+a.id+')">Set balance</button><button class="fx-x" aria-label="Delete account" onclick="fxDelAccount('+a.id+')">✕</button></div></div>';
+  }).join(''):'<div class="fx-empty">Add your first account below.</div>';
+}
+
 /* ── CASH FLOW ── */
 function fxCatOptions(){
   const type=fxVal('fxType')||'expense';
   const used=[...new Set(FX.d.ledger.filter(t=>t.type===type).map(t=>t.category))];
-  const all=[...new Set(FX_CATS[type].concat(used))];
-  fxEl('fxCatList').innerHTML=all.map(c=>'<option value="'+fxEsc(c)+'"></option>').join('');
+  fxEl('fxCatList').innerHTML=[...new Set(FX_CATS[type].concat(used))].map(c=>'<option value="'+fxEsc(c)+'"></option>').join('');
 }
 function fxAddTxn(){
-  const amount=parseFloat(fxVal('fxAmt'));
+  const amount=parseFloat(fxVal('fxAmt')),acct=Number(fxVal('fxAcct'));
+  if(!acct){showToast('⚠️ Add an account first (Accounts tab)','error');return;}
   if(!(amount>0)){showToast('⚠️ Enter an amount above 0','error');return;}
-  const type=fxVal('fxType')==='income'?'income':'expense';
-  const date=fxVal('fxDate')||fxToday();
-  FX.d.ledger.push({id:fxId(),type:type,amount:amount,category:fxVal('fxCat')||'Other',date:date,note:fxVal('fxNote')});
+  const type=fxVal('fxType')==='income'?'income':'expense',date=fxVal('fxDate')||fxToday();
+  FX.d.ledger.push({id:fxId(),type:type,acct:acct,amount:amount,category:fxVal('fxCat')||'Other',date:date,note:fxVal('fxNote')});
   FX.month=fxYM(date);
-  fxSave('ledger');fxSet('fxAmt','');fxSet('fxNote','');
-  showToast('✅ '+(type==='income'?'Income':'Expense')+' added','success');
+  fxSave('ledger');fxSet('fxAmt','');fxSet('fxNote','');fxSet('fxCat','');
+  showToast('✅ '+(type==='income'?'Income':'Expense')+' added to '+fxAcctName(acct),'success');
   fxRefresh();
 }
 function fxDelTxn(id){
-  if(!confirm('Delete this transaction?'))return;
-  FX.d.ledger=FX.d.ledger.filter(t=>t.id!==id);fxSave('ledger');fxRefresh();
+  const t=FX.d.ledger.find(x=>x.id===id);if(!t)return;
+  if(!confirm(t.sip?'Delete this SIP payment? Your fund units will not change — edit them in Investments if needed.':'Delete this transaction?'))return;
+  FX.d.ledger=FX.d.ledger.filter(x=>x.id!==id);fxSave('ledger');fxRefresh();
 }
 function fxMonthShift(n){FX.month=fxShiftYM(FX.month,n);fxRenderCash();}
 function fxRenderCash(){
-  const ym=FX.month,m=fxMonthStats(ym);
+  const ym=FX.month,acct=fxVal('fxFilter'),m=fxMonthStats(ym,acct||null);
   fxEl('fxMonthLbl').textContent=fxMonthLabel(ym);
   const mt=fxEl('fxMonthTiles');mt.className='fx-tiles';
-  mt.innerHTML=fxTile('Income',fxMoney(m.inc),'')+fxTile('Expenses',fxMoney(m.exp),'')+fxTile('Net',fxGain(m.net),m.rate==null?'':(m.rate*100).toFixed(0)+'% saved');
-  const rows=FX.d.ledger.filter(t=>fxYM(t.date)===ym).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:b.id-a.id);
-  fxEl('fxLedger').innerHTML=rows.length?rows.map(t=>
-    '<tr><td>'+fxEsc(t.date.slice(5))+'</td><td>'+fxEsc(t.category)+'</td><td>'+fxEsc(t.note||'')+'</td>'+
-    '<td class="r '+(t.type==='income'?'fx-up':'')+'">'+(t.type==='income'?fxMoney(t.amount,true):fxMoney(-t.amount))+'</td>'+
-    '<td><button class="fx-x" aria-label="Delete transaction" onclick="fxDelTxn('+t.id+')">✕</button></td></tr>').join('')
-    :'<tr><td colspan="5" class="fx-empty">No transactions in '+fxMonthLabel(ym)+'.</td></tr>';
-  const byCat={};rows.filter(t=>t.type==='expense').forEach(t=>{byCat[t.category]=(byCat[t.category]||0)+(+t.amount||0);});
+  mt.innerHTML=fxTile('Income',fxMoney(m.inc),'')+fxTile('Spent',fxMoney(m.exp),'')+fxTile('Net',fxGain(m.net),m.rate==null?'':(m.rate*100).toFixed(0)+'% saved');
+  const rows=FX.d.ledger.filter(t=>fxYM(t.date)===ym&&(!acct||fxTxAcct(t)===Number(acct)||t.to===Number(acct))).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:b.id-a.id);
+  fxEl('fxLedger').innerHTML=rows.length?rows.map(t=>{
+    const isT=t.type==='transfer';
+    const amt=isT?'<span class="fx-flat">'+fxMoney(t.amount)+'</span>':t.type==='income'?fxMoney(t.amount,true):fxMoney(-t.amount);
+    return '<tr><td>'+fxEsc(t.date.slice(5))+'</td><td>'+fxEsc(isT?'Transfer':t.category)+'</td><td>'+fxEsc(isT?fxAcctName(t.acct)+' → '+fxAcctName(t.to):fxAcctName(fxTxAcct(t)))+'</td><td>'+fxEsc(t.note||'')+'</td>'+
+      '<td class="r '+(t.type==='income'?'fx-up':'')+'">'+amt+'</td><td><button class="fx-x" aria-label="Delete transaction" onclick="fxDelTxn('+t.id+')">✕</button></td></tr>';
+  }).join(''):'<tr><td colspan="6" class="fx-empty">No transactions in '+fxMonthLabel(ym)+'.</td></tr>';
+  const byCat={};
+  FX.d.ledger.forEach(t=>{if(t.type!=='expense'||fxYM(t.date)!==ym||(acct&&fxTxAcct(t)!==Number(acct)))return;byCat[t.category]=(byCat[t.category]||0)+(+t.amount||0);});
   const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]),max=cats.length?cats[0][1]:1,tot=m.exp||1;
   fxEl('fxCatBars').innerHTML=cats.length?'<div class="fx-bars">'+cats.map(c=>
     '<div class="row"><div class="top"><span>'+fxEsc(c[0])+'</span><span>'+fxMoney(c[1])+' <small class="fx-flat">'+Math.round(c[1]/tot*100)+'%</small></span></div><div class="fx-track"><div class="fx-fill" style="width:'+(c[1]/max*100).toFixed(1)+'%"></div></div></div>').join('')+'</div>'
-    :'<div class="fx-empty">No expenses logged this month.</div>';
+    :'<div class="fx-empty">No spending logged for this view.</div>';
 }
 
 /* ── INVESTMENTS ── */
@@ -3072,38 +3236,56 @@ function fxCancelHolding(){
 function fxPrice(id){
   const h=FX.d.holdings.find(x=>x.id===id);if(!h)return;
   const v=prompt('Current price of '+h.sym+' (NPR):',h.price);if(v===null)return;
-  const p=parseFloat(v);if(!(p>=0)){showToast('⚠️ Enter a valid price','error');return;}
+  const p=fxParse(v);if(!(p>=0)){showToast('⚠️ Enter a valid price','error');return;}
   h.price=p;h.priceDate=fxToday();fxSave('holdings');fxRefresh();
 }
 function fxDelHolding(id){
   if(!confirm('Remove this holding?'))return;
   FX.d.holdings=FX.d.holdings.filter(h=>h.id!==id);fxSave('holdings');fxRefresh();
 }
+function fxSaveSip(){
+  const s=FX.d.settings;
+  s.sipSym=fxVal('sipSym');s.sipAmount=parseFloat(fxVal('sipAmtIn'))||0;s.sipDay=Math.min(28,Math.max(1,parseInt(fxVal('sipDay'))||1));
+  fxSave('settings');showToast('✅ SIP settings saved','success');fxRefresh();
+}
+function fxRecordSip(){
+  const s=FX.d.settings,h=FX.d.holdings.find(x=>x.sym===fxVal('sipSym'));
+  const amt=parseFloat(fxVal('sipAmtIn')),acct=Number(fxVal('sipAcct'));
+  if(!h||!(amt>0)||!acct){showToast('⚠️ Pick the fund, amount and account','error');return;}
+  if(!(h.price>0)){showToast('⚠️ Set a current price for '+h.sym+' first','error');return;}
+  const ym=fxToday().slice(0,7);
+  if(fxSipRecorded(ym)&&!confirm('A SIP is already recorded for this month. Record another?'))return;
+  const units=Math.floor(amt/h.price);
+  if(units<1){showToast('⚠️ That amount buys less than 1 unit at NPR '+fxNum(h.price),'error');return;}
+  h.avg=((+h.units||0)*(+h.avg||0)+amt)/((+h.units||0)+units);h.units=(+h.units||0)+units;
+  FX.d.ledger.push({id:fxId(),type:'expense',acct:acct,amount:amt,category:'Investment',note:h.sym+' SIP',date:fxToday(),sip:true});
+  s.sipSym=h.sym;s.sipAmount=amt;
+  fxSave('holdings');fxSave('ledger');fxSave('settings');
+  showToast('✅ '+h.sym+' SIP recorded · +'+units+' units · NPR '+fxNum(amt)+' from '+fxAcctName(acct),'success');fxRefresh();
+}
 function fxRenderInvest(){
-  const c=fxCalc(),H=FX.d.holdings;
+  const c=fxCalc(),H=FX.d.holdings,s=FX.d.settings;
   const t=fxEl('fxInvTiles');t.className='fx-tiles';
   t.innerHTML=fxTile('Current value',fxMoney(c.inv),H.length+' holding'+(H.length===1?'':'s'))+fxTile('Cost',fxMoney(c.cost),'what you paid')+fxTile('Gain / loss',fxGain(c.pnl,c.cost>0?c.pnl/c.cost:null),'')+
-    fxTile('Monthly SIP',fxMoney(+FX.d.settings.sipAmount||0),+FX.d.settings.sipAmount>0?'on day '+(+FX.d.settings.sipDay||1):'set it in Plan');
+    fxTile('Monthly SIP',fxMoney(+s.sipAmount||0),s.sipSym?fxEsc(s.sipSym)+' · day '+(+s.sipDay||1):'not set');
   const vals=H.map(h=>({sym:h.sym,v:(+h.units||0)*(+h.price||0)})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v),tot=vals.reduce((a,x)=>a+x.v,0);
   fxEl('fxAlloc').innerHTML=tot>0
     ?'<div class="fx-alloc" role="img" aria-label="Portfolio allocation">'+vals.map((x,i)=>'<div style="width:'+(x.v/tot*100)+'%;background:'+FX_COLORS[i%FX_COLORS.length]+'"></div>').join('')+'</div><div class="fx-legend">'+vals.map((x,i)=>'<span><i style="background:'+FX_COLORS[i%FX_COLORS.length]+'"></i>'+fxEsc(x.sym)+' '+(x.v/tot*100).toFixed(0)+'%</span>').join('')+'</div>'
     :'<div class="fx-empty">Add a holding to see how your money is spread.</div>';
+  const sel=fxEl('sipSym');sel.innerHTML=H.map(h=>'<option value="'+fxEsc(h.sym)+'">'+fxEsc(h.sym)+'</option>').join('');sel.value=s.sipSym||'';
+  fxSet('sipAmtIn',s.sipAmount||'');fxSet('sipDay',s.sipDay||1);
+  const ym=fxToday().slice(0,7);
+  fxEl('fxSipNote').textContent=!s.sipSym?'Choose the fund you pay monthly, then save.':fxSipRecorded(ym)?'✓ '+s.sipSym+' SIP recorded for '+fxMonthLabel(ym)+'. Every other holding is treated as a long-term hold.':'Not recorded yet for '+fxMonthLabel(ym)+'. “Record this month” takes the amount from the account, adds it as a spending entry, and adds the units to '+s.sipSym+'. Every other holding is a long-term hold.';
   fxEl('fxHold').innerHTML=H.length?H.slice().sort((a,b)=>b.units*b.price-a.units*a.price).map(h=>{
     const v=h.units*h.price,cost=h.units*h.avg,pnl=v-cost;
-    return '<tr><td><span class="sym">'+fxEsc(h.sym)+'</span>'+(h.name?'<span class="sub">'+fxEsc(h.name)+'</span>':'')+'</td><td class="r">'+fxNum(h.units)+'</td><td class="r">'+fxNum(h.avg)+'</td><td class="r">'+fxNum(h.price)+'</td><td class="r">'+fxMoney(v)+'</td><td class="r">'+fxGain(pnl,cost>0?pnl/cost:null)+'</td>'+
+    return '<tr><td><span class="sym">'+fxEsc(h.sym)+'</span> <span class="fx-badge">'+(h.sym===s.sipSym?'SIP':'Hold')+'</span>'+(h.name?'<span class="sub">'+fxEsc(h.name)+'</span>':'')+'</td><td class="r">'+fxNum(h.units)+'</td><td class="r">'+fxNum(h.avg)+'</td><td class="r">'+fxNum(h.price)+'</td><td class="r">'+fxMoney(v)+'</td><td class="r">'+fxGain(pnl,cost>0?pnl/cost:null)+'</td>'+
       '<td class="r"><button class="fx-mini" onclick="fxPrice('+h.id+')">Price</button><button class="fx-mini" onclick="fxEditHolding('+h.id+')">Edit</button><button class="fx-x" aria-label="Remove holding" onclick="fxDelHolding('+h.id+')">✕</button></td></tr>';
   }).join(''):'<tr><td colspan="7" class="fx-empty">No holdings yet.</td></tr>';
   const stale=H.filter(h=>h.priceDate&&(Date.now()-new Date(h.priceDate+'T00:00:00'))>14*864e5);
-  fxEl('fxHoldNote').textContent=stale.length?'Prices not updated in 14+ days: '+stale.map(h=>h.sym).join(', ')+'. Tap “Price” to refresh.':'Prices are entered by hand — tap “Price” to update.';
+  fxEl('fxHoldNote').textContent=stale.length?'Prices not updated in 14+ days: '+stale.map(h=>h.sym).join(', ')+'. Tap “Price” to refresh from Mero Share.':'Prices are typed in by hand — copy “Last Transaction Price” from Mero Share and tap “Price”.';
 }
 
 /* ── PLAN ── */
-function fxSaveSettings(){
-  const s=FX.d.settings;
-  s.opening=parseFloat(fxVal('sOpen'))||0;s.sipAmount=parseFloat(fxVal('sSip'))||0;
-  s.sipDay=Math.min(28,Math.max(1,parseInt(fxVal('sSipDay'))||1));
-  fxSave('settings');showToast('✅ Settings saved','success');fxRefresh();
-}
 function fxAddGoal(){
   const name=fxVal('gName'),target=parseFloat(fxVal('gTarget'));
   if(!name||!(target>0)){showToast('⚠️ Goal name and target are required','error');return;}
@@ -3114,7 +3296,7 @@ function fxAddGoal(){
 function fxGoalAdd(id){
   const g=FX.d.goals.find(x=>x.id===id);if(!g)return;
   const v=prompt('Add to “'+g.name+'” (NPR):');if(v===null)return;
-  const a=parseFloat(v);if(!a){showToast('⚠️ Enter a number','error');return;}
+  const a=fxParse(v);if(!a){showToast('⚠️ Enter a number','error');return;}
   g.saved=Math.max(0,(+g.saved||0)+a);fxSave('goals');fxRefresh();
 }
 function fxDelGoal(id){if(!confirm('Delete this goal?'))return;FX.d.goals=FX.d.goals.filter(g=>g.id!==id);fxSave('goals');fxRefresh();}
@@ -3126,9 +3308,6 @@ function fxAddItem(){
 }
 function fxDelItem(id){if(!confirm('Remove this entry?'))return;FX.d.items=FX.d.items.filter(i=>i.id!==id);fxSave('items');fxRefresh();}
 function fxRenderPlan(){
-  const s=FX.d.settings;
-  if(document.activeElement!==fxEl('sOpen'))fxSet('sOpen',s.opening||'');
-  fxSet('sSip',s.sipAmount||'');fxSet('sSipDay',s.sipDay||1);
   const avg=fxAvgNet3(),now=new Date();now.setHours(0,0,0,0);
   fxEl('fxGoals').innerHTML=FX.d.goals.length?FX.d.goals.map(g=>{
     const saved=+g.saved||0,target=+g.target||1,pct=Math.min(100,saved/target*100),left=Math.max(0,target-saved);let meta='';
@@ -3153,9 +3332,10 @@ function fxDownload(name,rows){
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1500);
 }
 function fxExport(){
-  const d=fxToday();
-  fxDownload('finance-ledger-'+d+'.csv',[['date','type','category','note','amount']].concat(FX.d.ledger.slice().sort((a,b)=>a.date<b.date?-1:1).map(t=>[t.date,t.type,t.category,t.note,t.amount])));
-  if(FX.d.holdings.length)setTimeout(()=>fxDownload('finance-holdings-'+d+'.csv',[['symbol','name','units','avg_price','current_price','price_date']].concat(FX.d.holdings.map(h=>[h.sym,h.name,h.units,h.avg,h.price,h.priceDate]))),400);
+  const d=fxToday(),bal=fxBalances();
+  fxDownload('finance-ledger-'+d+'.csv',[['date','type','category','account','to_account','note','amount']].concat(FX.d.ledger.slice().sort((a,b)=>a.date<b.date?-1:1).map(t=>[t.date,t.type,t.category,fxAcctName(fxTxAcct(t)),t.to?fxAcctName(t.to):'',t.note,t.amount])));
+  setTimeout(()=>fxDownload('finance-accounts-'+d+'.csv',[['account','type','balance']].concat(FX.d.accounts.map(a=>[a.name,a.type,bal[a.id]]))),400);
+  if(FX.d.holdings.length)setTimeout(()=>fxDownload('finance-holdings-'+d+'.csv',[['symbol','name','units','avg_price','current_price','price_date']].concat(FX.d.holdings.map(h=>[h.sym,h.name,h.units,h.avg,h.price,h.priceDate]))),800);
   showToast('⤓ Backup downloaded','success');
 }
 
